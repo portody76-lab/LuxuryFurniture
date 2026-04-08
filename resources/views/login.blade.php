@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <title>Login</title>
@@ -17,7 +18,22 @@
     <div class="w-1/2 p-10">
       <h2 class="text-xl font-semibold mb-6">Masuk ke akun</h2>
 
-      <form method="POST" action="#">
+      <form method="POST" action="/login">
+        @csrf
+@if(session('error'))
+  <div class="flex items-center gap-2 bg-red-100 border border-red-300 text-red-700 px-4 py-3 mb-4 rounded-lg text-sm">
+
+    <!-- Icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M12 9v2m0 4h.01M5.07 19h13.86c1.54 0 2.5-1.67 1.73-3L13.73 4c-.77-1.33-2.69-1.33-3.46 0L3.34 16c-.77 1.33.19 3 1.73 3z" />
+    </svg>
+
+    <!-- Text -->
+    <span>{{ session('error') }}</span>
+
+  </div>
+@endif
         <label class="block text-sm mb-1">Username</label>
         <div class="flex items-center bg-gray-100 rounded-lg mb-4 overflow-hidden">
 
@@ -38,8 +54,8 @@
         <div class="flex items-center bg-gray-100 rounded-lg mb-6 overflow-hidden">
 
           <div class="bg-[#D2B473] p-3 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="white" class="w-5">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white"
+              class="w-5">
               <path stroke-linecap="round" stroke-linejoin="round"
                 d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
             </svg>
