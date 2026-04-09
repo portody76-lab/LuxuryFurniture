@@ -18,7 +18,7 @@
     <div class="w-1/2 p-10">
       <h2 class="text-xl font-semibold mb-6">Masuk ke akun</h2>
 
-      <form method="POST" action="/login">
+      <form method="POST" action="/">
         @csrf
 @if(session('error'))
   <div class="flex items-center gap-2 bg-red-100 border border-red-300 text-red-700 px-4 py-3 mb-4 rounded-lg text-sm">

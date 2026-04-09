@@ -13,7 +13,7 @@ class RoleMiddleware
     {
         // cek sudah login atau belum
         if (!Auth::check()) {
-            return redirect('/login');
+            return redirect('/');
         }
 
         // ambil role user
