@@ -12,20 +12,26 @@ class LoginController extends Controller
         return view('login');
     }
 
-public function login(Request $request)
-{
-    if (!Auth::attempt($request->only('username', 'password'))) {
-        return back()->with('error', 'Username atau password salah');
-    }
+    public function login(Request $request)
+    {
+        if (!Auth::attempt($request->only('username', 'password'))) {
+            return back()->with('error', 'Username atau password salah');
+        }
 
-    $role = auth()->user()->role->role_name;
+        $user = Auth::user();
 
-    if ($role == 'admin') {
-        return redirect()->route('contents.dashboard'); // pakai named route
-    } else {
-        return redirect()->route('operator.dashboard');
+        if (!$user) {
+            return redirect('/login');
+        }
+
+        $role = $user->role->role_name ?? null;
+
+        if ($role == 'admin') {
+            return redirect()->route('contents.admin.dashboard'); // pakai named route
+        } else {
+            return redirect()->route('operator.dashboard');
+        }
     }
-}
 
     public function logout()
     {

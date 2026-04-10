@@ -40,15 +40,16 @@ class DashboardController extends Controller
             ->groupBy('month')
             ->orderBy('month')
             ->get();
-
+            
         // Distribusi kategori
         $categoryStats = DB::table('products')
             ->join('categories', 'products.category_id', '=', 'categories.id')
             ->select('categories.name', DB::raw('COUNT(products.id) as total'))
+            ->where('products.is_deleted', 0)
             ->groupBy('categories.name')
             ->get();
 
-        return view('contents.dashboard', compact(
+        return view('contents.admin.dashboard', compact(
             'totalProducts',
             'totalCategories',
             'totalUsers',
