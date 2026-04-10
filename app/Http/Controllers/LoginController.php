@@ -21,7 +21,7 @@ public function login(Request $request)
     $role = auth()->user()->role->role_name;
 
     if ($role == 'admin') {
-        return redirect('/admin/dashboard');
+        return redirect('/contents/dashboard');
     } else {
         return redirect('/operator/dashboard');
     }
