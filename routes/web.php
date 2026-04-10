@@ -2,22 +2,43 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\CategoryController;
 
-Route::get('/', [LoginController::class, 'showLoginForm']);
+// LOGIN
+Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/', [LoginController::class, 'login']);
 
-Route::prefix('admin')->middleware(['auth','role:admin'])->group(function(){
-    Route::get('/dashboard', function () {
-        return view('admin.dashboard');
-    });
+// ADMIN
+Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
+
+    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
+
+    Route::view('/manage-admin', 'admin.manage-admin')->name('admin.manage-admin');
+
+    Route::view('/users', 'admin.users')->name('admin.users');
+
+    Route::get('/categories', [CategoryController::class, 'index'])
+        ->name('admin.categories');
+
+    Route::post('/categories', [CategoryController::class, 'store'])
+        ->name('admin.categories.store');
+
+    Route::put('/categories/{id}', [CategoryController::class, 'update'])
+        ->name('admin.categories.update');
+
+    Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])
+        ->name('admin.categories.destroy');
+
+    Route::view('/reports', 'admin.reports')->name('admin.reports');
 });
 
-Route::prefix('operator')->middleware(['auth','role:operator'])->group(function(){
+// OPERATOR
+Route::prefix('operator')->middleware(['auth', 'role:operator'])->group(function () {
     Route::get('/dashboard', function () {
         return view('operator.dashboard');
     });
 });
 
-Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
-
+// LOGOUT
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth');
