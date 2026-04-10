@@ -135,3 +135,14 @@ document.addEventListener('DOMContentLoaded', function() {
     initSearchAndFilter();
     initToast();
 });
+
+function confirmDelete(productId) {
+    // Cek apakah produk punya history transaksi
+    // Ini bisa dilakukan dengan AJAX atau data attribute
+    const hasHistory = confirm('Apakah Anda yakin ingin menghapus produk ini?\n\n' +
+        '⚠️ PENTING:\n' +
+        '- Jika produk memiliki history transaksi: Data akan DISEMBUNYIKAN saja\n' +
+        '- Jika tidak memiliki history: Data akan DIHAPUS PERMANEN');
+    
+    return hasHistory;
+}
