@@ -12,25 +12,25 @@ Route::post('/', [LoginController::class, 'login']);
 // ADMIN
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
 
-    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('contents.dashboard');
 
     Route::view('/manage-admin', 'admin.manage-admin')->name('admin.manage-admin');
 
     Route::view('/users', 'admin.users')->name('admin.users');
 
     Route::get('/categories', [CategoryController::class, 'index'])
-        ->name('admin.categories');
+        ->name('contents.categories');
 
     Route::post('/categories', [CategoryController::class, 'store'])
-        ->name('admin.categories.store');
+        ->name('contents.categories.store');
 
     Route::put('/categories/{id}', [CategoryController::class, 'update'])
-        ->name('admin.categories.update');
+        ->name('contents.categories.update');
 
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])
-        ->name('admin.categories.destroy');
+        ->name('contents.categories.destroy');
 
-    Route::view('/reports', 'admin.reports')->name('admin.reports');
+    Route::view('/reports', 'contents.reports')->name('contents.reports');
 });
 
 // OPERATOR
@@ -42,3 +42,8 @@ Route::prefix('operator')->middleware(['auth', 'role:operator'])->group(function
 
 // LOGOUT
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth');
+
+
+Route::get('/content', function () {
+    return view('contents.dashboard');
+});

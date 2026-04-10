@@ -48,7 +48,7 @@ class DashboardController extends Controller
             ->groupBy('categories.name')
             ->get();
 
-        return view('admin.dashboard', compact(
+        return view('contents.dashboard', compact(
             'totalProducts',
             'totalCategories',
             'totalUsers',
