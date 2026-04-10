@@ -25,7 +25,7 @@ class ProductController extends Controller
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('product_code', 'like', "%{$search}%");
+                    ->orWhere('product_code', 'like', "%{$search}%");
             });
         }
 
@@ -36,8 +36,8 @@ class ProductController extends Controller
 
         // 📦 Pagination
         $products = $query->orderBy('created_at', 'desc')
-                          ->paginate(10)
-                          ->withQueryString();
+            ->paginate(10)
+            ->withQueryString();
 
         // Pastikan data yang dikirim tidak null
         $categories = Category::all() ?? collect();
@@ -54,9 +54,9 @@ class ProductController extends Controller
         // VALIDASI - Hapus 'product_code' dari validasi
         $request->validate([
             // 'product_code' dihapus karena akan di-generate otomatis
-            'name'         => 'required|string|max:255',
-            'category_id'  => 'required|exists:categories,id',
-            'image'        => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         // 📸 Upload image
@@ -70,12 +70,12 @@ class ProductController extends Controller
 
         $product = Product::create([
             'product_code' => $productCode, // ← Pakai hasil generate
-            'name'         => $request->name,
-            'category_id'  => $request->category_id,
-            'image'        => $imagePath,
-            'is_deleted'   => false,
-            'created_by'   => Auth::id(),
-            'updated_by'   => Auth::id(),
+            'name' => $request->name,
+            'category_id' => $request->category_id,
+            'image' => $imagePath,
+            'is_deleted' => false,
+            'created_by' => Auth::id(),
+            'updated_by' => Auth::id(),
         ]);
 
         return redirect()
@@ -94,9 +94,9 @@ class ProductController extends Controller
                 'string',
                 Rule::unique('products', 'product_code')->ignore($product->id),
             ],
-            'name'        => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'image'       => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
         $imagePath = $product->image;
@@ -112,10 +112,10 @@ class ProductController extends Controller
 
         $product->update([
             'product_code' => $request->product_code,
-            'name'         => $request->name,
-            'category_id'  => $request->category_id,
-            'image'        => $imagePath,
-            'updated_by'   => Auth::id(),
+            'name' => $request->name,
+            'category_id' => $request->category_id,
+            'image' => $imagePath,
+            'updated_by' => Auth::id(),
         ]);
 
         return redirect()
@@ -124,17 +124,35 @@ class ProductController extends Controller
     }
 
     /**
-     * Soft delete the specified product
+     * Soft delete or hard delete the specified product based on transaction history
      */
     public function destroy(Product $product)
     {
-        $product->update([
-            'is_deleted' => true,
-            'updated_by' => Auth::id(),
-        ]);
+        // Cek apakah produk memiliki history transaksi stok
+        $hasTransactionHistory = $product->stockTransactions()->exists();
+
+        if ($hasTransactionHistory) {
+            // Jika ada history transaksi, lakukan soft delete (hanya sembunyikan)
+            $product->update([
+                'is_deleted' => true,
+                'updated_by' => Auth::id(),
+            ]);
+
+            $message = 'Produk berhasil disembunyikan! (Memiliki history transaksi)';
+        } else {
+            // Jika tidak ada history transaksi, hapus permanent dari database
+            // Hapus file gambar jika ada
+            if ($product->image && Storage::disk('public')->exists($product->image)) {
+                Storage::disk('public')->delete($product->image);
+            }
+
+            $product->forceDelete();
+
+            $message = 'Produk berhasil dihapus permanent dari database!';
+        }
 
         return redirect()
             ->route('operator.dashboard')
-            ->with('success', 'Produk berhasil dihapus!');
+            ->with('success', $message);
     }
 }
