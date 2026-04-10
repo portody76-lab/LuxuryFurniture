@@ -78,62 +78,96 @@
 @endsection
 
 @section('scripts')
-<script>
-    // ========== LOGIKA ASLI, TIDAK DIUBAH SATUPUN ==========
-    const productData = @json($productStats ?? []);
-    const userData = @json($userStats ?? []);
-    const categoryData = @json($categoryStats ?? []);
+    <script>
+        // ========== LOGIKA ASLI, TIDAK DIUBAH SATUPUN ==========
+        const productData = @json($productStats ?? []);
+        const userData = @json($userStats ?? []);
+        const categoryData = @json($categoryStats ?? []);
 
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
-    // PRODUCT CHART
-    new Chart(document.getElementById('productChart'), {
-        type: 'bar',
-        data: {
-            labels: productData.map(d => {
-                const m = parseInt(d.month);
-                return months[m - 1] ?? '-';
-            }),
-            datasets: [{
-                data: productData.map(d => d.total ?? 0)
-            }]
-        }
-    });
+        // PRODUCT CHART
+        new Chart(document.getElementById('productChart'), {
+            type: 'bar',
+            data: {
+                labels: productData.map(d => {
+                    const m = parseInt(d.month);
+                    return months[m - 1] ?? '-';
+                }),
+                datasets: [{
+                    data: productData.map(d => d.total ?? 0)
+                }]
+            }
+        });
 
-    // USER CHART (FIXED)
-    new Chart(document.getElementById('userChart'), {
-        type: 'line',
-        data: {
-            labels: userData.map(d => {
-                const m = parseInt(d.month);
-                return months[m - 1] ?? '-';
-            }),
-            datasets: [{
-                data: userData.map(d => d.total ?? 0)
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: {
-                        stepSize: 1,
-                        precision: 0
+        // USER CHART (FIXED)
+        new Chart(document.getElementById('userChart'), {
+            type: 'line',
+            data: {
+                labels: userData.map(d => {
+                    const m = parseInt(d.month);
+                    return months[m - 1] ?? '-';
+                }),
+                datasets: [{
+                    data: userData.map(d => d.total ?? 0)
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1,
+                            precision: 0
+                        }
                     }
                 }
             }
-        }
-    });
+        });
 
-    // CATEGORY CHART
-    new Chart(document.getElementById('categoryChart'), {
-        type: 'pie',
-        data: {
-            labels: categoryData.map(d => d.name ?? '-'),
-            datasets: [{
-                data: categoryData.map(d => d.total ?? 0)
-            }]
-        }
-    });
-</script>
+        // CATEGORY CHART
+        const categoryColors = [
+            '#b68b40', '#c9a87b', '#8faa7b', '#ab8e64',
+            '#d4b896', '#7a9e6e', '#e2c99a', '#6b8f5e',
+            '#f0dfc0', '#5a7a50'
+        ];
+
+        new Chart(document.getElementById('categoryChart'), {
+            type: 'pie',
+            data: {
+                labels: categoryData.map(d => d.name ?? '-'),
+                datasets: [{
+                    data: categoryData.map(d => d.total ?? 0),
+                    backgroundColor: categoryColors.slice(0, categoryData.length),
+                    borderColor: '#fff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                size: 12
+                            },
+                            padding: 12,
+                            usePointStyle: true
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const value = context.parsed;
+                                const pct = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                return ` ${context.label}: ${value} produk (${pct}%)`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
 @endsection

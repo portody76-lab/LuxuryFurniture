@@ -11,27 +11,27 @@ Route::post('/', [LoginController::class, 'login']);
 
 // ADMIN
 Route::prefix('contents')->middleware(['auth', 'role:admin'])->group(function () {
-        Route::get('contents.dashboard', [DashboardController::class, 'index'])
-        ->name('contents.dashboard');
-    Route::get('contents.dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('contents.dashboard');
+        Route::get('contents.admin.dashboard', [DashboardController::class, 'index'])
+        ->name('contents.admin.dashboard');
+    Route::get('contents.admin.dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('contents.admin.dashboard');
 
-    Route::view('/manage-admin', 'admin.manage-admin')->name('admin.manage-admin');
+    Route::view('/manage-admin', 'contents.admin.manage-admin')->name('contents.admin.manage-admin');
 
-    Route::view('/users', 'admin.users')->name('admin.users');
+    Route::view('/users', 'contents.admin.users')->name('contents.admin.users');
 
     Route::get('/categories', [CategoryController::class, 'index'])
-        ->name('contents.categories');
+        ->name('contents.admin.categories');
 
     Route::post('/categories', [CategoryController::class, 'store'])
-        ->name('contents.categories.store');
+        ->name('contents.admin.categories.store');
 
     Route::put('/categories/{id}', [CategoryController::class, 'update'])
-        ->name('contents.categories.update');
+        ->name('contents.admin.categories.update');
 
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])
-        ->name('contents.categories.destroy');
+        ->name('contents.admin.categories.destroy');
 
-    Route::view('/reports', 'contents.reports')->name('contents.reports');
+    Route::view('/reports', 'contents.admin.reports')->name('contents.admin.reports');
 });
 
 // OPERATOR
@@ -43,8 +43,3 @@ Route::prefix('operator')->middleware(['auth', 'role:operator'])->group(function
 
 // LOGOUT
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth');
-
-
-Route::get('/content', function () {
-    return view('contents.dashboard');
-});
