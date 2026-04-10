@@ -6,15 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class StockTransaction extends Model
 {
-    protected $table = 'stock_transactions';
-
     protected $fillable = [
         'product_id',
         'quantity',
         'type',
         'transaction_date',
         'created_by',
-        'updated_by'
+        'updated_by',
+    ];
+
+    protected $casts = [
+        'transaction_date' => 'datetime',
     ];
 
     public function product()
