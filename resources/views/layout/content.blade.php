@@ -12,14 +12,19 @@
 <body class="bg-[#f4efe3] font-sans">
 
     <div class="flex min-h-screen">
-        @include('layout.sidebar.sidebar_admin')
+        @auth
+            @if(auth()->user()->role->role_name === 'admin')
+                @include('layout.sidebar.sidebar_admin')
+            @elseif(auth()->user()->role->role_name === 'operator')
+                @include('layout.sidebar.sidebar_operator')
+            @endif
+        @endauth
 
         <div class="flex-1 p-6">
             @yield('content')
         </div>
     </div>
 
-    </div>
     @yield('scripts')
 
 </body>

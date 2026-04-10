@@ -23,22 +23,26 @@ class ProductCodeHelper
             return 'PRD-001';
         }
         
-        // Mapping nama kategori ke kode (3 huruf)
+        // Mapping dengan lowercase (case insensitive)
         $codeMapping = [
-            'Kursi' => 'KRS',
-            'Meja' => 'MJA',
-            'Lemari' => 'LMR',
-            'Sofa' => 'SFA',
-            'Rak' => 'RAK',
-            'Tempat Tidur' => 'TTD',
-            'Buffet' => 'BFT',
-            'Lampu' => 'LMP',
-            'Dekorasi' => 'DKR',
-            'Aksesoris' => 'AKS',
+            'kursi' => 'KRS',
+            'meja' => 'MJA',
+            'lemari' => 'LMR',
+            'sofa' => 'SFA',
+            'rak' => 'RAK',
+            'tempat tidur' => 'TTD',
+            'buffet' => 'BFT',
+            'lampu' => 'LMP',
+            'dekorasi' => 'DKR',
+            'aksesoris' => 'AKS',
+            'pintu' => 'PTU',
         ];
         
-        // Ambil kode dari mapping, jika tidak ada ambil 3 huruf pertama
-        $categoryCode = $codeMapping[$category->name] ?? strtoupper(substr($category->name, 0, 3));
+        // Trim dan lowercase untuk mapping
+        $categoryName = strtolower(trim($category->name));
+        
+        // Cari mapping, jika tidak ada ambil 3 huruf pertama
+        $categoryCode = $codeMapping[$categoryName] ?? strtoupper(substr($category->name, 0, 3));
         
         // Cari produk terakhir dengan kode yang sama
         $lastProduct = Product::where('product_code', 'LIKE', $categoryCode . '-%')

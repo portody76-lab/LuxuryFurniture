@@ -14,28 +14,36 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        if (!Auth::attempt($request->only('username', 'password'))) {
-            return back()->with('error', 'Username atau password salah');
+        $credentials = $request->validate([
+            'username' => 'required',
+            'password' => 'required',
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            
+            $user = Auth::user();
+            $role = $user->role->role_name ?? null;
+            
+            if ($role == 'admin') {
+                return redirect()->route('contents.admin.dashboard');
+            } else {
+                return redirect()->route('contents.operator.dashboard');
+            }
         }
 
-        $user = Auth::user();
-
-        if (!$user) {
-            return redirect('/login');
-        }
-
-        $role = $user->role->role_name ?? null;
-
-        if ($role == 'admin') {
-            return redirect()->route('contents.admin.dashboard'); // pakai named route
-        } else {
-            return redirect()->route('operator.dashboard');
-        }
+        // Kirim error message
+        return back()->withErrors([
+            'username' => 'Username atau password salah.',
+        ])->withInput($request->except('password'));
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
-        return redirect('/');
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        
+        return redirect('/')->with('success', 'Anda berhasil logout');
     }
 }
