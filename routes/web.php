@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Operator\ProductController;
+use App\Http\Controllers\Operator\StockController;
 
 // ========== LOGIN ==========
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
@@ -77,6 +78,16 @@ Route::middleware(['auth', 'role:operator'])
         // Restore
         Route::post('/operator/products/{id}/restore', [ProductController::class, 'restore'])
             ->name('products.restore');
+
+                    // ========== STOCK MANAGEMENT ==========
+        Route::get('/operator/stock', [StockController::class, 'index'])
+            ->name('stock');
+
+        Route::post('/operator/stock/add', [StockController::class, 'addStock'])
+            ->name('stock.add');
+
+        Route::post('/operator/stock/remove', [StockController::class, 'removeStock'])
+            ->name('stock.remove');
     });
 
 // ========== LOGOUT ==========
