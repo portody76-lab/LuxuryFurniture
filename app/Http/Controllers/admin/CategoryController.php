@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -16,7 +17,7 @@ class CategoryController extends Controller
     {
         $query = Category::query();
 
-        // search by id atau name
+        // search by id or name
         if ($request->filled('search')) {
             $search = $request->search;
 
@@ -26,12 +27,11 @@ class CategoryController extends Controller
             });
         }
 
-
         $categories = $query
             ->orderBy('id', 'asc')
             ->paginate(10);
 
-        return view('admin.categories', compact('categories'));
+        return view('contents.admin.categories', compact('categories'));
     }
 
     /**
@@ -53,6 +53,9 @@ class CategoryController extends Controller
             ->with('success', 'Category berhasil ditambahkan');
     }
 
+    /**
+     * UPDATE CATEGORY
+     */
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -69,28 +72,30 @@ class CategoryController extends Controller
         return back()->with('success', 'Category berhasil diupdate');
     }
 
-    /**
-     * DELETE CATEGORY (AUTO CHECK TRANSACTION)
+/**
+     * DELETE CATEGORY
+     * Hanya bisa dihapus jika TIDAK ADA produk (termasuk yang soft delete)
      */
     public function destroy($id)
     {
         $category = Category::findOrFail($id);
+        
+        // CEK APAKAH KATEGORI MEMILIKI PRODUK (TERMASUK YANG SOFT DELETE)
+        $hasProducts = Product::where('category_id', $id)->exists();
+        // exists() akan true jika ada 1 saja produk, termasuk yang is_deleted = true
 
-        // cek apakah kategori punya transaksi lewat products
-        $hasTransaction = $category->products()
-            ->whereHas('transactions')
-            ->exists();
-
-        if ($hasTransaction) {
-            // SOFT DELETE (deleted_at)
-            $category->delete();
-        } else {
-            // HARD DELETE
-            $category->forceDelete();
+        if ($hasProducts) {
+            return redirect()
+                ->back()
+                ->with('error', 'Category tidak bisa dihapus karena masih memiliki produk! Hapus atau pindahkan produk terlebih dahulu.');
         }
+
+        // Hapus kategori (HARD DELETE karena tidak pakai soft delete)
+        $category->delete();
 
         return redirect()
             ->back()
             ->with('success', 'Category berhasil dihapus');
     }
+
 }

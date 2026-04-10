@@ -2,44 +2,84 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
-use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Operator\ProductController;
 
-// LOGIN
+// ========== LOGIN ==========
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/', [LoginController::class, 'login']);
 
-// ADMIN
-Route::prefix('contents')->middleware(['auth', 'role:admin'])->group(function () {
-        Route::get('contents.admin.dashboard', [DashboardController::class, 'index'])
-        ->name('contents.admin.dashboard');
-    Route::get('contents.admin.dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('contents.admin.dashboard');
+// ========== ADMIN (Role: admin) ==========
+Route::middleware(['auth', 'role:admin'])
+    ->prefix('contents')
+    ->name('contents.admin.')
+    ->group(function () {
 
-    Route::view('/manage-admin', 'contents.admin.manage-admin')->name('contents.admin.manage-admin');
+        // Dashboard Admin
+        Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])
+            ->name('dashboard');
 
-    Route::view('/users', 'contents.admin.users')->name('contents.admin.users');
+        // Manage Admin
+        Route::view('/manage-admin', 'contents.admin.manage-admin')
+            ->name('manage-admin');
 
-    Route::get('/categories', [CategoryController::class, 'index'])
-        ->name('contents.admin.categories');
+        // Users
+        Route::view('/users', 'contents.admin.users')
+            ->name('users');
 
-    Route::post('/categories', [CategoryController::class, 'store'])
-        ->name('contents.admin.categories.store');
+        // Categories
+        Route::get('/categories', [CategoryController::class, 'index'])
+            ->name('categories');
 
-    Route::put('/categories/{id}', [CategoryController::class, 'update'])
-        ->name('contents.admin.categories.update');
+        Route::post('/categories', [CategoryController::class, 'store'])
+            ->name('categories.store');
 
-    Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])
-        ->name('contents.admin.categories.destroy');
+        Route::put('/categories/{id}', [CategoryController::class, 'update'])
+            ->name('categories.update');
 
-    Route::view('/reports', 'contents.admin.reports')->name('contents.admin.reports');
-});
+        Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])
+            ->name('categories.destroy');
 
-// OPERATOR
-Route::prefix('operator')->middleware(['auth', 'role:operator'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('operator.dashboard');
+        // Reports
+        Route::view('/reports', 'contents.admin.reports')
+            ->name('reports');
     });
-});
 
-// LOGOUT
-Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth');
+// ========== OPERATOR (Role: operator) ==========
+Route::middleware(['auth', 'role:operator'])
+    ->prefix('contents')
+    ->name('contents.operator.')
+    ->group(function () {
+
+        // Dashboard Operator
+        Route::get('/operator/dashboard', [DashboardController::class, 'operatorDashboard'])
+            ->name('dashboard');
+
+        // Product Management
+        Route::get('/operator/productmanage', [ProductController::class, 'index'])
+            ->name('productmanage');
+
+        // Trash
+        Route::get('/operator/productmanage/trash', [ProductController::class, 'trash'])
+            ->name('productmanage.trash');
+
+        // Product CRUD
+        Route::post('/operator/products', [ProductController::class, 'store'])
+            ->name('products.store');
+
+        Route::put('/operator/products/{id}', [ProductController::class, 'update'])
+            ->name('products.update');
+
+        Route::delete('/operator/products/{id}', [ProductController::class, 'destroy'])
+            ->name('products.destroy');
+
+        // Restore
+        Route::post('/operator/products/{id}/restore', [ProductController::class, 'restore'])
+            ->name('products.restore');
+    });
+
+// ========== LOGOUT ==========
+Route::post('/logout', [LoginController::class, 'logout'])
+    ->middleware('auth')
+    ->name('logout');
