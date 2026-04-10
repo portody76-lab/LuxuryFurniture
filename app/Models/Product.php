@@ -11,6 +11,7 @@ class Product extends Model
         'category_id',
         'name',
         'image',
+        'stock',
         'is_deleted',
         'created_by',
         'updated_by',

@@ -114,7 +114,7 @@ class ProductController extends Controller
             $product->is_deleted = true;
             $product->save();
 
-            $message = 'Produk memiliki history transaksi, hanya disembunyikan (soft delete).';
+            $message = 'Produk berhasi di hapus di tampilan';
         } else {
             if ($product->image && file_exists(storage_path('app/public/' . $product->image))) {
                 unlink(storage_path('app/public/' . $product->image));
@@ -122,7 +122,7 @@ class ProductController extends Controller
 
             $product->delete();
 
-            $message = 'Produk berhasil dihapus permanen karena belum pernah bertransaksi.';
+            $message = 'Produk berhasil dihapus permanen';
         }
 
         return redirect()->route('contents.operator.productmanage')
