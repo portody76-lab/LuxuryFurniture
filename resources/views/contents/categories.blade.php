@@ -29,7 +29,7 @@
       </div>
 
       <div class="space-y-2">
-        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 p-3 rounded-lg text-[#2c2b26] hover:bg-white/70 transition">
+        <a href="{{ route('contents.dashboard') }}" class="flex items-center gap-3 p-3 rounded-lg text-[#2c2b26] hover:bg-white/70 transition">
           <i class="fas fa-tachometer-alt w-5"></i> Dashboard
         </a>
         <a href="{{ route('admin.manage-admin') }}" class="flex items-center gap-3 p-3 rounded-lg text-[#2c2b26] hover:bg-white/70 transition">

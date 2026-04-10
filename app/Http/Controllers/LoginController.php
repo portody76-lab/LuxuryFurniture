@@ -21,9 +21,9 @@ public function login(Request $request)
     $role = auth()->user()->role->role_name;
 
     if ($role == 'admin') {
-        return redirect('/contents/dashboard');
+        return redirect()->route('contents.dashboard'); // pakai named route
     } else {
-        return redirect('/operator/dashboard');
+        return redirect()->route('operator.dashboard');
     }
 }
 

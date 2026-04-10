@@ -10,9 +10,10 @@ Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/', [LoginController::class, 'login']);
 
 // ADMIN
-Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
-
-    Route::get('/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('contents.dashboard');
+Route::prefix('contents')->middleware(['auth', 'role:admin'])->group(function () {
+        Route::get('contents.dashboard', [DashboardController::class, 'index'])
+        ->name('contents.dashboard');
+    Route::get('contents.dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('contents.dashboard');
 
     Route::view('/manage-admin', 'admin.manage-admin')->name('admin.manage-admin');
 
