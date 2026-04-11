@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Operator\ProductController;
@@ -92,6 +93,15 @@ Route::middleware(['auth', 'role:operator'])
 
         Route::post('/operator/stock/remove', [StockController::class, 'removeStock'])
             ->name('stock.remove');
+    });
+
+// ========== REPORTS (Gabung Admin & Operator) ==========
+Route::middleware(['auth'])
+    ->group(function () {
+        Route::get('/contents/reports', [App\Http\Controllers\ReportController::class, 'index'])
+            ->name('contents.reports');
+        Route::get('/contents/reports/download', [App\Http\Controllers\ReportController::class, 'downloadPdf'])
+            ->name('contents.reports.download');
     });
 
 // ========== LOGOUT ==========

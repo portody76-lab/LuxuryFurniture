@@ -3,8 +3,8 @@
 
     <div>
         <div class="flex justify-center mb-10 mt-4">
-            <img src="{{ asset('images/Logo LF.png') }}" alt="Logo Perusahaan"
-                class="w-64 h-auto object-contain" onerror="this.src='{{ asset('images/default-logo.png') }}'">
+            <img src="{{ asset('images/Logo LF.png') }}" alt="Logo Perusahaan" class="w-64 h-auto object-contain"
+                onerror="this.src='{{ asset('images/default-logo.png') }}'">
         </div>
 
         <nav class="space-y-2">
@@ -28,8 +28,8 @@
                 <i class="fas fa-tags w-5"></i> Category
             </a>
 
-            <a href="{{ route('contents.admin.reports') }}"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.admin.reports') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
+            <a href="{{ route('contents.reports') }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.reports') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
                 <i class="fas fa-chart-line w-5"></i> Report
             </a>
         </nav>
