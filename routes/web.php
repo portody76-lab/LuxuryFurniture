@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Operator\ProductController;
 use App\Http\Controllers\Operator\StockController;
 
@@ -21,9 +22,15 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])
             ->name('dashboard');
 
-        // Manage Admin
-        Route::view('/manage-admin', 'contents.admin.manage-admin')
+        // MANAGE ACCOUNT ADMIN (tambahkan ini)
+        Route::get('/manage-admin', [App\Http\Controllers\Admin\AccountController::class, 'index'])
             ->name('manage-admin');
+
+        Route::put('/manage-admin/username', [App\Http\Controllers\Admin\AccountController::class, 'updateUsername'])
+            ->name('manage-admin.update-username');
+
+        Route::put('/manage-admin/password', [App\Http\Controllers\Admin\AccountController::class, 'updatePassword'])
+            ->name('manage-admin.update-password');
 
         // Users
         Route::view('/users', 'contents.admin.users')
@@ -32,13 +39,10 @@ Route::middleware(['auth', 'role:admin'])
         // Categories
         Route::get('/categories', [CategoryController::class, 'index'])
             ->name('categories');
-
         Route::post('/categories', [CategoryController::class, 'store'])
             ->name('categories.store');
-
         Route::put('/categories/{id}', [CategoryController::class, 'update'])
             ->name('categories.update');
-
         Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])
             ->name('categories.destroy');
 
@@ -79,7 +83,7 @@ Route::middleware(['auth', 'role:operator'])
         Route::post('/operator/products/{id}/restore', [ProductController::class, 'restore'])
             ->name('products.restore');
 
-                    // ========== STOCK MANAGEMENT ==========
+        // ========== STOCK MANAGEMENT ==========
         Route::get('/operator/stock', [StockController::class, 'index'])
             ->name('stock');
 
