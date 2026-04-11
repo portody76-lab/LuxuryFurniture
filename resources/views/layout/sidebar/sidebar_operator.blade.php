@@ -13,8 +13,8 @@
                 <i class="fas fa-tachometer-alt w-5"></i> Dashboard
             </a>
 
-            <a href="#"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.operator.manage-account') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
+            <a href="{{ route('manage-account') }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.manage-account') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
                 <i class="fas fa-user-cog w-5"></i> Manage Account Operator
             </a>
 

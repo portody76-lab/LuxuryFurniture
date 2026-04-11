@@ -4,8 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Operator\ProductController;
 use App\Http\Controllers\Operator\StockController;
 
@@ -23,19 +24,13 @@ Route::middleware(['auth', 'role:admin'])
         Route::get('/admin/dashboard', [DashboardController::class, 'adminDashboard'])
             ->name('dashboard');
 
-        // MANAGE ACCOUNT ADMIN (tambahkan ini)
-        Route::get('/manage-admin', [App\Http\Controllers\Admin\AccountController::class, 'index'])
-            ->name('manage-admin');
-
-        Route::put('/manage-admin/username', [App\Http\Controllers\Admin\AccountController::class, 'updateUsername'])
-            ->name('manage-admin.update-username');
-
-        Route::put('/manage-admin/password', [App\Http\Controllers\Admin\AccountController::class, 'updatePassword'])
-            ->name('manage-admin.update-password');
-
         // Users
-        Route::view('/users', 'contents.admin.users')
-            ->name('users');
+        Route::get('/users', [UserController::class, 'index'])->name('users');
+        Route::post('/users', [UserController::class, 'store'])->name('users.store');
+        Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+        Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+        Route::put('/users/{id}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
+        Route::put('/users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
 
         // Categories
         Route::get('/categories', [CategoryController::class, 'index'])
@@ -95,13 +90,23 @@ Route::middleware(['auth', 'role:operator'])
             ->name('stock.remove');
     });
 
-// ========== REPORTS (Gabung Admin & Operator) ==========
+// ========== REPORTS dan MANAGE ACCOUNT (Gabung Admin & Operator) ==========
 Route::middleware(['auth'])
     ->group(function () {
+
+        // REPORTS
         Route::get('/contents/reports', [App\Http\Controllers\ReportController::class, 'index'])
             ->name('contents.reports');
         Route::get('/contents/reports/download', [App\Http\Controllers\ReportController::class, 'downloadPdf'])
             ->name('contents.reports.download');
+
+        // MANAGE ACCOUNT
+        Route::get('/contents/manage-account', [AccountController::class, 'index'])
+            ->name('manage-account');
+        Route::put('/contents/manage-account/username', [AccountController::class, 'updateUsername'])
+            ->name('manage-account.update-username');
+        Route::put('/contents/manage-account/password', [AccountController::class, 'updatePassword'])
+            ->name('manage-account.update-password');
     });
 
 // ========== LOGOUT ==========
