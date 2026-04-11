@@ -21,10 +21,18 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            
+
             $user = Auth::user();
             $role = $user->role->role_name ?? null;
-            
+
+            // ========== CEK STATUS AKUN ==========
+            if ($user->status == 0) {
+                Auth::logout();
+                return back()->withErrors([
+                    'username' => 'Status akun Anda nonaktif. Hubungi admin segera!',
+                ])->onlyInput('username');
+            }
+
             if ($role == 'admin') {
                 return redirect()->route('contents.admin.dashboard');
             } else {
@@ -43,7 +51,7 @@ class LoginController extends Controller
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        
+
         return redirect('/')->with('success', 'Anda berhasil logout');
     }
 }
