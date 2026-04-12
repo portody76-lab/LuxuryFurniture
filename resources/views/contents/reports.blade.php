@@ -9,7 +9,6 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {{-- FILTER PANEL --}}
         <div class="bg-white rounded-2xl p-6 shadow h-fit">
             <h3 class="font-bold text-lg text-gray-800 mb-4 flex items-center gap-2">
                 <i class="fas fa-filter text-[#c9973a]"></i> Report Filter
@@ -75,7 +74,6 @@
                 @endif
             </div>
 
-            {{-- HEADER UNTUK PRINT --}}
             <div class="print-header text-center mb-6 hidden print:block">
                 <img src="{{ asset('images/Logo LF.png') }}" alt="Logo" class="w-32 mx-auto mb-2">
                 <h2 class="text-xl font-bold">LUXURY FURNITURE</h2>
@@ -87,7 +85,6 @@
                 <hr class="my-3">
             </div>
 
-            {{-- KONDISI: BELUM PILIH TIPE LAPORAN --}}
             @if(!$reportType)
                 <div class="text-center py-12">
                     <div class="w-20 h-20 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
@@ -97,7 +94,6 @@
                     <p class="text-gray-400 text-sm mt-1">Silahkan pilih tipe laporan terlebih dahulu</p>
                 </div>
 
-            {{-- KONDISI: SUDAH PILIH TAPI DATA KOSONG --}}
             @elseif(isset($reportData) && count($reportData) == 0)
                 <div class="text-center py-12">
                     <div class="w-20 h-20 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
@@ -107,7 +103,6 @@
                     <p class="text-gray-400 text-sm mt-1">Tidak ada data untuk periode yang dipilih</p>
                 </div>
 
-            {{-- KONDISI: ADA DATA --}}
             @else
                 <div class="overflow-x-auto">
                     <table class="w-full">
@@ -176,7 +171,6 @@
                     Total data: {{ count($reportData) }} record
                 </div>
 
-                {{-- FOOTER UNTUK PRINT --}}
                 <div class="print-footer text-center text-xs text-gray-500 mt-6 hidden print:block">
                     <hr class="my-3">
                     <p>Dicetak pada: {{ date('d/m/Y H:i:s') }}</p>

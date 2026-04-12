@@ -3,23 +3,21 @@
 @section('title', 'Product Management')
 
 @section('content')
-    {{-- Header --}}
     <div class="bg-white p-6 rounded-2xl mb-6 shadow-md border border-[#e7ddcf]">
         <h2 class="text-2xl font-bold text-gray-800">Product Management</h2>
         <p class="text-[#8b7a66] mt-1">Kelola produk furniture Anda</p>
     </div>
 
-    {{-- Toast Notification --}}
     @if(session('success') || session('error'))
         <div class="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
-            <div id="toast-box" class="px-8 py-4 rounded-2xl shadow-2xl text-white text-sm font-semibold
-                                {{ session('success') ? 'bg-green-500' : 'bg-red-500' }}">
+            <div id="toast-box"
+                class="px-8 py-4 rounded-2xl shadow-2xl text-white text-sm font-semibold
+                                                                        {{ session('success') ? 'bg-green-500' : 'bg-red-500' }}">
                 {{ session('success') ?? session('error') }}
             </div>
         </div>
     @endif
 
-    {{-- TOP CARDS --}}
     <div class="grid grid-cols-2 gap-6 mb-6">
         <div class="bg-white rounded-2xl p-5 flex items-center gap-5 shadow">
             <div class="w-14 h-14 rounded-full bg-[#c9973a] flex items-center justify-center">
@@ -90,7 +88,6 @@
             </div>
         </div>
 
-        {{-- Search Active Indicator --}}
         @if(request('search'))
             <div class="mb-4 flex items-center gap-2">
                 <span class="text-sm text-[#7a5c1e]">Menampilkan hasil untuk:</span>
@@ -152,23 +149,18 @@
                                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                                             </svg>
                                         </button>
-                                        <form method="POST" action="{{ route('contents.operator.products.destroy', $p->id) }}"
-                                            class="inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                class="bg-red-500 hover:bg-red-700 text-white p-2 rounded-lg transition-colors"
-                                                onclick="return confirm('Yakin ingin menghapus produk {{ $productName }}?')">
-                                                <svg width="14" height="14" fill="none" stroke="white" stroke-width="2.5"
-                                                    viewBox="0 0 24 24">
-                                                    <polyline points="3 6 5 6 21 6" />
-                                                    <path d="M19 6l-1 14H6L5 6" />
-                                                    <path d="M10 11v6" />
-                                                    <path d="M14 11v6" />
-                                                    <path d="M9 6V4h6v2" />
-                                                </svg>
-                                            </button>
-                                        </form>
+                                        <button type="button"
+                                            onclick="openDeleteModal({{ $p->id }}, '{{ addslashes($productName) }}')"
+                                            class="bg-red-500 hover:bg-red-700 text-white p-2 rounded-lg transition-colors">
+                                            <svg width="14" height="14" fill="none" stroke="white" stroke-width="2.5"
+                                                viewBox="0 0 24 24">
+                                                <polyline points="3 6 5 6 21 6" />
+                                                <path d="M19 6l-1 14H6L5 6" />
+                                                <path d="M10 11v6" />
+                                                <path d="M14 11v6" />
+                                                <path d="M9 6V4h6v2" />
+                                            </svg>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -356,6 +348,36 @@
             </div>
         </div>
     </div>
+    {{-- MODAL DELETE CONFIRMATION --}}
+    <div id="modal-delete" class="modal-overlay">
+        <div class="modal-animation bg-white rounded-3xl p-8 w-full max-w-md mx-4 shadow-2xl">
+            <div class="text-center mb-4">
+                <div class="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-3">
+                    <i class="fas fa-trash-alt text-red-500 text-2xl"></i>
+                </div>
+                <span class="bg-red-100 text-red-600 text-xs font-bold tracking-wider px-4 py-1 rounded-full">
+                    PERINGATAN
+                </span>
+            </div>
+            <h2 class="font-playfair text-2xl font-bold text-center text-[#1a1208] mb-3">Hapus Produk</h2>
+            <p class="text-center text-gray-500 mb-6" id="delete-message">
+                Yakin ingin menghapus produk <span id="delete-product-name" class="font-semibold text-gray-800"></span>?
+            </p>
+
+            <form id="form-delete" method="POST" class="flex gap-3">
+                @csrf
+                @method('DELETE')
+                <button type="button" onclick="closeModal('modal-delete')"
+                    class="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-600 hover:bg-gray-50 transition font-medium">
+                    Batal
+                </button>
+                <button type="submit"
+                    class="flex-1 px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl transition font-medium">
+                    <i class="fas fa-trash-alt mr-2"></i> Ya, Hapus
+                </button>
+            </form>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
@@ -438,6 +460,7 @@
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
+        // Modal functions
         function openModal(modalId) {
             document.getElementById(modalId).style.display = 'flex';
             document.body.style.overflow = 'hidden';
@@ -446,6 +469,23 @@
             document.getElementById(modalId).style.display = 'none';
             document.body.style.overflow = 'auto';
         }
+
+        // Delete modal functions
+        let deleteFormAction = '';
+
+        function openDeleteModal(productId, productName) {
+            deleteFormAction = '/contents/operator/products/' + productId;
+            document.getElementById('delete-product-name').innerText = productName;
+            openModal('modal-delete');
+        }
+
+        document.getElementById('form-delete')?.addEventListener('submit', function (e) {
+            e.preventDefault();
+            this.action = deleteFormAction;
+            this.submit();
+        });
+
+        // Preview image function
         function previewImage(input, previewId, labelId) {
             const preview = document.getElementById(previewId);
             const label = document.getElementById(labelId);
@@ -459,6 +499,8 @@
                 reader.readAsDataURL(input.files[0]);
             }
         }
+
+        // Open edit modal with data
         function openEditModal(id, code, name, categoryId) {
             const form = document.getElementById('form-edit');
             form.action = "{{ route('contents.operator.products.update', ['id' => ':id']) }}".replace(':id', id);
@@ -469,6 +511,8 @@
             document.getElementById('edit-file-label').textContent = 'No file chosen';
             openModal('modal-edit');
         }
+
+        // Search functionality
         document.getElementById('search-button')?.addEventListener('click', function () {
             const search = document.getElementById('search-input').value;
             const category = document.getElementById('category-filter').value;
@@ -479,9 +523,11 @@
             if (params.length > 0) url += '?' + params.join('&');
             window.location.href = url;
         });
+
         document.getElementById('search-input')?.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') document.getElementById('search-button').click();
         });
+
         document.getElementById('category-filter')?.addEventListener('change', function () {
             const search = document.getElementById('search-input').value;
             const category = this.value;
@@ -492,10 +538,12 @@
             if (params.length > 0) url += '?' + params.join('&');
             window.location.href = url;
         });
+
         setTimeout(function () {
             const toast = document.getElementById('toast-box');
             if (toast) setTimeout(() => toast.style.visibility = 'hidden', 3000);
         }, 100);
+
         window.onclick = function (event) {
             if (event.target.classList.contains('modal-overlay')) {
                 event.target.style.display = 'none';

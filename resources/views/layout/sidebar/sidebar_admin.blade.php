@@ -14,8 +14,8 @@
             </a>
 
             <a href="{{ route('manage-account') }}"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.admin.manage-admin') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
-                <i class="fas fa-user-cog w-5"></i> Manage Account Admin
+                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('manage-account') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
+                <i class="fas fa-user-cog w-5"></i> Manage Account
             </a>
 
             <a href="{{ route('contents.admin.users') }}"

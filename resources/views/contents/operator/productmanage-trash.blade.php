@@ -17,7 +17,7 @@
     @if(session('success') || session('error'))
         <div class="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
             <div id="toast-box" class="px-8 py-4 rounded-2xl shadow-2xl text-white text-sm font-semibold
-                                {{ session('success') ? 'bg-green-500' : 'bg-red-500' }}">
+                                        {{ session('success') ? 'bg-green-500' : 'bg-red-500' }}">
                 {{ session('success') ?? session('error') }}
             </div>
         </div>
@@ -105,22 +105,19 @@
                                 </td>
                                 <td class="px-3 py-3 text-sm text-gray-400">{{ $stockValue }}</td>
                                 <td class="px-3 py-3 text-center">
-                                    <form method="POST" action="{{ route('contents.operator.products.restore', $p->id) }}"
-                                        class="inline">
-                                        @csrf
-                                        <button type="submit"
-                                            class="bg-[#c9973a] hover:bg-[#e8d5a8] text-white p-2 rounded-lg transition-colors"
-                                            title="Restore">
-                                            <i class="fas fa-trash-restore"></i>
-                                        </button>
-                                    </form>
+                                    <button type="button"
+                                        onclick="openRestoreModal({{ $productId }}, '{{ addslashes($productName) }}')"
+                                        class="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition-colors"
+                                        title="Restore">
+                                        <i class="fas fa-trash-restore"></i>
+                                    </button>
                                 </td>
                             </tr>
                         @endforeach
                     @else
                         <tr>
-                            <td colspan="6" class="px-4 py-8 text-center text-gray-500"><i
-                                    class="fas fa-trash-alt text-4xl text-gray-300 mb-2 block"></i>
+                            <td colspan="6" class="px-4 py-8 text-center text-gray-500">
+                                <i class="fas fa-trash-alt text-4xl text-gray-300 mb-2 block"></i>
                                 <p>Tidak ada produk di trash</p>
                             </td>
                         </tr>
@@ -132,10 +129,71 @@
             <div class="mt-6">{{ $products->links() }}</div>
         @endif
     </div>
+
+    {{-- MODAL RESTORE CONFIRMATION --}}
+    <div id="modal-restore" class="modal-overlay">
+        <div class="modal-animation bg-white rounded-3xl p-8 w-full max-w-md mx-4 shadow-2xl">
+            <div class="text-center mb-4">
+                <div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-3">
+                    <i class="fas fa-trash-restore text-green-500 text-2xl"></i>
+                </div>
+                <span class="bg-green-100 text-green-600 text-xs font-bold tracking-wider px-4 py-1 rounded-full">
+                    RESTORE PRODUK
+                </span>
+            </div>
+            <h2 class="font-playfair text-2xl font-bold text-center text-[#1a1208] mb-3">Restore Produk</h2>
+            <p class="text-center text-gray-500 mb-6">
+                Yakin ingin mengembalikan produk <span id="restore-product-name"
+                    class="font-semibold text-gray-800"></span>?
+            </p>
+
+            <form id="form-restore" method="POST" class="flex gap-3">
+                @csrf
+                <button type="button" onclick="closeModal('modal-restore')"
+                    class="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-600 hover:bg-gray-50 transition font-medium">
+                    Batal
+                </button>
+                <button type="submit"
+                    class="flex-1 px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl transition font-medium">
+                    <i class="fas fa-trash-restore mr-2"></i> Ya, Restore
+                </button>
+            </form>
+        </div>
+    </div>
 @endsection
 
 @section('scripts')
     <style>
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-animation {
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
         #toast-box {
             animation: toastFade 3s ease-in-out forwards;
         }
@@ -165,9 +223,36 @@
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Restore modal functions
+        let restoreFormAction = '';
+
+        function openRestoreModal(productId, productName) {
+            restoreFormAction = '/contents/operator/products/' + productId + '/restore';
+            document.getElementById('restore-product-name').innerText = productName;
+            openModal('modal-restore');
+        }
+
+        document.getElementById('form-restore')?.addEventListener('submit', function (e) {
+            e.preventDefault();
+            this.action = restoreFormAction;
+            this.submit();
+        });
+
+        // Search functionality
         const searchInput = document.getElementById('search-input');
         const searchButton = document.getElementById('search-button');
         const categoryFilter = document.getElementById('category-filter');
+
         function applySearchAndFilter() {
             const searchValue = searchInput?.value || '';
             const categoryValue = categoryFilter?.value || '';
@@ -178,9 +263,11 @@
             url += params.join('&');
             window.location.href = url;
         }
+
         if (searchButton) searchButton.addEventListener('click', applySearchAndFilter);
         if (searchInput) searchInput.addEventListener('keypress', function (e) { if (e.key === 'Enter') applySearchAndFilter(); });
         if (categoryFilter) categoryFilter.addEventListener('change', applySearchAndFilter);
+
         setTimeout(function () { const toast = document.getElementById('toast-box'); if (toast) setTimeout(() => toast.style.display = 'none', 3000); }, 100);
     </script>
 @endsection
