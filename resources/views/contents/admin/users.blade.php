@@ -5,7 +5,6 @@
 @section('content')
     <div class="max-w-7xl mx-auto px-4 py-8">
 
-        <!-- Header -->
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-gray-800 tracking-tight">User Management</h1>
             <p class="text-gray-500 mt-1">Kelola semua user (Admin & Operator)</p>
@@ -53,7 +52,6 @@
             </div>
         </div>
 
-        <!-- ALERT MESSAGES -->
         @if (session('success'))
             <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 rounded-xl mb-6 shadow-sm">
                 <div class="flex items-center gap-2">
@@ -130,7 +128,8 @@
                         @forelse($users as $user)
                             <tr class="hover:bg-gray-50 transition">
                                 <td class="px-6 py-4 text-sm text-gray-500">
-                                    {{ ($users->currentPage() - 1) * $users->perPage() + $loop->iteration }}</td>
+                                    {{ ($users->currentPage() - 1) * $users->perPage() + $loop->iteration }}
+                                </td>
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-2">
                                         <div
@@ -164,24 +163,20 @@
                                             onclick="openToggleModal({{ $user->id }}, '{{ $user->username }}', {{ $user->status }})"
                                             class="{{ $user->status ? 'text-green-600 hover:text-green-800' : 'text-gray-500 hover:text-gray-700' }} transition"
                                             title="{{ $user->status ? 'Nonaktifkan' : 'Aktifkan' }}">
-                                            <i
-                                                class="fas {{ $user->status ? 'fa-toggle-on' : 'fa-toggle-off' }} text-2xl"></i>
+                                            <i class="fas {{ $user->status ? 'fa-toggle-on' : 'fa-toggle-off' }} text-2xl"></i>
                                         </button>
 
-                                        <!-- Edit Button -->
                                         <button
                                             onclick="openEditModal({{ $user->id }}, '{{ $user->username }}', '{{ $user->email }}', {{ $user->role_id }})"
                                             class="text-blue-600 hover:text-blue-800 transition" title="Edit">
                                             <i class="fas fa-edit text-lg"></i>
                                         </button>
 
-                                        <!-- Reset Password Button -->
                                         <button onclick="openResetModal({{ $user->id }}, '{{ $user->username }}')"
                                             class="text-teal-600 hover:text-teal-800 transition" title="Reset Password">
                                             <i class="fas fa-key text-lg"></i>
                                         </button>
 
-                                        <!-- Delete Button -->
                                         <button onclick="openDeleteModal({{ $user->id }}, '{{ $user->username }}')"
                                             class="text-red-600 hover:text-red-800 transition" title="Hapus">
                                             <i class="fas fa-trash-alt text-lg"></i>
@@ -202,7 +197,6 @@
             </div>
         </div>
 
-        <!-- PAGINATION -->
         <div class="mt-6">
             {{ $users->links() }}
         </div>
@@ -371,7 +365,6 @@
                     <strong id="toggle_username"></strong>?
                 </p>
                 <p class="text-sm mt-2" id="toggle_message">
-                    <!-- Pesan akan diisi oleh JavaScript -->
                 </p>
             </div>
 
@@ -521,7 +514,7 @@
             document.getElementById('deleteModal').classList.remove('flex');
         }
 
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             const addModal = document.getElementById('addModal');
             const editModal = document.getElementById('editModal');
             const resetModal = document.getElementById('resetModal');

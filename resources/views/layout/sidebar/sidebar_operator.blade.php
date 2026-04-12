@@ -14,8 +14,8 @@
             </a>
 
             <a href="{{ route('manage-account') }}"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.manage-account') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
-                <i class="fas fa-user-cog w-5"></i> Manage Account Operator
+                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('manage-account') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
+                <i class="fas fa-user-cog w-5"></i> Manage Account
             </a>
 
             <a href="{{ route('contents.operator.productmanage') }}"
@@ -33,7 +33,6 @@
                 <i class="fas fa-chart-line w-5"></i> Report
             </a>
 
-            <!-- TAMBAHKAN MENU TRASH DI SINI -->
             <a href="{{ route('contents.operator.productmanage.trash') }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.operator.productmanage.trash') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
                 <i class="fas fa-trash-alt w-5"></i> Trash

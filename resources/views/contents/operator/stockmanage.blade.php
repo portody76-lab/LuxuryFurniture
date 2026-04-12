@@ -11,7 +11,7 @@
     @if(session('success') || session('error'))
         <div class="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
             <div id="toast-box" class="px-8 py-4 rounded-2xl shadow-2xl text-white text-sm font-semibold
-                                                {{ session('success') ? 'bg-green-500' : 'bg-red-500' }}">
+                                                        {{ session('success') ? 'bg-green-500' : 'bg-red-500' }}">
                 {{ session('success') ?? session('error') }}
             </div>
         </div>

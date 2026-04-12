@@ -4,30 +4,25 @@
 
 @section('content')
 
-    <!-- MAIN CONTENT -->
     <div class="flex-1 p-6">
 
-        <!-- Header Halaman -->
         <div class="bg-white p-6 rounded-2xl mb-6 shadow-md border border-[#e7ddcf]">
             <h2 class="text-2xl font-bold text-gray-800">Categories</h2>
             <p class="text-[#8b7a66] mt-1">Kelola kategori produk furniture Anda</p>
         </div>
 
-        <!-- SUCCESS MESSAGE -->
         @if (session('success'))
             <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg mb-4 shadow-sm">
                 <i class="fas fa-check-circle mr-2"></i> {{ session('success') }}
             </div>
         @endif
 
-        <!-- ERROR MESSAGE -->
         @if (session('error'))
             <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-4 shadow-sm">
                 <i class="fas fa-exclamation-circle mr-2"></i> {{ session('error') }}
             </div>
         @endif
 
-        <!-- VALIDATION ERROR -->
         @if ($errors->any())
             <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-4 shadow-sm">
                 <ul class="list-disc pl-5">
@@ -81,13 +76,11 @@
                                 <td class="px-6 py-3 text-sm text-gray-600 text-left">{{ $category->id }}</td>
                                 <td class="px-6 py-3 text-sm font-medium text-gray-800 text-left">{{ $category->name }}</td>
                                 <td class="px-6 py-3 text-left">
-                                    <!-- EDIT BUTTON -->
                                     <button type="button" data-id="{{ $category->id }}" data-name="{{ $category->name }}"
-                                        onclick="openEditModal(this)"
-                                        class="text-blue-500 hover:text-blue-700 transition mr-3" title="Edit">
+                                        onclick="openEditModal(this)" class="text-blue-500 hover:text-blue-700 transition mr-3"
+                                        title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </button>
-                                    <!-- DELETE BUTTON -->
                                     <button type="button" data-id="{{ $category->id }}" onclick="openDeleteModal(this)"
                                         class="text-red-500 hover:text-red-700 transition" title="Hapus">
                                         <i class="fas fa-trash-alt"></i>
@@ -107,7 +100,6 @@
             </div>
         </div>
 
-        <!-- PAGINATION -->
         <div class="mt-6">
             {{ $categories->links() }}
         </div>
@@ -238,7 +230,6 @@
             document.getElementById('editName').value = name;
 
             let form = document.getElementById('editForm');
-            // PERBAIKAN: gunakan replace untuk memasukkan id
             form.action = "{{ route('contents.admin.categories.update', ['id' => ':id']) }}".replace(':id', id);
         }
 
@@ -252,7 +243,6 @@
             document.getElementById('deleteModal').style.display = 'flex';
 
             let form = document.getElementById('deleteForm');
-            // PERBAIKAN: gunakan replace untuk memasukkan id
             form.action = "{{ route('contents.admin.categories.destroy', ['id' => ':id']) }}".replace(':id', id);
         }
 
@@ -261,7 +251,7 @@
         }
 
         // Close modal when clicking outside
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             const addModal = document.getElementById('categoryModal');
             const editModal = document.getElementById('editModal');
             const deleteModal = document.getElementById('deleteModal');
@@ -278,16 +268,16 @@
         }
 
         // Auto hide success message after 3 seconds
-        setTimeout(function() {
+        setTimeout(function () {
             const successMsg = document.querySelector('.bg-green-100');
             const errorMsg = document.querySelector('.bg-red-100');
             if (successMsg) {
-                setTimeout(function() {
+                setTimeout(function () {
                     successMsg.style.display = 'none';
                 }, 3000);
             }
             if (errorMsg && !errorMsg.querySelector('ul')) {
-                setTimeout(function() {
+                setTimeout(function () {
                     errorMsg.style.display = 'none';
                 }, 3000);
             }

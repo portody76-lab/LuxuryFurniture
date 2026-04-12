@@ -6,7 +6,6 @@
     <div class="min-h-[calc(100vh-3rem)] flex items-center justify-center">
         <div class="max-w-4xl w-full mx-auto">
 
-            <!-- Header Section dengan Icon Profile -->
             <div class="mb-8 text-center">
                 <div class="mb-4">
                     <div
@@ -23,7 +22,7 @@
                 @endif
             </div>
 
-            <!-- Info Card - Elegant -->
+            <!-- Info Card -->
             <div
                 class="bg-linear-to-r from-amber-50 to-amber-100/30 rounded-2xl p-6 mb-8 border border-amber-200/50 shadow-sm">
                 <div class="flex items-center gap-2 mb-3">
@@ -112,40 +111,39 @@
     </div>
 
     <!-- MODAL EDIT USERNAME -->
-<div id="usernameModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center">
-    <div class="bg-white rounded-2xl w-full max-w-md mx-4 shadow-2xl animate-fade-in-up">
-        <div class="border-b border-gray-100 px-6 py-5 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <i class="fas fa-user-pen text-amber-500"></i>
-                <h3 class="text-xl font-bold text-gray-800">Edit Username</h3>
+    <div id="usernameModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center">
+        <div class="bg-white rounded-2xl w-full max-w-md mx-4 shadow-2xl animate-fade-in-up">
+            <div class="border-b border-gray-100 px-6 py-5 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-user-pen text-amber-500"></i>
+                    <h3 class="text-xl font-bold text-gray-800">Edit Username</h3>
+                </div>
+                <button type="button" onclick="closeUsernameModal()" class="text-gray-400 hover:text-gray-600 transition">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
             </div>
-            <button type="button" onclick="closeUsernameModal()" class="text-gray-400 hover:text-gray-600 transition">
-                <i class="fas fa-times text-xl"></i>
-            </button>
-        </div>
 
-        <!-- TAMBAHKAN ID UNIK UNTUK FORM -->
-        <form id="usernameFormElement" method="POST" action="{{ route('manage-account.update-username') }}">
-            @csrf
-            @method('PUT')
+            <form id="usernameFormElement" method="POST" action="{{ route('manage-account.update-username') }}">
+                @csrf
+                @method('PUT')
 
-            <div class="px-6 py-6">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
-                <input type="text" name="username" value="{{ old('username', auth()->user()->username) }}"
-                    class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition"
+                <div class="px-6 py-6">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
+                    <input type="text" name="username" value="{{ old('username', auth()->user()->username) }}"
+                        class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition"
                         placeholder="Masukkan username baru" required>
-                <div id="usernameError" class="text-red-500 text-sm mt-2 hidden"></div>
-            </div>
+                    <div id="usernameError" class="text-red-500 text-sm mt-2 hidden"></div>
+                </div>
 
-            <div class="border-t border-gray-100 px-6 py-5 flex justify-end gap-3">
-                <button type="button" onclick="closeUsernameModal()"
-                    class="px-5 py-2.5 text-gray-600 hover:bg-gray-100 rounded-xl transition">Cancel</button>
-                <button type="submit" id="submitUsernameBtn"
-                    class="px-6 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl transition shadow-sm">Update</button>
-            </div>
-        </form>
+                <div class="border-t border-gray-100 px-6 py-5 flex justify-end gap-3">
+                    <button type="button" onclick="closeUsernameModal()"
+                        class="px-5 py-2.5 text-gray-600 hover:bg-gray-100 rounded-xl transition">Cancel</button>
+                    <button type="submit" id="submitUsernameBtn"
+                        class="px-6 py-2.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl transition shadow-sm">Update</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
     <!-- MODAL EDIT PASSWORD -->
     <div id="passwordModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center">
@@ -160,7 +158,6 @@
                 </button>
             </div>
 
-            <!-- PASTIKAN METHOD POST dan ada @method('PUT') -->
             <form method="POST" action="{{ route('manage-account.update-password') }}">
                 @csrf
                 @method('PUT')
