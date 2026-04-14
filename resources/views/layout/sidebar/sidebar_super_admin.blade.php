@@ -5,22 +5,21 @@
         <div class="flex justify-center mb-10 mt-4">
             <img src="{{ asset('images/Logo LF.png') }}" alt="Logo Perusahaan" class="w-64 h-auto object-contain"
                 onerror="this.src='{{ asset('images/default-logo.png') }}'">
-            </div>
-            
-            <nav class="space-y-2">
-                <a href="{{ route('contents.super_admin.dashboard') }}"
+        </div>
+
+        <nav class="space-y-2">
+            <a href="{{ route('contents.super_admin.dashboard') }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.super_admin.dashboard') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
                 <i class="fas fa-tachometer-alt w-5"></i> Dashboard
             </a>
-            
-            {{-- MANAGE ACCOUNT - PAKAI ROUTE GLOBAL --}}
+
             <a href="{{ route('manage-account') }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('manage-account') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
                 <i class="fas fa-user-cog w-5"></i> Manage Account
             </a>
 
-            <a href="{{ route('contents.super_admin.users') }}"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.super_admin.users') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
+            <a href="{{ route('contents.user-management.index') }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.user-management.*') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
                 <i class="fas fa-users w-5"></i> User Management
             </a>
 
@@ -34,21 +33,21 @@
                 <i class="fas fa-box w-5"></i> Product Management
             </a>
 
-            
+
             <a href="{{ route('contents.super_admin.stock') }}"
-            class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.super_admin.stock') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
-            <i class="fas fa-warehouse w-5"></i> Stock Management
-        </a>
-        
-        <a href="{{ route('contents.super_admin.reports') }}"
-        class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.super_admin.reports') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
-        <i class="fas fa-chart-line w-5"></i> Report
-    </a>
-    {{-- MENU TRASH KHUSUS SUPER ADMIN --}}
-    <a href="{{ route('contents.super_admin.products.trash') }}"
-        class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.super_admin.products.trash') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
-        <i class="fas fa-trash-alt w-5"></i> Trash
-    </a>
+                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.super_admin.stock') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
+                <i class="fas fa-warehouse w-5"></i> Stock Management
+            </a>
+
+            <a href="{{ route('contents.super_admin.reports') }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.super_admin.reports') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
+                <i class="fas fa-chart-line w-5"></i> Report
+            </a>
+            {{-- MENU TRASH KHUSUS SUPER ADMIN --}}
+            <a href="{{ route('contents.super_admin.products.trash') }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.super_admin.products.trash') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
+                <i class="fas fa-trash-alt w-5"></i> Trash
+            </a>
 
         </nav>
     </div>
