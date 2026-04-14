@@ -23,11 +23,12 @@ class UserController extends Controller
             ->paginate(10);
 
         $totalUsers = User::count();
-        $totalAdmin = User::where('role_id', 1)->count();
-        $totalOperator = User::where('role_id', 2)->count();
+        $totalSuperAdmin = User::where('role_id', 3)->count(); // Super Admin (id=3)
+        $totalAdmin = User::where('role_id', 1)->count();      // Admin (id=1)
+        $totalOperator = User::where('role_id', 2)->count();   // Operator (id=2)
         $roles = Role::all();
 
-        return view('contents.admin.users', compact('users', 'totalUsers', 'totalAdmin', 'totalOperator', 'roles'));
+        return view('contents.admin.users', compact('users', 'totalUsers', 'totalSuperAdmin', 'totalAdmin', 'totalOperator', 'roles'));
     }
 
     /**
@@ -58,7 +59,8 @@ class UserController extends Controller
             'updated_by' => Auth::id(),
         ]);
 
-        return redirect()->route('contents.admin.users')
+        // ✅ PERBAIKAN: redirect ke route yang benar
+        return redirect()->route('contents.user-management.index')
             ->with('success', 'User berhasil ditambahkan! Email: ' . $request->email . ' | Password default: 12345678');
     }
 
@@ -99,21 +101,24 @@ class UserController extends Controller
             'updated_by' => Auth::id(),
         ]);
 
-        return redirect()->route('contents.admin.users')
+        // ✅ PERBAIKAN: redirect ke route yang benar
+        return redirect()->route('contents.user-management.index')
             ->with('success', 'User berhasil diupdate!');
     }
 
     public function destroy($id)
     {
         if ($id == Auth::id()) {
-            return redirect()->route('contents.admin.users')
+            // ✅ PERBAIKAN: redirect ke route yang benar
+            return redirect()->route('contents.user-management.index')
                 ->with('error', 'Anda tidak bisa menghapus akun sendiri!');
         }
 
         $user = User::findOrFail($id);
         $user->delete();
 
-        return redirect()->route('contents.admin.users')
+        // ✅ PERBAIKAN: redirect ke route yang benar
+        return redirect()->route('contents.user-management.index')
             ->with('success', 'User berhasil dihapus!');
     }
 
@@ -126,19 +131,22 @@ class UserController extends Controller
             'updated_by' => Auth::id(),
         ]);
 
-        return redirect()->route('contents.admin.users')
+        // ✅ PERBAIKAN: redirect ke route yang benar
+        return redirect()->route('contents.user-management.index')
             ->with('success', 'Password user berhasil direset menjadi: 12345678');
     }
 
-
-    // Toggle status user (Aktif/Nonaktif)
+    /**
+     * Toggle status user (Aktif/Nonaktif)
+     */
     public function toggleStatus($id)
     {
         $user = User::findOrFail($id);
 
         // Cegah nonaktifkan akun sendiri
         if ($id == Auth::id()) {
-            return redirect()->route('contents.admin.users')
+            // ✅ PERBAIKAN: redirect ke route yang benar
+            return redirect()->route('contents.user-management.index')
                 ->with('error', 'Anda tidak bisa mengubah status akun sendiri!');
         }
 
@@ -148,7 +156,9 @@ class UserController extends Controller
         $user->save();
 
         $statusText = $user->status ? 'diaktifkan' : 'dinonaktifkan';
-        return redirect()->route('contents.admin.users')
+        
+        // ✅ PERBAIKAN: redirect ke route yang benar
+        return redirect()->route('contents.user-management.index')
             ->with('success', "Status user berhasil {$statusText}!");
     }
 }

@@ -37,12 +37,6 @@ Route::middleware(['auth', 'role:super_admin'])
     ->name('contents.super_admin.')
     ->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])->name('dashboard');
-        Route::get('/users', [UserController::class, 'index'])->name('users');
-        Route::post('/users', [UserController::class, 'store'])->name('users.store');
-        Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
-        Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
-        Route::put('/users/{id}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
-        Route::put('/users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
         Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
         Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
         Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
@@ -69,12 +63,6 @@ Route::middleware(['auth', 'role:admin'])
     ->name('contents.admin.')
     ->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])->name('dashboard');
-        Route::get('/users', [UserController::class, 'index'])->name('users');
-        Route::post('/users', [UserController::class, 'store'])->name('users.store');
-        Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
-        Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
-        Route::put('/users/{id}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
-        Route::put('/users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
         Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
         Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
         Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
@@ -94,6 +82,19 @@ Route::middleware(['auth', 'role:operator'])
         Route::get('/stock', [StockController::class, 'index'])->name('stock');
         Route::post('/stock/add', [StockController::class, 'addStock'])->name('stock.add');
         Route::post('/stock/remove', [StockController::class, 'removeStock'])->name('stock.remove');
+    });
+
+    // ========== USER MANAGEMENT (Super Admin & Admin) ==========
+Route::middleware(['auth', 'role:super_admin,admin'])
+    ->prefix('contents/user-management')
+    ->name('contents.user-management.')
+    ->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::post('/', [UserController::class, 'store'])->name('store');
+        Route::put('/{id}', [UserController::class, 'update'])->name('update');
+        Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
+        Route::put('/{id}/reset-password', [UserController::class, 'resetPassword'])->name('reset-password');
+        Route::put('/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggle-status');
     });
 
 // ========== LOGOUT ==========

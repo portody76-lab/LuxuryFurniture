@@ -33,23 +33,37 @@
             </div>
         @endif
 
-        <!-- SEARCH BAR & ADD BUTTON -->
-        <div class="flex flex-wrap items-center gap-4 mb-6">
+        <!-- SEARCH & TAMBAH CATEGORY -->
+        <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
             <form method="GET" action="{{ route('contents.admin.categories') }}" class="flex gap-2">
                 <div class="relative">
-                    <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm"></i>
-                    <input type="text" name="search" placeholder="Search Categories..." value="{{ request('search') }}"
-                        class="pl-10 pr-4 py-2 border border-gray-300 rounded-xl w-64 focus:outline-none focus:ring-2 focus:ring-[#cbb892] focus:border-transparent">
+                    <!-- SVG ICON SEARCH -->
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-[#c9973a]" width="14" height="14"
+                        fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <input type="text" name="search" placeholder="Cari kategori..." value="{{ request('search') }}"
+                        class="border border-[#e8d5a8] rounded-xl py-2 pl-9 pr-4 text-sm bg-[#fdf8f0] transition-colors focus:border-[#c9973a] focus:outline-none w-64">
                 </div>
                 <button type="submit"
-                    class="bg-[#cbb892] hover:bg-[#b89a6a] text-white px-5 py-2 rounded-xl transition shadow-sm">
-                    <i class="fas fa-search mr-1"></i> Search
+                    class="bg-[#c9973a] hover:bg-[#b07e28] text-white px-4 py-2 rounded-xl transition-colors">
+                    <svg width="16" height="16" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
                 </button>
+                @if (request('search'))
+                    <a href="{{ route('contents.admin.categories') }}"
+                        class="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2.5 rounded-xl transition shadow-sm">
+                        Reset
+                    </a>
+                @endif
             </form>
 
-            <button onclick="openModal()"
-                class="bg-[#8faa7b] hover:bg-[#7a9666] text-white px-5 py-2 rounded-xl transition shadow-sm flex items-center gap-2">
-                <i class="fas fa-plus"></i> Add Category
+            <button onclick="openAddModal()"
+                class="bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-xl transition shadow-sm flex items-center gap-2">
+                <i class="fas fa-plus"></i> Tambah Kategori
             </button>
         </div>
 
@@ -77,8 +91,8 @@
                                 <td class="px-6 py-3 text-sm font-medium text-gray-800 text-left">{{ $category->name }}</td>
                                 <td class="px-6 py-3 text-left">
                                     <button type="button" data-id="{{ $category->id }}" data-name="{{ $category->name }}"
-                                        onclick="openEditModal(this)" class="text-blue-500 hover:text-blue-700 transition mr-3"
-                                        title="Edit">
+                                        onclick="openEditModal(this)"
+                                        class="text-blue-500 hover:text-blue-700 transition mr-3" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </button>
                                     <button type="button" data-id="{{ $category->id }}" onclick="openDeleteModal(this)"
@@ -251,7 +265,7 @@
         }
 
         // Close modal when clicking outside
-        window.onclick = function (event) {
+        window.onclick = function(event) {
             const addModal = document.getElementById('categoryModal');
             const editModal = document.getElementById('editModal');
             const deleteModal = document.getElementById('deleteModal');
@@ -268,16 +282,16 @@
         }
 
         // Auto hide success message after 3 seconds
-        setTimeout(function () {
+        setTimeout(function() {
             const successMsg = document.querySelector('.bg-green-100');
             const errorMsg = document.querySelector('.bg-red-100');
             if (successMsg) {
-                setTimeout(function () {
+                setTimeout(function() {
                     successMsg.style.display = 'none';
                 }, 3000);
             }
             if (errorMsg && !errorMsg.querySelector('ul')) {
-                setTimeout(function () {
+                setTimeout(function() {
                     errorMsg.style.display = 'none';
                 }, 3000);
             }

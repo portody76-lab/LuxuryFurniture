@@ -6,7 +6,7 @@
 
     <div class="bg-white p-8 rounded-2xl mb-8 shadow-md border border-[#e7ddcf]">
         <h2 class="text-3xl font-bold text-gray-800">
-            Halo, {{ auth()->user()->role->role_name === 'super_admin' ? 'Super Admin' : (auth()->user()->role->role_name === 'admin' ? 'Admin' : 'Operator') }}
+            Halo, {{ auth()->user()->username }}
         </h2>
         <p class="text-[#8b7a66] text-base mt-2">
             Selamat datang di Dashboard {{ auth()->user()->role->role_name === 'super_admin' ? 'Super Admin' : (auth()->user()->role->role_name === 'admin' ? 'Admin' : 'Operator') }} Luxury Furniture
