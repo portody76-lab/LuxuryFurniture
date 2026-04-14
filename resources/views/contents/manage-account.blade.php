@@ -9,12 +9,12 @@
             <div class="mb-8 text-center">
                 <div class="mb-4">
                     <div
-                        class="w-20 h-20 bg-linear-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center mx-auto shadow-lg">
-                        <i class="fas fa-user-circle text-white text-5xl"></i>
+                        class="w-16 h-16 sm:w-20 sm:h-20 bg-linear-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center mx-auto shadow-lg">
+                        <i class="fas fa-user-circle text-white text-4xl sm:text-5xl"></i>
                     </div>
                 </div>
                 @if (auth()->user()->role->role_name === 'admin')
-                    <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Manage Account Admin</h1>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight">Manage Account Admin</h1>
                     <p class="text-gray-500 mt-1">Kelola data akun admin Anda sendiri</p>
                 @else
                     <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Manage Account Operator</h1>
@@ -76,7 +76,7 @@
                 <!-- Change Username Card -->
                 <div
                     class="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
-                    <div class="p-6 text-center">
+                    <div class="p-4 sm:p-6 text-center">
                         <div
                             class="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-amber-200 transition">
                             <i class="fas fa-user-pen text-amber-600 text-xl"></i>
@@ -93,7 +93,7 @@
                 <!-- Change Password Card -->
                 <div
                     class="group bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100">
-                    <div class="p-6 text-center">
+                    <div class="p-4 sm:p-6 text-center">
                         <div
                             class="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-amber-200 transition">
                             <i class="fas fa-key text-amber-600 text-xl"></i>
