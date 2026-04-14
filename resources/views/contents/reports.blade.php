@@ -20,9 +20,9 @@
                     <select name="report_type" id="report_type" required
                         class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:border-[#c9973a] focus:outline-none">
                         <option value="" disabled {{ !$reportType ? 'selected' : '' }}>-- Pilih Tipe Laporan --</option>
-                        <option value="transaction" {{ $reportType == 'transaction' ? 'selected' : '' }}>📋 Laporan Transaksi</option>
-                        <option value="stock" {{ $reportType == 'stock' ? 'selected' : '' }}>📦 Laporan Stok Produk</option>
-                        <option value="category" {{ $reportType == 'category' ? 'selected' : '' }}>📁 Laporan Kategori</option>
+                        <option value="transaction" {{ $reportType == 'transaction' ? 'selected' : '' }}>Laporan Transaksi</option>
+                        <option value="stock" {{ $reportType == 'stock' ? 'selected' : '' }}>Laporan Stok Produk</option>
+                        <option value="category" {{ $reportType == 'category' ? 'selected' : '' }}>Laporan Kategori</option>
                     </select>
                 </div>
 

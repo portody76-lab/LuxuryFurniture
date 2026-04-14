@@ -33,7 +33,9 @@ class LoginController extends Controller
                 ])->onlyInput('username');
             }
 
-            if ($role == 'admin') {
+            if ($role == 'super_admin') {
+                return redirect()->route('contents.super_admin.dashboard');
+            } elseif ($role == 'admin') {
                 return redirect()->route('contents.admin.dashboard');
             } else {
                 return redirect()->route('contents.operator.dashboard');

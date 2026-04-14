@@ -7,13 +7,7 @@ export default defineConfig({
         laravel({
             input: [
                 "resources/css/app.css",
-                "resources/css/login.css",
-                "resources/css/dashboard.css",
-                "resources/css/admin/categories.css",
                 "resources/js/app.js",
-                "resources/js/login.js",
-                "resources/js/dashboard.js",
-                "resources/js/operator/productmanage.js",
             ],
             refresh: true,
         }),

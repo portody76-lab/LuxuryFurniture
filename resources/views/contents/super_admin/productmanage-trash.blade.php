@@ -8,7 +8,7 @@
             <h1 class="text-2xl font-bold text-gray-800">Trash - Produk Terhapus</h1>
             <p class="text-[#8b7a66] text-sm mt-1">Produk yang telah dihapus</p>
         </div>
-        <a href="{{ route('contents.operator.productmanage') }}"
+        <a href="{{ route('contents.super_admin.products') }}"
             class="bg-[#c9973a] hover:bg-[#a87922] text-white px-4 py-2 rounded-xl transition flex items-center gap-2">
             <i class="fas fa-arrow-left"></i> Kembali ke Produk
         </a>
@@ -74,14 +74,12 @@
             <table class="w-full">
                 <thead>
                     <tr class="bg-[#f3e4c3]">
-                        <th class="rounded-l-xl px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">
-                            Image</th>
+                        <th class="rounded-l-xl px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Image</th>
                         <th class="px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Kode</th>
                         <th class="px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Nama Item</th>
                         <th class="px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Kategori</th>
                         <th class="px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Stok</th>
-                        <th class="rounded-r-xl px-3 py-3 text-center font-semibold text-[#7a5c1e] text-xs tracking-wider">
-                            Aksi</th>
+                        <th class="rounded-r-xl px-3 py-3 text-center font-semibold text-[#7a5c1e] text-xs tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -100,16 +98,14 @@
                                         class="w-14 h-14 object-cover rounded-xl opacity-50"></td>
                                 <td class="px-3 py-3 text-sm text-gray-400 line-through">{{ $productCode }}</td>
                                 <td class="px-3 py-3 text-sm text-gray-400 line-through">{{ $productName }}</td>
-                                <td class="px-3 py-3"><span
-                                        class="bg-gray-200 text-gray-500 text-xs font-medium px-3 py-1 rounded-lg">{{ $categoryName }}</span>
-                                </td>
+                                <td class="px-3 py-3"><span class="bg-gray-200 text-gray-500 text-xs font-medium px-3 py-1 rounded-lg">{{ $categoryName }}</span></td>
                                 <td class="px-3 py-3 text-sm text-gray-400">{{ $stockValue }}</td>
                                 <td class="px-3 py-3 text-center">
                                     <button type="button"
                                         onclick="openRestoreModal({{ $productId }}, '{{ addslashes($productName) }}')"
-                                        class="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition-colors"
+                                        class="bg-green-500 hover:bg-green-600 text-white p-2 rounded-md transition-colors scale-125"
                                         title="Restore">
-                                        <i class="fas fa-trash-restore"></i>
+                                        <i class="fa-solid fa-arrows-rotate"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -143,8 +139,10 @@
             </div>
             <h2 class="font-playfair text-2xl font-bold text-center text-[#1a1208] mb-3">Restore Produk</h2>
             <p class="text-center text-gray-500 mb-6">
-                Yakin ingin mengembalikan produk <span id="restore-product-name"
-                    class="font-semibold text-gray-800"></span>?
+                Yakin ingin mengembalikan produk <span id="restore-product-name" class="font-semibold text-gray-800"></span>?
+            </p>
+            <p class="text-center text-green-600 text-sm mb-6">
+                <i class="fas fa-info-circle"></i> Produk akan kembali ke daftar produk aktif
             </p>
 
             <form id="form-restore" method="POST" class="flex gap-3">
@@ -155,7 +153,7 @@
                 </button>
                 <button type="submit"
                     class="flex-1 px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl transition font-medium">
-                    <i class="fas fa-trash-restore mr-2"></i> Ya, Restore
+                    <i class="fa-solid fa-arrows-rotate"></i>  Ya, Restore
                 </button>
             </form>
         </div>
@@ -177,48 +175,27 @@
             align-items: center;
             justify-content: center;
         }
-
         .modal-animation {
             animation: modalFadeIn 0.3s ease-out;
         }
-
         @keyframes modalFadeIn {
             from {
                 opacity: 0;
                 transform: scale(0.95);
             }
-
             to {
                 opacity: 1;
                 transform: scale(1);
             }
         }
-
         #toast-box {
             animation: toastFade 3s ease-in-out forwards;
         }
-
         @keyframes toastFade {
-            0% {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-
-            15% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-            85% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-            100% {
-                opacity: 0;
-                transform: translateY(-20px);
-                visibility: hidden;
-            }
+            0% { opacity: 0; transform: translateY(-20px); }
+            15% { opacity: 1; transform: translateY(0); }
+            85% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); visibility: hidden; }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -237,7 +214,7 @@
         let restoreFormAction = '';
 
         function openRestoreModal(productId, productName) {
-            restoreFormAction = '/contents/operator/products/' + productId + '/restore';
+            restoreFormAction = '/contents/super-admin/products/' + productId + '/restore';
             document.getElementById('restore-product-name').innerText = productName;
             openModal('modal-restore');
         }
@@ -256,7 +233,7 @@
         function applySearchAndFilter() {
             const searchValue = searchInput?.value || '';
             const categoryValue = categoryFilter?.value || '';
-            let url = "{{ route('contents.operator.productmanage.trash') }}?";
+            let url = "{{ route('contents.super_admin.products.trash') }}?";
             const params = [];
             if (searchValue) params.push('search=' + encodeURIComponent(searchValue));
             if (categoryValue && categoryValue !== '') params.push('category_id=' + encodeURIComponent(categoryValue));

@@ -114,7 +114,7 @@ class ProductController extends Controller
             $product->is_deleted = true;
             $product->save();
 
-            $message = 'Produk berhasi di hapus di tampilan';
+            $message = 'Produk berhasil disembunyikan (soft delete).';
         } else {
             if ($product->image && file_exists(storage_path('app/public/' . $product->image))) {
                 unlink(storage_path('app/public/' . $product->image));
@@ -122,21 +122,26 @@ class ProductController extends Controller
 
             $product->delete();
 
-            $message = 'Produk berhasil dihapus permanen';
+            $message = 'Produk berhasil dihapus permanen.';
         }
 
         return redirect()->route('contents.operator.productmanage')
             ->with('success', $message);
     }
 
+    /**
+     * Menampilkan produk yang sudah soft delete (trash)
+     */
     public function trash(Request $request)
     {
         $query = Product::with('category')->where('is_deleted', true);
 
+        // Filter by category
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
 
+        // Search by name or product code
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -149,7 +154,14 @@ class ProductController extends Controller
         $categories = Category::all();
         $totalTrash = Product::where('is_deleted', true)->count();
 
-        return view('contents.operator.productmanage-trash', compact('products', 'categories', 'totalTrash'));
+        // Tentukan view berdasarkan role user
+        $userRole = auth()->user()->role->role_name;
+        
+        if ($userRole === 'super_admin') {
+            return view('contents.super_admin.productmanage-trash', compact('products', 'categories', 'totalTrash'));
+        } else {
+            return view('contents.operator.productmanage-trash', compact('products', 'categories', 'totalTrash'));
+        }
     }
 
     /**
@@ -161,7 +173,14 @@ class ProductController extends Controller
         $product->is_deleted = false;
         $product->save();
 
-        return redirect()->route('contents.operator.productmanage.trash')
-            ->with('success', 'Produk "' . $product->name . '" berhasil direstore!');
+        // Redirect berdasarkan role user
+        $userRole = auth()->user()->role->role_name;
+        if ($userRole === 'super_admin') {
+            return redirect()->route('contents.super_admin.products.trash')
+                ->with('success', 'Produk "' . $product->name . '" berhasil direstore!');
+        } else {
+            return redirect()->route('contents.operator.productmanage.trash')
+                ->with('success', 'Produk "' . $product->name . '" berhasil direstore!');
+        }
     }
 }
