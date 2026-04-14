@@ -1,5 +1,13 @@
-<aside class="w-64 p-6 flex flex-col justify-between min-h-screen"
+<aside id="sidebar" class="w-64 p-6 flex flex-col justify-between min-h-screen"
     style="background: linear-gradient(180deg, #e8d5a8 0%, #ddc89a 100%); box-shadow: 4px 0 20px rgba(180,140,60,0.10);">
+
+    <div>
+        <!-- Tombol close (mobile) -->
+        <div class="flex justify-end mb-2 md:hidden">
+            <button id="closeSidebarBtn" class="text-[#5a4a1e] text-xl">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
 
     <div>
         <div class="flex justify-center mb-10 mt-4">
@@ -52,7 +60,7 @@
         </nav>
     </div>
 
-    <form method="POST" action="{{ route('logout') }}">
+    <form method="POST" action="{{ route('logout') }}" class="mt-6">
         @csrf
         <button type="submit"
             class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white text-[#5a4a1e] font-medium text-sm transition-all duration-200 shadow hover:bg-[#c9973a] hover:text-white">

@@ -19,6 +19,7 @@ class UserController extends Controller
                 return $query->where('username', 'like', '%' . $search . '%')
                     ->orWhere('email', 'like', '%' . $search . '%');
             })
+            ->orderByRaw("FIELD(role_id, 3, 1, 2)")  // Super Admin(3) → Admin(1) → Operator(2)
             ->orderBy('id', 'asc')
             ->paginate(10);
 
@@ -156,7 +157,7 @@ class UserController extends Controller
         $user->save();
 
         $statusText = $user->status ? 'diaktifkan' : 'dinonaktifkan';
-        
+
         // ✅ PERBAIKAN: redirect ke route yang benar
         return redirect()->route('contents.user-management.index')
             ->with('success', "Status user berhasil {$statusText}!");
