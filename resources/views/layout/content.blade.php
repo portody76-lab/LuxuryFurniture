@@ -13,7 +13,9 @@
 
     <div class="flex min-h-screen">
         @auth
-            @if(auth()->user()->role->role_name === 'admin')
+            @if(auth()->user()->role->role_name === 'super_admin')
+                @include('layout.sidebar.sidebar_super_admin')
+            @elseif(auth()->user()->role->role_name === 'admin')
                 @include('layout.sidebar.sidebar_admin')
             @elseif(auth()->user()->role->role_name === 'operator')
                 @include('layout.sidebar.sidebar_operator')
