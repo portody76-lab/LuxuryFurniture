@@ -39,6 +39,22 @@
         * {
             max-width: 100%;
         }
+
+        /* ANIMASI ALERT */
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .animate-slide-in-right {
+            animation: slideInRight 0.3s ease-out;
+        }
     </style>
 </head>
 
@@ -72,6 +88,69 @@
             @yield('content')
         </div>
     </div>
+
+    <!-- ========================================== -->
+    <!-- ALERT NOTIFIKASI GLOBAL (Pojok Kanan Atas) -->
+    <!-- ========================================== -->
+    <div id="alert-container" class="fixed top-4 right-4 z-50 space-y-2 w-80 max-w-[calc(100%-2rem)]">
+        @if(session('success'))
+            <div class="alert alert-success bg-green-100 border-l-4 border-green-500 text-green-700 p-3 rounded-lg shadow-lg flex items-start gap-2 animate-slide-in-right">
+                <i class="fas fa-check-circle text-green-500 mt-0.5"></i>
+                <div class="flex-1 text-sm">{{ session('success') }}</div>
+                <button onclick="this.parentElement.remove()" class="text-green-500 hover:text-green-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        @endif
+
+        @if(session('error'))
+            <div class="alert alert-error bg-red-100 border-l-4 border-red-500 text-red-700 p-3 rounded-lg shadow-lg flex items-start gap-2 animate-slide-in-right">
+                <i class="fas fa-exclamation-circle text-red-500 mt-0.5"></i>
+                <div class="flex-1 text-sm">{{ session('error') }}</div>
+                <button onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        @endif
+
+        @if(session('warning'))
+            <div class="alert alert-warning bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-3 rounded-lg shadow-lg flex items-start gap-2 animate-slide-in-right">
+                <i class="fas fa-exclamation-triangle text-yellow-500 mt-0.5"></i>
+                <div class="flex-1 text-sm">{{ session('warning') }}</div>
+                <button onclick="this.parentElement.remove()" class="text-yellow-500 hover:text-yellow-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        @endif
+
+        @if(session('info'))
+            <div class="alert alert-info bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-3 rounded-lg shadow-lg flex items-start gap-2 animate-slide-in-right">
+                <i class="fas fa-info-circle text-blue-500 mt-0.5"></i>
+                <div class="flex-1 text-sm">{{ session('info') }}</div>
+                <button onclick="this.parentElement.remove()" class="text-blue-500 hover:text-blue-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        @endif
+    </div>
+
+    @if($errors->any())
+        <div class="fixed top-4 right-4 z-50 w-80 max-w-[calc(100%-2rem)]">
+            <div class="alert alert-error bg-red-100 border-l-4 border-red-500 text-red-700 p-3 rounded-lg shadow-lg flex items-start gap-2 animate-slide-in-right">
+                <i class="fas fa-exclamation-triangle text-red-500 mt-0.5"></i>
+                <div class="flex-1 text-sm">
+                    <ul class="list-disc pl-4">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                <button onclick="this.parentElement.remove()" class="text-red-500 hover:text-red-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+    @endif
 
     @yield('scripts')
 
@@ -110,8 +189,21 @@
                     if (overlay) overlay.classList.add('hidden');
                 }
             });
+
+            // ========== AUTO HIDE ALERT ==========
+            const alerts = document.querySelectorAll('#alert-container .alert');
+            alerts.forEach(alert => {
+                setTimeout(() => {
+                    alert.style.opacity = '0';
+                    alert.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (alert.parentElement) alert.remove();
+                    }, 300);
+                }, 4000);
+            });
         });
     </script>
 
 </body>
+
 </html>

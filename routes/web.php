@@ -5,10 +5,10 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\StockController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Operator\ProductController;
-use App\Http\Controllers\Operator\StockController;
 
 // ========== LOGIN ==========
 Route::get('/', [LoginController::class, 'showLoginForm'])->name('login');
@@ -37,10 +37,14 @@ Route::middleware(['auth', 'role:super_admin'])
     ->name('contents.super_admin.')
     ->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])->name('dashboard');
+        
+        // Categories
         Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
         Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
         Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
         Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+        
+        // Products
         Route::get('/products', [ProductController::class, 'index'])->name('products');
         Route::get('/products/trash', [ProductController::class, 'trash'])->name('products.trash');
         Route::post('/products', [ProductController::class, 'store'])->name('products.store');
@@ -48,11 +52,15 @@ Route::middleware(['auth', 'role:super_admin'])
         Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
         Route::post('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
         Route::delete('/products/{id}/force', [ProductController::class, 'forceDelete'])->name('products.force-delete');
+        
+        // Stock Management (pakai StockController)
         Route::get('/stock', [StockController::class, 'index'])->name('stock');
         Route::post('/stock/add', [StockController::class, 'addStock'])->name('stock.add');
         Route::post('/stock/remove', [StockController::class, 'removeStock'])->name('stock.remove');
+        Route::get('/stock/history/{productId}', [StockController::class, 'history'])->name('stock.history');
+        Route::get('/stock/detail/{productId}', [StockController::class, 'detail'])->name('stock.detail');
         
-        // REPORTS untuk SUPER ADMIN
+        // Reports
         Route::get('/reports', [ReportController::class, 'index'])->name('reports');
         Route::get('/reports/download', [ReportController::class, 'downloadPdf'])->name('reports.download');
     });
@@ -63,10 +71,22 @@ Route::middleware(['auth', 'role:admin'])
     ->name('contents.admin.')
     ->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])->name('dashboard');
+        
+        // Categories
         Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
         Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
         Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
         Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+        
+        // Products
+        Route::get('/products', [ProductController::class, 'index'])->name('products');
+        
+        // Stock Management (pakai StockController)
+        Route::get('/stock', [StockController::class, 'index'])->name('stock');
+        Route::post('/stock/add', [StockController::class, 'addStock'])->name('stock.add');
+        Route::post('/stock/remove', [StockController::class, 'removeStock'])->name('stock.remove');
+        Route::get('/stock/history/{productId}', [StockController::class, 'history'])->name('stock.history');
+        Route::get('/stock/detail/{productId}', [StockController::class, 'detail'])->name('stock.detail');
     });
 
 // ========== OPERATOR (Role: operator) ==========
@@ -75,16 +95,22 @@ Route::middleware(['auth', 'role:operator'])
     ->name('contents.operator.')
     ->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'operatorDashboard'])->name('dashboard');
+        
+        // Product Management
         Route::get('/productmanage', [ProductController::class, 'index'])->name('productmanage');
         Route::post('/products', [ProductController::class, 'store'])->name('products.store');
         Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
         Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
+        
+        // Stock Management (pakai StockController)
         Route::get('/stock', [StockController::class, 'index'])->name('stock');
         Route::post('/stock/add', [StockController::class, 'addStock'])->name('stock.add');
         Route::post('/stock/remove', [StockController::class, 'removeStock'])->name('stock.remove');
+        Route::get('/stock/history/{productId}', [StockController::class, 'history'])->name('stock.history');
+        Route::get('/stock/detail/{productId}', [StockController::class, 'detail'])->name('stock.detail');
     });
 
-    // ========== USER MANAGEMENT (Super Admin & Admin) ==========
+// ========== USER MANAGEMENT (Super Admin & Admin) ==========
 Route::middleware(['auth', 'role:super_admin,admin'])
     ->prefix('contents/user-management')
     ->name('contents.user-management.')
@@ -96,6 +122,12 @@ Route::middleware(['auth', 'role:super_admin,admin'])
         Route::put('/{id}/reset-password', [UserController::class, 'resetPassword'])->name('reset-password');
         Route::put('/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggle-status');
     });
+
+// ========== MUTASI (Semua Role: Super Admin, Admin, Operator) ==========
+Route::middleware(['auth', 'role:super_admin,admin,operator'])
+    ->get('/contents/mutasi', function() {
+        return view('contents.mutasi');
+    })->name('contents.mutasi');
 
 // ========== LOGOUT ==========
 Route::post('/logout', [LoginController::class, 'logout'])
