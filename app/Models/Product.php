@@ -15,10 +15,12 @@ class Product extends Model
         'is_deleted',
         'created_by',
         'updated_by',
+        'min_stock_threshold', // baru: threshold stok minimal (default 25)
     ];
 
     protected $casts = [
         'is_deleted' => 'boolean',
+        'min_stock_threshold' => 'integer',
     ];
 
     // Relationships
@@ -51,11 +53,66 @@ class Product extends Model
         return asset('images/placeholder.png');
     }
 
-    // Calculate current stock
-    public function getStockAttribute(): int
+    // Calculate current stock (gunakan kolom stock langsung, bukan dari transaksi)
+    public function getCurrentStockAttribute(): int
     {
-        $stockIn  = $this->stockTransactions->where('type', 'in')->sum('quantity');
-        $stockOut = $this->stockTransactions->where('type', 'out')->sum('quantity');
-        return $stockIn - $stockOut;
+        return $this->stock;
+    }
+
+    // Method untuk menambah stok
+    public function addStock($quantity, $userId, $description = null, $condition = 'good')
+    {
+        $oldStock = $this->stock;
+        $this->stock += $quantity;
+        $this->save();
+
+        return $this->stockTransactions()->create([
+            'type' => 'in',
+            'quantity' => $quantity,
+            'stock' => $this->stock, // stok setelah transaksi
+            'transaction_date' => now(),
+            'created_by' => $userId,
+            'updated_by' => $userId,
+            'condition' => $condition,
+            'description' => $description,
+            'damage_reason' => null,
+        ]);
+    }
+
+    // Method untuk mengurangi stok
+    public function removeStock($quantity, $userId, $description = null, $condition = 'good', $damageReason = null)
+    {
+        if ($this->stock < $quantity) {
+            throw new \Exception('Stok tidak mencukupi');
+        }
+
+        $oldStock = $this->stock;
+        $this->stock -= $quantity;
+        $this->save();
+
+        return $this->stockTransactions()->create([
+            'type' => 'out',
+            'quantity' => $quantity,
+            'stock' => $this->stock, // stok setelah transaksi
+            'transaction_date' => now(),
+            'created_by' => $userId,
+            'updated_by' => $userId,
+            'condition' => $condition,
+            'description' => $description,
+            'damage_reason' => $damageReason,
+        ]);
+    }
+
+    // Cek apakah stok hampir habis (<= threshold)
+    public function isLowStock()
+    {
+        $threshold = $this->min_stock_threshold ?? 25;
+        return $this->stock <= $threshold;
+    }
+
+    // Hitung frekuensi transaksi (untuk ranking)
+    public function getTransactionFrequencyAttribute()
+    {
+        return $this->stockTransactions()->count();
     }
 }

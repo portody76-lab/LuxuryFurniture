@@ -9,46 +9,117 @@
             </button>
         </div>
 
-    <div>
-        <div class="flex justify-center mb-10 mt-4">
+        <div class="flex justify-center mb-8 mt-4">
             <img src="{{ asset('images/Logo LF.png') }}" alt="Logo Perusahaan" class="w-64 h-auto object-contain"
                 onerror="this.src='{{ asset('images/default-logo.png') }}'">
         </div>
 
         <nav class="space-y-2">
+            {{-- DASHBOARD --}}
             <a href="{{ route('contents.operator.dashboard') }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.operator.dashboard') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
-                <i class="fas fa-tachometer-alt w-5"></i> Dashboard
+                <i class="fas fa-tachometer-alt w-5"></i> Dasbor
             </a>
 
-            <a href="{{ route('manage-account') }}"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('manage-account') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
-                <i class="fas fa-user-cog w-5"></i> Manage Account
-            </a>
+            {{-- Manajemen Produk (Sub-menu) --}}
+            <div class="relative">
+                <button onclick="toggleProductSubmenu()"
+                    class="w-full flex items-center justify-between px-4 py-3 rounded-xl {{ request()->routeIs('contents.operator.productmanage*') || request()->routeIs('contents.operator.stock*') || request()->routeIs('contents.mutasi*') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
+                    <div class="flex items-center gap-3">
+                        <i class="fas fa-box w-5"></i> Manajemen Produk
+                    </div>
+                    <i id="productSubmenuIcon" class="fas fa-chevron-down text-xs transition-transform duration-200"></i>
+                </button>
+                <div id="productSubmenu" class="mt-1 ml-6 space-y-1 hidden">
+                    <a href="{{ route('contents.operator.productmanage') }}"
+                        class="flex items-center gap-3 px-4 py-2 rounded-lg {{ request()->routeIs('contents.operator.productmanage') ? 'text-[#c9973a] font-semibold' : 'text-[#5a4a1e] hover:text-[#c9973a]' }} text-sm transition">
+                        <i class="fas fa-cube w-4"></i> Produk
+                    </a>
+                    <a href="{{ route('contents.operator.stock') }}"
+                        class="flex items-center gap-3 px-4 py-2 rounded-lg {{ request()->routeIs('contents.operator.stock') ? 'text-[#c9973a] font-semibold' : 'text-[#5a4a1e] hover:text-[#c9973a]' }} text-sm transition">
+                        <i class="fas fa-warehouse w-4"></i> Stok
+                    </a>
+                    <a href="{{ route('contents.mutasi') }}"
+                        class="flex items-center gap-3 px-4 py-2 rounded-lg {{ request()->routeIs('contents.mutasi') ? 'text-[#c9973a] font-semibold' : 'text-[#5a4a1e] hover:text-[#c9973a]' }} text-sm transition">
+                        <i class="fas fa-exchange-alt w-4"></i> Mutasi
+                    </a>
+                </div>
+            </div>
 
-            <a href="{{ route('contents.operator.productmanage') }}"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.operator.productmanage') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
-                <i class="fas fa-box w-5"></i> Product Management
-            </a>
-
-            <a href="{{ route('contents.operator.stock') }}"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.operator.stock') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
-                <i class="fas fa-warehouse w-5"></i> Stock Management
-            </a>
-
+            {{-- REPORT --}}
             <a href="{{ route('contents.reports') }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.reports') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
-                <i class="fas fa-chart-line w-5"></i> Report
+                <i class="fas fa-chart-line w-5"></i> Laporan
             </a>
         </nav>
     </div>
 
-    <form method="POST" action="{{ route('logout') }}" class="mt-6">
-        @csrf
-        <button type="submit"
-            class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white text-[#5a4a1e] font-medium text-sm transition-all duration-200 shadow hover:bg-[#c9973a] hover:text-white">
-            <i class="fas fa-sign-out-alt w-5"></i>
-            Logout
-        </button>
-    </form>
+    {{-- SETTING (Manage Account + Logout) --}}
+    <div class="mt-6">
+        <div class="relative">
+            <button onclick="toggleSettingMenu()"
+                class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white font-medium text-sm transition-all duration-200 shadow">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-cog w-5"></i> Pengaturan
+                </div>
+                <i id="settingMenuIcon" class="fas fa-chevron-down text-xs transition-transform duration-200"></i>
+            </button>
+            <div id="settingMenu" class="mt-1 space-y-1 hidden">
+                <a href="{{ route('manage-account') }}"
+                    class="flex items-center gap-3 px-4 py-2 rounded-lg text-[#5a4a1e] hover:text-[#c9973a] text-sm transition">
+                    <i class="fas fa-user-cog w-4"></i> Kelola Akun
+                </a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit"
+                        class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-red-600 hover:bg-red-50 text-sm transition">
+                        <i class="fas fa-sign-out-alt w-4"></i> Keluar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
 </aside>
+
+<script>
+    // Toggle Submenu Manajemen Produk
+    function toggleProductSubmenu() {
+        const submenu = document.getElementById('productSubmenu');
+        const icon = document.getElementById('productSubmenuIcon');
+
+        if (submenu.classList.contains('hidden')) {
+            submenu.classList.remove('hidden');
+            icon.style.transform = 'rotate(180deg)';
+        } else {
+            submenu.classList.add('hidden');
+            icon.style.transform = 'rotate(0deg)';
+        }
+    }
+
+    // Toggle Menu Pengaturan (Setting)
+    function toggleSettingMenu() {
+        const menu = document.getElementById('settingMenu');
+        const icon = document.getElementById('settingMenuIcon');
+
+        if (menu.classList.contains('hidden')) {
+            menu.classList.remove('hidden');
+            icon.style.transform = 'rotate(180deg)';
+        } else {
+            menu.classList.add('hidden');
+            icon.style.transform = 'rotate(0deg)';
+        }
+    }
+
+    // Jika halaman sedang di route Manajemen Produk (produk/stok/mutasi), submenu terbuka otomatis
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentRoute = window.location.href;
+        if (currentRoute.includes('/productmanage') || currentRoute.includes('/stock') || currentRoute.includes('/mutasi')) {
+            const submenu = document.getElementById('productSubmenu');
+            const icon = document.getElementById('productSubmenuIcon');
+            if (submenu && submenu.classList.contains('hidden')) {
+                submenu.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            }
+        }
+    });
+</script>
