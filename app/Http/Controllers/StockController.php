@@ -34,11 +34,6 @@ class StockController extends Controller
         return view('contents.stockmanage', compact('products', 'categories', 'totalStock'));
     }
 
-    protected function getStockRoute()
-    {
-        return route('contents.stockmanage');
-    }
-
     public function addStock(Request $request)
     {
         $request->validate([
@@ -52,12 +47,18 @@ class StockController extends Controller
 
         DB::beginTransaction();
         try {
-            $product->addStock(
-                quantity: $request->quantity,
-                userId: $userId,
-                description: $request->description,
-                condition: 'good'
-            );
+            $product->stock += $request->quantity;
+            $product->save();
+
+            StockTransaction::create([
+                'product_id' => $product->id,
+                'quantity' => $request->quantity,
+                'type' => 'in',
+                'condition' => 'good',
+                'description' => $request->description,
+                'transaction_date' => now(),
+                'created_by' => $userId,
+            ]);
 
             DB::commit();
 
@@ -68,8 +69,8 @@ class StockController extends Controller
                 ]);
             }
 
-            return redirect()->to($this->getStockRoute())
-                ->with('success', "Stok {$product->name} bertambah {$request->quantity} unit! (Stok sekarang: {$product->stock})");
+            return redirect()->route('stock')
+                ->with('success', "Stok {$product->name} bertambah {$request->quantity} unit!");
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -80,9 +81,7 @@ class StockController extends Controller
                 ], 400);
             }
 
-            return redirect()->back()
-                ->with('error', 'Gagal menambah stok: ' . $e->getMessage())
-                ->withInput();
+            return redirect()->back()->with('error', 'Gagal menambah stok: ' . $e->getMessage());
         }
     }
 
@@ -93,7 +92,6 @@ class StockController extends Controller
             'quantity' => 'required|integer|min:1',
             'description' => 'required|string|min:3|max:500',
             'condition' => 'required|in:good,damaged',
-            'damage_reason' => 'required_if:condition,damaged|nullable|string|max:500',
         ]);
 
         $product = Product::findOrFail($request->product_id);
@@ -106,20 +104,24 @@ class StockController extends Controller
                 return response()->json(['success' => false, 'message' => $errorMsg], 400);
             }
 
-            return redirect()->back()
-                ->with('error', $errorMsg)
-                ->withInput();
+            return redirect()->back()->with('error', $errorMsg);
         }
 
         DB::beginTransaction();
         try {
-            $product->removeStock(
-                quantity: $request->quantity,
-                userId: $userId,
-                description: $request->description,
-                condition: $request->condition,
-                damageReason: $request->damage_reason
-            );
+            $product->stock -= $request->quantity;
+            $product->save();
+
+            StockTransaction::create([
+                'product_id' => $product->id,
+                'quantity' => $request->quantity,
+                'type' => 'out',
+                'condition' => $request->condition,
+                'damage_reason' => null,
+                'description' => $request->description,
+                'transaction_date' => now(),
+                'created_by' => $userId,
+            ]);
 
             DB::commit();
 
@@ -128,12 +130,12 @@ class StockController extends Controller
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
-                    'message' => "Stok {$product->name} berkurang {$request->quantity} unit{$conditionText}! (Stok sekarang: {$product->stock})"
+                    'message' => "Stok {$product->name} berkurang {$request->quantity} unit{$conditionText}!"
                 ]);
             }
 
-            return redirect()->to($this->getStockRoute())
-                ->with('success', "Stok {$product->name} berkurang {$request->quantity} unit{$conditionText}! (Stok sekarang: {$product->stock})");
+            return redirect()->route('stock')
+                ->with('success', "Stok {$product->name} berkurang {$request->quantity} unit{$conditionText}!");
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -144,9 +146,7 @@ class StockController extends Controller
                 ], 400);
             }
 
-            return redirect()->back()
-                ->with('error', 'Gagal mengurangi stok: ' . $e->getMessage())
-                ->withInput();
+            return redirect()->back()->with('error', 'Gagal mengurangi stok: ' . $e->getMessage());
         }
     }
 
@@ -167,14 +167,15 @@ class StockController extends Controller
                     $userName = $user ? ($user->username ?? 'Unknown') : 'Unknown';
                 }
 
+                $tanggal = '-';
+                if ($transaction->transaction_date) {
+                    $date = \Carbon\Carbon::parse($transaction->transaction_date);
+                    $tanggal = $date->translatedFormat('l, d/m/Y');
+                }
+
                 $result[] = [
                     'id' => $transaction->id,
-                    'nomor' => $transaction->id,
-                    'tanggal' => $transaction->transaction_date 
-                        ? $transaction->transaction_date->translatedFormat('d F Y H:i') . ' WIB'
-                        : '-',
-                    'kode' => $product->product_code,
-                    'nama' => $product->name,
+                    'tanggal' => $tanggal,
                     'user' => $userName,
                     'jenis' => $transaction->type === 'in' ? 'Masuk' : 'Keluar',
                     'jumlah' => $transaction->quantity,
@@ -215,7 +216,7 @@ class StockController extends Controller
                 'category' => $product->category->name ?? '-',
                 'stock' => $product->stock,
                 'min_stock_threshold' => $product->min_stock_threshold ?? 25,
-                'image_url' => $product->image_url,
+                'image_url' => $product->image ? asset('storage/' . $product->image) : asset('images/placeholder.png'),
                 'description' => $product->description ?? '-',
             ]
         ]);
