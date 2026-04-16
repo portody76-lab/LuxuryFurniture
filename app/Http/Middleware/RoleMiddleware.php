@@ -14,7 +14,11 @@ class RoleMiddleware
             return redirect()->route('login');
         }
 
-        $userRole = Auth::user()->role->role_name;
+        $user = Auth::user();
+        $userRole = $user->role->role_name;
+        
+        // DEBUG - log role yang dicek
+        // Log::info('RoleMiddleware - User: ' . $user->username . ', Role: ' . $userRole . ', Required: ' . implode(',', $roles));
 
         // Super admin bisa akses semua
         if ($userRole === 'super_admin') {
@@ -26,6 +30,6 @@ class RoleMiddleware
             return $next($request);
         }
 
-        abort(403, 'Akses ditolak');
+        abort(403, 'Akses ditolak untuk role: ' . $userRole . '. Required: ' . implode(',', $roles));
     }
 }

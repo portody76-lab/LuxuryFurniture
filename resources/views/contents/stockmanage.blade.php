@@ -45,7 +45,7 @@
             <div class="mb-4 flex items-center gap-2">
                 <span class="text-sm text-[#7a5c1e]">Menampilkan hasil untuk:</span>
                 <span class="bg-[#c9973a] text-white text-xs px-3 py-1 rounded-full">"{{ request('search') }}"</span>
-                <a href="{{ request()->routeIs('contents.operator.stock') ? route('contents.operator.stock') : (request()->routeIs('contents.admin.stock') ? route('contents.admin.stock') : route('contents.super_admin.stock')) }}"
+                <a href="{{ request()->routeIs('contents.stock') ? route('contents.stock') : (request()->routeIs('contents.stock') ? route('contents.stock') : route('contents.super_admin.stock')) }}"
                     class="text-xs text-[#c9973a] hover:underline">Clear search</a>
             </div>
         @endif

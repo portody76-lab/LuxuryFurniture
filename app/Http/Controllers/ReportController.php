@@ -36,9 +36,7 @@ class ReportController extends Controller
 
         return view('contents.reports', compact('reportData', 'reportType', 'startDate', 'endDate', 'reportTitle'));
     }
-    /**
-     * Download PDF laporan
-     */
+
     public function downloadPdf(Request $request)
     {
         $reportType = $request->input('report_type', 'stock');
@@ -87,16 +85,18 @@ class ReportController extends Controller
             ->join('categories', 'products.category_id', '=', 'categories.id')
             ->select(
                 'stock_transactions.transaction_date',
+                'products.product_code',
                 'products.name as product_name',
                 'categories.name as category_name',
                 'stock_transactions.type',
                 'stock_transactions.quantity',
-                'stock_transactions.stock'
+                'stock_transactions.condition',
+                'stock_transactions.description',
+                'stock_transactions.created_by'
             )
             ->orderBy('stock_transactions.transaction_date', 'desc');
 
         if ($startDate && $endDate) {
-            // PERBAIKAN: pakai whereDate
             $query->whereDate('stock_transactions.transaction_date', '>=', $startDate)
                 ->whereDate('stock_transactions.transaction_date', '<=', $endDate);
         }
@@ -104,45 +104,48 @@ class ReportController extends Controller
         $results = $query->get();
 
         return $results->map(fn($item) => [
-            'date' => date('d/m/Y', strtotime($item->transaction_date)),
+            'date' => date('d/m/Y H:i', strtotime($item->transaction_date)),
+            'product_code' => $item->product_code,
             'product' => $item->product_name,
             'category' => $item->category_name,
             'type' => $item->type == 'in' ? 'Masuk' : 'Keluar',
             'quantity' => $item->quantity,
-            'stock' => $item->stock
+            'condition' => $item->condition == 'good' ? 'Aman' : 'Rusak',
+            'description' => $item->description ?? '-',
+            'user' => $this->getUserName($item->created_by)
         ])->toArray();
     }
 
-    /**
-     * Get stock report
-     */
     private function getStockReport()
-    {
-        // Ambil stok terakhir per produk (bukan per transaksi)
-        $results = DB::table('products')
-            ->join('categories', 'products.category_id', '=', 'categories.id')
-            ->where('products.is_deleted', false)
-            ->select(
-                'products.product_code',
-                'products.name as product_name',
-                'categories.name as category_name',
-                'products.stock'
-            )
-            ->orderBy('products.name', 'asc')
-            ->get();
+{
+    $results = DB::table('products')
+        ->join('categories', 'products.category_id', '=', 'categories.id')
+        ->where('products.is_deleted', false)
+        ->select(
+            'products.product_code',
+            'products.name as product_name',
+            'categories.name as category_name',
+            'products.stock',
+            'products.description'
+        )
+        ->orderBy('products.name', 'asc')
+        ->get();
 
-        return $results->map(fn($item) => [
-            'code' => $item->product_code ?? '-',
-            'product' => $item->product_name,
-            'category' => $item->category_name,
-            'stock' => $item->stock ?? 0,
-            'status' => $item->stock <= 5 ? '⚠️ Stok Menipis' : ($item->stock == 0 ? '❌ Habis' : '✅ Aman')
-        ])->toArray();
-    }
+    $data = $results->map(fn($item) => [
+        'code' => $item->product_code ?? '-',
+        'product' => $item->product_name,
+        'category' => $item->category_name,
+        'stock' => $item->stock ?? 0,
+        'status' => $item->stock <= 5 ? '⚠️ Stok Menipis' : ($item->stock == 0 ? '❌ Habis' : '✅ Aman'),
+        'description' => $item->description ?? '-'
+    ])->toArray();
+    
+    // DEBUG - lihat struktur array
+    // \Log::info('Stock Report Data:', ['data' => $data]);
+    
+    return $data;
+}
 
-    /**
-     * Get category report
-     */
     private function getCategoryReport()
     {
         $results = DB::table('categories')
@@ -162,5 +165,12 @@ class ReportController extends Controller
             'total_products' => $item->total_products,
             'total_stock' => $item->total_stock ?? 0
         ])->toArray();
+    }
+
+    private function getUserName($userId)
+    {
+        if (!$userId) return 'System';
+        $user = DB::table('users')->where('id', $userId)->first();
+        return $user ? ($user->username ?? 'Unknown') : 'Unknown';
     }
 }

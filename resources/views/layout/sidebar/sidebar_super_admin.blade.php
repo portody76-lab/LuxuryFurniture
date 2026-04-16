@@ -16,39 +16,40 @@
 
         <nav class="space-y-2">
             {{-- DASHBOARD --}}
-            <a href="{{ route('contents.super_admin.dashboard') }}"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.super_admin.dashboard') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
+            <a href="{{ route('contents.dashboard') }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.dashboard') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
                 <i class="fas fa-tachometer-alt w-5"></i> Dasbor
             </a>
 
             {{-- USER MANAGEMENT --}}
-            <a href="{{ route('contents.user-management.index') }}"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.user-management.*') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
+            <a href="{{ route('contents.users') }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.users') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
                 <i class="fas fa-users w-5"></i> Manajemen User
             </a>
 
             {{-- CATEGORY --}}
-            <a href="{{ route('contents.super_admin.categories') }}"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.super_admin.categories') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
+            <a href="{{ route('contents.categories') }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.categories') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
                 <i class="fas fa-tags w-5"></i> Kategori
             </a>
 
             {{-- Manajemen Produk (Sub-menu) --}}
             <div class="relative">
                 <button onclick="toggleProductSubmenu()"
-                    class="w-full flex items-center justify-between px-4 py-3 rounded-xl {{ request()->routeIs('contents.super_admin.products*') || request()->routeIs('contents.super_admin.stock*') || request()->routeIs('contents.mutasi*') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
+                    class="w-full flex items-center justify-between px-4 py-3 rounded-xl {{ request()->routeIs('contents.productmanage*') || request()->routeIs('contents.stockmanage*') || request()->routeIs('contents.mutasi*') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
                     <div class="flex items-center gap-3">
                         <i class="fas fa-box w-5"></i> Manajemen Produk
                     </div>
-                    <i id="productSubmenuIcon" class="fas fa-chevron-down text-xs transition-transform duration-200"></i>
+                    <i id="productSubmenuIcon"
+                        class="fas fa-chevron-down text-xs transition-transform duration-200"></i>
                 </button>
                 <div id="productSubmenu" class="mt-1 ml-6 space-y-1 hidden">
-                    <a href="{{ route('contents.super_admin.products') }}"
-                        class="flex items-center gap-3 px-4 py-2 rounded-lg {{ request()->routeIs('contents.super_admin.products') ? 'text-[#c9973a] font-semibold' : 'text-[#5a4a1e] hover:text-[#c9973a]' }} text-sm transition">
+                    <a href="{{ route('contents.productmanage') }}"
+                        class="flex items-center gap-3 px-4 py-2 rounded-lg {{ request()->routeIs('contents.productmanage') ? 'text-[#c9973a] font-semibold' : 'text-[#5a4a1e] hover:text-[#c9973a]' }} text-sm transition">
                         <i class="fas fa-cube w-4"></i> Produk
                     </a>
-                    <a href="{{ route('contents.super_admin.stock') }}"
-                        class="flex items-center gap-3 px-4 py-2 rounded-lg {{ request()->routeIs('contents.super_admin.stock') ? 'text-[#c9973a] font-semibold' : 'text-[#5a4a1e] hover:text-[#c9973a]' }} text-sm transition">
+                    <a href="{{ route('contents.stockmanage') }}"
+                        class="flex items-center gap-3 px-4 py-2 rounded-lg {{ request()->routeIs('contents.stockmanage') ? 'text-[#c9973a] font-semibold' : 'text-[#5a4a1e] hover:text-[#c9973a]' }} text-sm transition">
                         <i class="fas fa-warehouse w-4"></i> Stok
                     </a>
                     <a href="{{ route('contents.mutasi') }}"
@@ -59,14 +60,14 @@
             </div>
 
             {{-- REPORT --}}
-            <a href="{{ route('contents.super_admin.reports') }}"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.super_admin.reports') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
+            <a href="{{ route('contents.reports') }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.reports') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
                 <i class="fas fa-chart-line w-5"></i> Laporan
             </a>
 
             {{-- TRASH KHUSUS SUPER ADMIN --}}
-            <a href="{{ route('contents.super_admin.products.trash') }}"
-                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.super_admin.products.trash') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
+            <a href="{{ route('contents.productmanage.trash') }}"
+                class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.productmanage.trash') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
                 <i class="fas fa-trash-alt w-5"></i> Sampah
             </a>
         </nav>
@@ -100,11 +101,9 @@
 </aside>
 
 <script>
-    // Toggle Submenu Manajemen Produk
     function toggleProductSubmenu() {
         const submenu = document.getElementById('productSubmenu');
         const icon = document.getElementById('productSubmenuIcon');
-
         if (submenu.classList.contains('hidden')) {
             submenu.classList.remove('hidden');
             icon.style.transform = 'rotate(180deg)';
@@ -114,11 +113,9 @@
         }
     }
 
-    // Toggle Menu Pengaturan (Setting)
     function toggleSettingMenu() {
         const menu = document.getElementById('settingMenu');
         const icon = document.getElementById('settingMenuIcon');
-
         if (menu.classList.contains('hidden')) {
             menu.classList.remove('hidden');
             icon.style.transform = 'rotate(180deg)';
@@ -128,10 +125,10 @@
         }
     }
 
-    // Jika halaman sedang di route Manajemen Produk (produk/stok/mutasi), submenu terbuka otomatis
     document.addEventListener('DOMContentLoaded', function() {
         const currentRoute = window.location.href;
-        if (currentRoute.includes('/products') || currentRoute.includes('/stock') || currentRoute.includes('/mutasi')) {
+        if (currentRoute.includes('/productmanage') || currentRoute.includes('/stockmanage') || currentRoute
+            .includes('/mutasi')) {
             const submenu = document.getElementById('productSubmenu');
             const icon = document.getElementById('productSubmenuIcon');
             if (submenu && submenu.classList.contains('hidden')) {

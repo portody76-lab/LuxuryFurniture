@@ -23,111 +23,56 @@ Route::middleware(['auth'])
         Route::put('/manage-account/password', [AccountController::class, 'updatePassword'])->name('manage-account.update-password');
     });
 
-// ========== REPORTS (Semua Role) ==========
+// ========== SEMUA ROUTE UNTUK SEMUA ROLE (dengan pengecekan di controller) ==========
 Route::middleware(['auth'])
     ->prefix('contents')
+    ->name('contents.')
     ->group(function () {
-        Route::get('/reports', [ReportController::class, 'index'])->name('contents.reports');
-        Route::get('/reports/download', [ReportController::class, 'downloadPdf'])->name('contents.reports.download');
-    });
-
-// ========== SUPER ADMIN (Role: super_admin) ==========
-Route::middleware(['auth', 'role:super_admin'])
-    ->prefix('contents/super-admin')
-    ->name('contents.super_admin.')
-    ->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])->name('dashboard');
         
-        // Categories
+        // Dashboard - semua role bisa akses
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        
+        // Categories - hanya admin & super_admin
         Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
         Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
         Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
         Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
         
-        // Products
-        Route::get('/products', [ProductController::class, 'index'])->name('products');
-        Route::get('/products/trash', [ProductController::class, 'trash'])->name('products.trash');
-        Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-        Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
-        Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
-        Route::post('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
-        Route::delete('/products/{id}/force', [ProductController::class, 'forceDelete'])->name('products.force-delete');
+        // User Management - hanya admin & super_admin
+        Route::get('/users', [UserController::class, 'index'])->name('users');
+        Route::post('/users', [UserController::class, 'store'])->name('users.store');
+        Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+        Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
+        Route::put('/users/{id}/reset-password', [UserController::class, 'resetPassword'])->name('users.reset-password');
+        Route::put('/users/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
         
-        // Stock Management (pakai StockController)
-        Route::get('/stock', [StockController::class, 'index'])->name('stock');
-        Route::post('/stock/add', [StockController::class, 'addStock'])->name('stock.add');
-        Route::post('/stock/remove', [StockController::class, 'removeStock'])->name('stock.remove');
-        Route::get('/stock/history/{productId}', [StockController::class, 'history'])->name('stock.history');
-        Route::get('/stock/detail/{productId}', [StockController::class, 'detail'])->name('stock.detail');
-        
-        // Reports
-        Route::get('/reports', [ReportController::class, 'index'])->name('reports');
-        Route::get('/reports/download', [ReportController::class, 'downloadPdf'])->name('reports.download');
-    });
-
-// ========== ADMIN (Role: admin) ==========
-Route::middleware(['auth', 'role:admin'])
-    ->prefix('contents/admin')
-    ->name('contents.admin.')
-    ->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])->name('dashboard');
-        
-        // Categories
-        Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
-        Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
-        Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
-        Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
-        
-        // Products
-        Route::get('/products', [ProductController::class, 'index'])->name('products');
-        
-        // Stock Management (pakai StockController)
-        Route::get('/stock', [StockController::class, 'index'])->name('stock');
-        Route::post('/stock/add', [StockController::class, 'addStock'])->name('stock.add');
-        Route::post('/stock/remove', [StockController::class, 'removeStock'])->name('stock.remove');
-        Route::get('/stock/history/{productId}', [StockController::class, 'history'])->name('stock.history');
-        Route::get('/stock/detail/{productId}', [StockController::class, 'detail'])->name('stock.detail');
-    });
-
-// ========== OPERATOR (Role: operator) ==========
-Route::middleware(['auth', 'role:operator'])
-    ->prefix('contents/operator')
-    ->name('contents.operator.')
-    ->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'operatorDashboard'])->name('dashboard');
-        
-        // Product Management
+        // Products - semua role bisa akses
         Route::get('/productmanage', [ProductController::class, 'index'])->name('productmanage');
         Route::post('/products', [ProductController::class, 'store'])->name('products.store');
         Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
         Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
         
-        // Stock Management (pakai StockController)
-        Route::get('/stock', [StockController::class, 'index'])->name('stock');
+        // Trash - hanya super_admin
+        Route::get('/productmanage/trash', [ProductController::class, 'trash'])->name('productmanage.trash');
+        Route::post('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
+        Route::delete('/products/{id}/force', [ProductController::class, 'forceDelete'])->name('products.force-delete');
+        
+        // Stock Management - semua role bisa akses
+        Route::get('/stockmanage', [StockController::class, 'index'])->name('stockmanage');
         Route::post('/stock/add', [StockController::class, 'addStock'])->name('stock.add');
         Route::post('/stock/remove', [StockController::class, 'removeStock'])->name('stock.remove');
         Route::get('/stock/history/{productId}', [StockController::class, 'history'])->name('stock.history');
         Route::get('/stock/detail/{productId}', [StockController::class, 'detail'])->name('stock.detail');
+        
+        // Mutasi - semua role bisa akses
+        Route::get('/mutasi', function() {
+            return view('contents.mutasi');
+        })->name('mutasi');
+        
+        // Reports - semua role bisa akses
+        Route::get('/reports', [ReportController::class, 'index'])->name('reports');
+        Route::get('/reports/download', [ReportController::class, 'downloadPdf'])->name('reports.download');
     });
-
-// ========== USER MANAGEMENT (Super Admin & Admin) ==========
-Route::middleware(['auth', 'role:super_admin,admin'])
-    ->prefix('contents/user-management')
-    ->name('contents.user-management.')
-    ->group(function () {
-        Route::get('/', [UserController::class, 'index'])->name('index');
-        Route::post('/', [UserController::class, 'store'])->name('store');
-        Route::put('/{id}', [UserController::class, 'update'])->name('update');
-        Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
-        Route::put('/{id}/reset-password', [UserController::class, 'resetPassword'])->name('reset-password');
-        Route::put('/{id}/toggle-status', [UserController::class, 'toggleStatus'])->name('toggle-status');
-    });
-
-// ========== MUTASI (Semua Role: Super Admin, Admin, Operator) ==========
-Route::middleware(['auth', 'role:super_admin,admin,operator'])
-    ->get('/contents/mutasi', function() {
-        return view('contents.mutasi');
-    })->name('contents.mutasi');
 
 // ========== LOGOUT ==========
 Route::post('/logout', [LoginController::class, 'logout'])

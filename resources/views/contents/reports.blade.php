@@ -19,14 +19,17 @@
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Tipe Laporan</label>
                     <select name="report_type" id="report_type" required
                         class="w-full px-4 py-2 border border-gray-300 rounded-xl focus:border-[#c9973a] focus:outline-none">
-                        <option value="" disabled {{ !$reportType ? 'selected' : '' }}>-- Pilih Tipe Laporan --</option>
-                        <option value="transaction" {{ $reportType == 'transaction' ? 'selected' : '' }}>Laporan Transaksi</option>
+                        <option value="" disabled {{ !$reportType ? 'selected' : '' }}>-- Pilih Tipe Laporan --
+                        </option>
+                        <option value="transaction" {{ $reportType == 'transaction' ? 'selected' : '' }}>Laporan Transaksi
+                        </option>
                         <option value="stock" {{ $reportType == 'stock' ? 'selected' : '' }}>Laporan Stok Produk</option>
                         <option value="category" {{ $reportType == 'category' ? 'selected' : '' }}>Laporan Kategori</option>
                     </select>
                 </div>
 
-                <div class="mb-4" id="periodDiv" style="{{ $reportType && $reportType != 'stock' && $reportType != 'category' ? '' : 'display: none;' }}">
+                <div class="mb-4" id="periodDiv"
+                    style="{{ $reportType && $reportType != 'stock' && $reportType != 'category' ? '' : 'display: none;' }}">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Periode</label>
                     <div class="grid grid-cols-2 gap-2">
                         <div>
@@ -61,7 +64,7 @@
                 <h3 class="font-bold text-lg text-gray-800">
                     <i class="fas fa-table text-[#c9973a] mr-2"></i> Data Laporan
                 </h3>
-                @if(isset($reportType) && $reportType && isset($reportData) && count($reportData) > 0)
+                @if (isset($reportType) && $reportType && isset($reportData) && count($reportData) > 0)
                     <form method="GET" action="{{ route('contents.reports.download') }}" target="_blank">
                         <input type="hidden" name="report_type" value="{{ $reportType }}">
                         <input type="hidden" name="start_date" value="{{ $startDate }}">
@@ -85,7 +88,7 @@
                 <hr class="my-3">
             </div>
 
-            @if(!$reportType)
+            @if (!$reportType)
                 <div class="text-center py-12">
                     <div class="w-20 h-20 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
                         <i class="fas fa-chart-pie text-3xl text-gray-400"></i>
@@ -93,7 +96,6 @@
                     <h4 class="text-gray-500 font-medium">Pilih Tipe Laporan</h4>
                     <p class="text-gray-400 text-sm mt-1">Silahkan pilih tipe laporan terlebih dahulu</p>
                 </div>
-
             @elseif(isset($reportData) && count($reportData) == 0)
                 <div class="text-center py-12">
                     <div class="w-20 h-20 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
@@ -102,65 +104,73 @@
                     <h4 class="text-gray-500 font-medium">Belum Ada Data</h4>
                     <p class="text-gray-400 text-sm mt-1">Tidak ada data untuk periode yang dipilih</p>
                 </div>
-
             @else
                 <div class="overflow-x-auto">
                     <table class="w-full">
                         <thead>
                             <tr class="bg-[#f3e4c3]">
                                 <th class="rounded-l-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">No</th>
-                                @if($reportType == 'transaction')
+                                @if ($reportType == 'transaction')
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Tanggal</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Produk</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Kategori</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Jenis</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Jumlah</th>
-                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Stok Akhir</th>
+                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Stok
+                                        Akhir</th>
                                 @elseif($reportType == 'stock')
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Kode</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Produk</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Kategori</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Stok</th>
-                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Status</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Deskripsi</th>
+                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Status
+                                    </th>
                                 @elseif($reportType == 'category')
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Kategori</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Total Produk</th>
-                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Total Stok</th>
+                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Total
+                                        Stok</th>
                                 @endif
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($reportData as $index => $row)
+                            @foreach ($reportData as $index => $row)
                                 <tr class="border-b border-[#f3e4c3] hover:bg-[#fdf8f0] transition-colors">
                                     <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $index + 1 }}</td>
 
-                                    @if($reportType == 'transaction')
+                                    @if ($reportType == 'transaction')
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['date'] }}</td>
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product'] }}</td>
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['category'] }}</td>
                                         <td class="px-4 py-3 text-sm">
-                                            <span class="px-2 py-1 rounded-full text-xs {{ $row['type'] == 'Masuk' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+                                            <span
+                                                class="px-2 py-1 rounded-full text-xs {{ $row['type'] == 'Masuk' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
                                                 {{ $row['type'] }}
                                             </span>
                                         </td>
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['quantity']) }}</td>
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['stock']) }}</td>
-
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['quantity']) }}
+                                        </td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['stock']) }}
+                                        </td>
                                     @elseif($reportType == 'stock')
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['code'] }}</td>
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product'] }}</td>
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['category'] }}</td>
                                         <td class="px-4 py-3 text-sm">
-                                            <span class="px-2 py-1 rounded-full text-xs {{ $row['stock'] <= 5 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
+                                            <span
+                                                class="px-2 py-1 rounded-full text-xs {{ $row['stock'] <= 5 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
                                                 {{ number_format($row['stock']) }}
                                             </span>
                                         </td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['description'] ?? '-' }}</td>
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['status'] }}</td>
-
                                     @elseif($reportType == 'category')
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['category'] }}</td>
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['total_products']) }}</td>
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['total_stock']) }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">
+                                            {{ number_format($row['total_products']) }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">
+                                            {{ number_format($row['total_stock']) }}</td>
                                     @endif
                                 </tr>
                             @endforeach
@@ -182,12 +192,12 @@
 @endsection
 
 @section('scripts')
-<script>
-    function printReport() {
-        const printContent = document.getElementById('reportContent');
-        const printWindow = window.open('', '_blank');
-        
-        printWindow.document.write(`
+    <script>
+        function printReport() {
+            const printContent = document.getElementById('reportContent');
+            const printWindow = window.open('', '_blank');
+
+            printWindow.document.write(`
             <html>
             <head>
                 <title>Laporan Luxury Furniture</title>
@@ -212,63 +222,73 @@
             </body>
             </html>
         `);
-        
-        printWindow.document.close();
-        printWindow.print();
-        printWindow.close();
-    }
-    
-    function clearPeriod() {
-        document.getElementById('start_date').value = '';
-        document.getElementById('end_date').value = '';
-    }
-    
-    // Toggle period div based on report type
-    const reportType = document.getElementById('report_type');
-    const periodDiv = document.getElementById('periodDiv');
-    
-    function togglePeriod() {
-        const type = reportType.value;
-        if (type === 'stock' || type === 'category') {
-            periodDiv.style.display = 'none';
-        } else if (type === 'transaction') {
-            periodDiv.style.display = 'block';
-        } else {
-            periodDiv.style.display = 'none';
-        }
-    }
-    
-    reportType.addEventListener('change', togglePeriod);
-    togglePeriod();
-    
-    // Auto hide toast
-    setTimeout(() => {
-        const toast = document.getElementById('toast-box');
-        if (toast) setTimeout(() => toast.style.visibility = 'hidden', 3000);
-    }, 100);
-</script>
 
-<style>
-    @media print {
-        .sidebar, .bg-white:first-child, form, .print\:hidden {
-            display: none !important;
+            printWindow.document.close();
+            printWindow.print();
+            printWindow.close();
         }
-        #reportContent {
-            margin: 0 !important;
-            padding: 0 !important;
-            box-shadow: none !important;
+
+        function clearPeriod() {
+            document.getElementById('start_date').value = '';
+            document.getElementById('end_date').value = '';
         }
-        .print-header, .print-footer {
-            display: block !important;
+
+        // Toggle period div based on report type
+        const reportType = document.getElementById('report_type');
+        const periodDiv = document.getElementById('periodDiv');
+
+        function togglePeriod() {
+            const type = reportType.value;
+            if (type === 'stock' || type === 'category') {
+                periodDiv.style.display = 'none';
+            } else if (type === 'transaction') {
+                periodDiv.style.display = 'block';
+            } else {
+                periodDiv.style.display = 'none';
+            }
         }
-        body {
-            background: white !important;
-            padding: 0 !important;
-            margin: 0 !important;
+
+        reportType.addEventListener('change', togglePeriod);
+        togglePeriod();
+
+        // Auto hide toast
+        setTimeout(() => {
+            const toast = document.getElementById('toast-box');
+            if (toast) setTimeout(() => toast.style.visibility = 'hidden', 3000);
+        }, 100);
+    </script>
+
+    <style>
+        @media print {
+
+            .sidebar,
+            .bg-white:first-child,
+            form,
+            .print\:hidden {
+                display: none !important;
+            }
+
+            #reportContent {
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+            }
+
+            .print-header,
+            .print-footer {
+                display: block !important;
+            }
+
+            body {
+                background: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
         }
-    }
-    .print-header, .print-footer {
-        display: none;
-    }
-</style>
+
+        .print-header,
+        .print-footer {
+            display: none;
+        }
+    </style>
 @endsection

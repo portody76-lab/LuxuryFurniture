@@ -97,7 +97,7 @@
             <span class="bg-[#c9973a] text-white text-xs px-3 py-1 rounded-full break-all">
                 "{{ request('search') }}"
             </span>
-            <a href="{{ route('contents.operator.productmanage') }}" class="text-xs text-[#c9973a] hover:underline">
+            <a href="{{ route('contents.productmanage') }}" class="text-xs text-[#c9973a] hover:underline">
                 Clear search
             </a>
         </div>
@@ -173,7 +173,7 @@
                                 </svg>
                                 <p>Tidak ada produk ditemukan</p>
                                 @if(request('search'))
-                                    <a href="{{ route('contents.operator.productmanage') }}" style="color: #c9973a; font-size: 12px;">Clear search</a>
+                                    <a href="{{ route('contents.productmanage') }}" style="color: #c9973a; font-size: 12px;">Clear search</a>
                                 @endif
                             </div>
                         </td>
@@ -199,7 +199,7 @@
                     FURNITURE</span>
             </div>
             <h2 class="font-playfair text-3xl font-bold text-center text-[#1a1208] mt-2 mb-7">Tambah Produk Baru</h2>
-            <form method="POST" action="{{ route('contents.operator.products.store') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('contents.products.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="grid grid-cols-2 gap-5">
                     <div class="flex flex-col gap-1">
@@ -499,7 +499,7 @@
         // Open edit modal with data
         function openEditModal(id, code, name, categoryId) {
             const form = document.getElementById('form-edit');
-            form.action = "{{ route('contents.operator.products.update', ['id' => ':id']) }}".replace(':id', id);
+            form.action = "{{ route('contents.products.update', ['id' => ':id']) }}".replace(':id', id);
             document.getElementById('edit-code').value = code;
             document.getElementById('edit-name').value = name;
             document.getElementById('edit-category').value = categoryId;
@@ -512,7 +512,7 @@
         document.getElementById('search-button')?.addEventListener('click', function () {
             const search = document.getElementById('search-input').value;
             const category = document.getElementById('category-filter').value;
-            let url = "{{ route('contents.operator.productmanage') }}";
+            let url = "{{ route('contents.productmanage') }}";
             let params = [];
             if (search) params.push('search=' + encodeURIComponent(search));
             if (category) params.push('category_id=' + category);
@@ -527,7 +527,7 @@
         document.getElementById('category-filter')?.addEventListener('change', function () {
             const search = document.getElementById('search-input').value;
             const category = this.value;
-            let url = "{{ route('contents.operator.productmanage') }}";
+            let url = "{{ route('contents.productmanage') }}";
             let params = [];
             if (search) params.push('search=' + encodeURIComponent(search));
             if (category) params.push('category_id=' + category);

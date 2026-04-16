@@ -35,7 +35,7 @@
 
         <!-- SEARCH & TAMBAH CATEGORY -->
         <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
-            <form method="GET" action="{{ route('contents.admin.categories') }}" class="flex gap-2">
+            <form method="GET" action="{{ route('contents.categories') }}" class="flex gap-2">
                 <div class="relative">
                     <!-- SVG ICON SEARCH -->
                     <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-[#c9973a]" width="14" height="14"
@@ -54,7 +54,7 @@
                     </svg>
                 </button>
                 @if (request('search'))
-                    <a href="{{ route('contents.admin.categories') }}"
+                    <a href="{{ route('contents.categories') }}"
                         class="bg-gray-500 hover:bg-gray-600 text-white px-5 py-2.5 rounded-xl transition shadow-sm">
                         Reset
                     </a>
@@ -135,7 +135,7 @@
                 </button>
             </div>
 
-            <form method="POST" action="{{ route('contents.admin.categories.store') }}">
+            <form method="POST" action="{{ route('contents.categories.store') }}">
                 @csrf
                 <div class="px-6 py-5">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Category Name</label>
@@ -244,7 +244,7 @@
             document.getElementById('editName').value = name;
 
             let form = document.getElementById('editForm');
-            form.action = "{{ route('contents.admin.categories.update', ['id' => ':id']) }}".replace(':id', id);
+            form.action = "{{ route('contents.categories.update', ['id' => ':id']) }}".replace(':id', id);
         }
 
         function closeEditModal() {
@@ -257,7 +257,7 @@
             document.getElementById('deleteModal').style.display = 'flex';
 
             let form = document.getElementById('deleteForm');
-            form.action = "{{ route('contents.admin.categories.destroy', ['id' => ':id']) }}".replace(':id', id);
+            form.action = "{{ route('contents.categories.destroy', ['id' => ':id']) }}".replace(':id', id);
         }
 
         function closeDeleteModal() {
