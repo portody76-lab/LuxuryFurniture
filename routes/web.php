@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\MutasiController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Operator\ProductController;
@@ -57,18 +58,18 @@ Route::middleware(['auth'])
         Route::post('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
         Route::delete('/products/{id}/force', [ProductController::class, 'forceDelete'])->name('products.force-delete');
 
-// Stock Management - semua role bisa akses
-Route::get('/stock', [StockController::class, 'index'])->name('stock');
-Route::get('/stockmanage', [StockController::class, 'index'])->name('stockmanage');
-Route::post('/stock/add', [StockController::class, 'addStock'])->name('stock.add');
-Route::post('/stock/remove', [StockController::class, 'removeStock'])->name('stock.remove');
-Route::get('/stock/history/{productId}', [StockController::class, 'history'])->name('stock.history');
-Route::get('/stock/detail/{productId}', [StockController::class, 'detail'])->name('stock.detail');
+        // Stock Management - semua role bisa akses
+        Route::get('/stock', [StockController::class, 'index'])->name('stock');
+        Route::get('/stockmanage', [StockController::class, 'index'])->name('stockmanage');
+        Route::post('/stock/add', [StockController::class, 'addStock'])->name('stock.add');
+        Route::post('/stock/remove', [StockController::class, 'removeStock'])->name('stock.remove');
+        Route::get('/stock/history/{productId}', [StockController::class, 'history'])->name('stock.history');
+        Route::get('/stock/detail/{productId}', [StockController::class, 'detail'])->name('stock.detail');
 
-        // Mutasi - semua role bisa akses
-        Route::get('/mutasi', function () {
-            return view('contents.mutasi');
-        })->name('mutasi');
+        /// ========== MUTASI (Semua Role: Super Admin, Admin, Operator) ==========
+        Route::middleware(['role:super_admin,admin,operator'])
+            ->get('/mutasi', [MutasiController::class, 'index'])
+            ->name('mutasi');
 
         // Reports - semua role bisa akses
         Route::get('/reports', [ReportController::class, 'index'])->name('reports');
@@ -76,7 +77,7 @@ Route::get('/stock/detail/{productId}', [StockController::class, 'detail'])->nam
     });
 
 
-    
+
 // ========== LOGOUT ==========
 Route::post('/logout', [LoginController::class, 'logout'])
     ->middleware('auth')
