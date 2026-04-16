@@ -25,6 +25,7 @@
                         </option>
                         <option value="stock" {{ $reportType == 'stock' ? 'selected' : '' }}>Laporan Stok Produk</option>
                         <option value="category" {{ $reportType == 'category' ? 'selected' : '' }}>Laporan Kategori</option>
+                        <option value="damaged" {{ $reportType == 'damaged' ? 'selected' : '' }}>Laporan Barang Rusak</option>
                     </select>
                 </div>
 
@@ -85,6 +86,9 @@
                     Periode: {{ $startDate ? date('d/m/Y', strtotime($startDate)) : 'Semua' }} -
                     {{ $endDate ? date('d/m/Y', strtotime($endDate)) : 'Semua' }}
                 </p>
+                <p class="text-xs text-gray-500 mt-1">
+                    Dicetak oleh: {{ Auth::user()->username ?? 'System' }}
+                </p>
                 <hr class="my-3">
             </div>
 
@@ -112,25 +116,31 @@
                                 <th class="rounded-l-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">No</th>
                                 @if ($reportType == 'transaction')
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Tanggal</th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Produk</th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Kategori</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Kode Produk</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Nama Produk</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Jenis</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Jumlah</th>
-                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Stok
-                                        Akhir</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Kondisi</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Deskripsi</th>
+                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">User</th>
                                 @elseif($reportType == 'stock')
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Kode</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Produk</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Kategori</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Stok</th>
-                                    <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Deskripsi</th>
-                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Status
-                                    </th>
+                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Status</th>
                                 @elseif($reportType == 'category')
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Kategori</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Total Produk</th>
-                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Total
-                                        Stok</th>
+                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Total Stok
+                                    </th>
+                                @elseif($reportType == 'damaged')
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Tanggal</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Kode Produk</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Nama Produk</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Jumlah</th>
+                                    <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Deskripsi</th>
+                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">User</th>
                                 @endif
                             </tr>
                         </thead>
@@ -140,37 +150,55 @@
                                     <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $index + 1 }}</td>
 
                                     @if ($reportType == 'transaction')
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['date'] }}</td>
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product'] }}</td>
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['category'] }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['date'] ?? '-' }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product_code'] ?? '-' }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product'] ?? '-' }}</td>
                                         <td class="px-4 py-3 text-sm">
                                             <span
-                                                class="px-2 py-1 rounded-full text-xs {{ $row['type'] == 'Masuk' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
-                                                {{ $row['type'] }}
+                                                class="px-2 py-1 rounded-full text-xs {{ ($row['type'] ?? '') == 'Masuk' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+                                                {{ $row['type'] ?? '-' }}
                                             </span>
                                         </td>
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['quantity']) }}
-                                        </td>
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['stock']) }}
-                                        </td>
-                                    @elseif($reportType == 'stock')
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['code'] }}</td>
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product'] }}</td>
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['category'] }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['quantity'] ?? 0) }}</td>
                                         <td class="px-4 py-3 text-sm">
                                             <span
-                                                class="px-2 py-1 rounded-full text-xs {{ $row['stock'] <= 5 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
-                                                {{ number_format($row['stock']) }}
+                                                class="px-2 py-1 rounded-full text-xs {{ ($row['condition'] ?? '') == 'Aman' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+                                                {{ $row['condition'] ?? '-' }}
                                             </span>
                                         </td>
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['description'] ?? '-' }}</td>
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['status'] }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['user'] ?? '-' }}</td>
+
+                                    @elseif($reportType == 'stock')
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['code'] ?? '-' }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product'] ?? '-' }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['category'] ?? '-' }}</td>
+                                        <td class="px-4 py-3 text-sm">
+                                            <span
+                                                class="px-2 py-1 rounded-full text-xs {{ ($row['stock'] ?? 0) <= 5 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
+                                                {{ number_format($row['stock'] ?? 0) }}
+                                            </span>
+                                            </span>
+                                        <td class="px-4 py-3 text-sm">
+                                            <span
+                                                class="px-2 py-1 rounded-full text-xs {{ $row['status'] == 'Stok Menipis' ? 'bg-red-100 text-red-700' : ($row['status'] == 'Habis' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700') }}">
+                                                {{ $row['status'] ?? '-' }}
+                                            </span>
+                                            </span>
+
                                     @elseif($reportType == 'category')
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['category'] }}</td>
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">
-                                            {{ number_format($row['total_products']) }}</td>
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">
-                                            {{ number_format($row['total_stock']) }}</td>
+                                            <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['category'] ?? '-' }}</td>
+                                            <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['total_products'] ?? 0) }}
+                                            </td>
+                                            <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['total_stock'] ?? 0) }}</td>
+
+                                        @elseif($reportType == 'damaged')
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['date'] ?? '-' }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product_code'] ?? '-' }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product'] ?? '-' }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['quantity'] ?? 0) }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['description'] ?? '-' }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['user'] ?? '-' }}</td>
                                     @endif
                                 </tr>
                             @endforeach
@@ -198,30 +226,28 @@
             const printWindow = window.open('', '_blank');
 
             printWindow.document.write(`
-            <html>
-            <head>
-                <title>Laporan Luxury Furniture</title>
-                <style>
-                    body { font-family: 'Inter', sans-serif; padding: 30px; margin: 0; }
-                    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-                    th, td { padding: 10px; text-align: left; border-bottom: 1px solid #e5e7eb; }
-                    th { background-color: #f3e4c3; font-weight: 600; }
-                    .text-center { text-align: center; }
-                    .text-xs { font-size: 12px; }
-                    .text-sm { font-size: 14px; }
-                    .text-xl { font-size: 20px; }
-                    .font-bold { font-weight: bold; }
-                    .text-gray-500 { color: #6b7280; }
-                    .bg-green-100 { background-color: #d1fae5; color: #047857; padding: 4px 8px; border-radius: 9999px; }
-                    .bg-red-100 { background-color: #fee2e2; color: #dc2626; padding: 4px 8px; border-radius: 9999px; }
-                    hr { border: none; border-top: 1px solid #e5e7eb; margin: 16px 0; }
-                </style>
-            </head>
-            <body>
-                ${printContent.cloneNode(true).innerHTML}
-            </body>
-            </html>
-        `);
+                    <html>
+                    <head>
+                        <title>Laporan Luxury Furniture</title>
+                        <style>
+                            body { font-family: 'Inter', sans-serif; padding: 30px; margin: 0; }
+                            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                            th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+                            th { background-color: #f3e4c3; font-weight: 600; }
+                            .text-center { text-align: center; }
+                            .text-xs { font-size: 12px; }
+                            .text-sm { font-size: 14px; }
+                            .text-xl { font-size: 20px; }
+                            .font-bold { font-weight: bold; }
+                            .text-gray-500 { color: #6b7280; }
+                            hr { border: none; border-top: 1px solid #ddd; margin: 16px 0; }
+                        </style>
+                    </head>
+                    <body>
+                        ${printContent.cloneNode(true).innerHTML}
+                    </body>
+                    </html>
+                `);
 
             printWindow.document.close();
             printWindow.print();
@@ -233,13 +259,12 @@
             document.getElementById('end_date').value = '';
         }
 
-        // Toggle period div based on report type
         const reportType = document.getElementById('report_type');
         const periodDiv = document.getElementById('periodDiv');
 
         function togglePeriod() {
             const type = reportType.value;
-            if (type === 'stock' || type === 'category') {
+            if (type === 'stock' || type === 'category' || type === 'damaged') {
                 periodDiv.style.display = 'none';
             } else if (type === 'transaction') {
                 periodDiv.style.display = 'block';
@@ -251,7 +276,6 @@
         reportType.addEventListener('change', togglePeriod);
         togglePeriod();
 
-        // Auto hide toast
         setTimeout(() => {
             const toast = document.getElementById('toast-box');
             if (toast) setTimeout(() => toast.style.visibility = 'hidden', 3000);
@@ -283,6 +307,11 @@
                 background: white !important;
                 padding: 0 !important;
                 margin: 0 !important;
+            }
+
+            th,
+            td {
+                border: 1px solid #000 !important;
             }
         }
 
