@@ -96,7 +96,7 @@
 
         <!-- SEARCH & TAMBAH USER -->
         <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 mb-6">
-            <form method="GET" action="{{ route('contents.user-management.index') }}" class="flex gap-2 w-full sm:w-auto">
+            <form method="GET" action="{{ route('contents.users') }}" class="flex gap-2 w-full sm:w-auto">
                 <div class="relative flex-1 sm:w-64 sm:flex-none">
                     <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-[#c9973a]" width="14" height="14"
                         fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -116,7 +116,7 @@
                     <span class="ml-1 sm:hidden">Cari</span>
                 </button>
                 @if (request('search'))
-                    <a href="{{ route('contents.user-management.index') }}"
+                    <a href="{{ route('contents.users') }}"
                         class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-xl transition shadow-sm text-center shrink-0">
                         Reset
                     </a>
@@ -132,7 +132,6 @@
         <!-- TABLE USER - PERBAIKAN OVERFLOW -->
         <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-gray-100">
             <div class="overflow-x-auto">
-                {{-- KURANGI min-width tabel agar tidak terlalu lebar --}}
                 <table class="w-full min-w-125 md:min-w-full">
                     <thead class="bg-gray-50 border-b border-gray-200">
                         <tr>
@@ -214,7 +213,7 @@
         </div>
     </div>
 
-    <!-- MODALS - tambahkan overflow-y-auto untuk keamanan -->
+    <!-- MODALS -->
     <!-- MODAL TAMBAH USER -->
     <div id="addModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4 overflow-y-auto">
         <div class="bg-white rounded-2xl w-full max-w-md my-8 mx-auto shadow-2xl animate-fade-in-up">
@@ -227,7 +226,7 @@
                     <i class="fas fa-times text-lg sm:text-xl"></i>
                 </button>
             </div>
-            <form method="POST" action="{{ route('contents.user-management.store') }}">
+            <form method="POST" action="{{ route('contents.users.store') }}">
                 @csrf
                 <div class="px-4 sm:px-6 py-4 sm:py-6 space-y-4">
                     <div>
@@ -416,7 +415,6 @@
             animation: fadeInUp 0.2s ease-out;
         }
 
-        /* GLOBAL FIX untuk cegah overflow horizontal */
         body {
             overflow-x: hidden !important;
             max-width: 100% !important;
@@ -428,7 +426,6 @@
     </style>
 
     <script>
-        // SCRIPT SAMA SEPERTI SEBELUMNYA (tidak berubah)
         function openAddModal() {
             document.getElementById('addModal').classList.remove('hidden');
             document.getElementById('addModal').classList.add('flex');
@@ -439,7 +436,7 @@
         }
 
         function openEditModal(id, username, email, roleId) {
-            let url = '{{ route('contents.user-management.update', ':id') }}';
+            let url = '{{ route('contents.users.update', ':id') }}';
             url = url.replace(':id', id);
             document.getElementById('editForm').action = url;
             document.getElementById('edit_username').value = username;
@@ -454,7 +451,7 @@
         }
 
         function openResetModal(id, username) {
-            let url = '{{ route('contents.user-management.reset-password', ':id') }}';
+            let url = '{{ route('contents.users.reset-password', ':id') }}';
             url = url.replace(':id', id);
             document.getElementById('resetForm').action = url;
             document.getElementById('reset_username').innerText = username;
@@ -467,7 +464,7 @@
         }
 
         function openToggleModal(id, username, currentStatus) {
-            let url = '{{ route('contents.user-management.toggle-status', ':id') }}';
+            let url = '{{ route('contents.users.toggle-status', ':id') }}';
             url = url.replace(':id', id);
             document.getElementById('toggleForm').action = url;
             let action = currentStatus == 1 ? 'nonaktifkan' : 'aktifkan';
@@ -486,7 +483,7 @@
         }
 
         function openDeleteModal(id, username) {
-            let url = '{{ route('contents.user-management.destroy', ':id') }}';
+            let url = '{{ route('contents.users.destroy', ':id') }}';
             url = url.replace(':id', id);
             document.getElementById('deleteForm').action = url;
             document.getElementById('delete_username').innerText = username;

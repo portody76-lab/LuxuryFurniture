@@ -8,6 +8,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\ProductCodeHelper;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -15,12 +16,10 @@ class ProductController extends Controller
     {
         $query = Product::with('category')->where('is_deleted', false);
 
-        // Filter by category
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
 
-        // Search by name or product code
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -33,7 +32,7 @@ class ProductController extends Controller
         $categories = Category::all();
         $totalProduct = Product::where('is_deleted', false)->count();
 
-        return view('contents.operator.productmanage', compact('products', 'categories', 'totalProduct'));
+        return view('contents.productmanage', compact('products', 'categories', 'totalProduct'));
     }
 
     public function store(Request $request)
@@ -41,7 +40,7 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:10000',
         ]);
 
         $productCode = ProductCodeHelper::generate($request->category_id);
@@ -59,7 +58,7 @@ class ProductController extends Controller
 
         $product->save();
 
-        return redirect()->route('contents.operator.productmanage')
+        return redirect()->route('contents.productmanage')
             ->with('success', 'Produk berhasil ditambahkan! (Kode: ' . $productCode . ')');
     }
 
@@ -71,7 +70,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'product_code' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:10000',
         ]);
 
         $oldCategoryId = $product->category_id;
@@ -98,7 +97,7 @@ class ProductController extends Controller
             $message .= ' Kode produk diperbarui menjadi: ' . $product->product_code;
         }
 
-        return redirect()->route('contents.operator.productmanage')
+        return redirect()->route('contents.productmanage')
             ->with('success', $message);
     }
 
@@ -125,23 +124,18 @@ class ProductController extends Controller
             $message = 'Produk berhasil dihapus permanen.';
         }
 
-        return redirect()->route('contents.operator.productmanage')
+        return redirect()->route('contents.productmanage')
             ->with('success', $message);
     }
 
-    /**
-     * Menampilkan produk yang sudah soft delete (trash)
-     */
     public function trash(Request $request)
     {
         $query = Product::with('category')->where('is_deleted', true);
 
-        // Filter by category
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
 
-        // Search by name or product code
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -154,33 +148,16 @@ class ProductController extends Controller
         $categories = Category::all();
         $totalTrash = Product::where('is_deleted', true)->count();
 
-        // Tentukan view berdasarkan role user
-        $userRole = auth()->user()->role->role_name;
-        
-        if ($userRole === 'super_admin') {
-            return view('contents.super_admin.productmanage-trash', compact('products', 'categories', 'totalTrash'));
-        } else {
-            return view('contents.operator.productmanage-trash', compact('products', 'categories', 'totalTrash'));
-        }
+        return view('contents.super_admin.productmanage-trash', compact('products', 'categories', 'totalTrash'));
     }
 
-    /**
-     * Restore produk yang sudah soft delete
-     */
     public function restore($id)
     {
         $product = Product::where('is_deleted', true)->findOrFail($id);
         $product->is_deleted = false;
         $product->save();
 
-        // Redirect berdasarkan role user
-        $userRole = auth()->user()->role->role_name;
-        if ($userRole === 'super_admin') {
-            return redirect()->route('contents.super_admin.products.trash')
-                ->with('success', 'Produk "' . $product->name . '" berhasil direstore!');
-        } else {
-            return redirect()->route('contents.operator.productmanage.trash')
-                ->with('success', 'Produk "' . $product->name . '" berhasil direstore!');
-        }
+        return redirect()->route('contents.productmanage.trash')
+            ->with('success', 'Produk "' . $product->name . '" berhasil direstore!');
     }
 }

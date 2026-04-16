@@ -11,19 +11,14 @@ use Illuminate\Support\Facades\Auth;
 
 class StockController extends Controller
 {
-    /**
-     * Halaman utama stock management
-     */
     public function index(Request $request)
     {
         $query = Product::with('category')->where('is_deleted', false);
 
-        // Filter by category
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->category_id);
         }
 
-        // Search by name or product code
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -34,32 +29,16 @@ class StockController extends Controller
 
         $products = $query->orderBy('name')->paginate(10);
         $categories = Category::all();
-
-        // Hitung total stok
         $totalStock = Product::where('is_deleted', false)->sum('stock');
 
-        return view('contents.operator.stockmanage', compact('products', 'categories', 'totalStock'));
+        return view('contents.stockmanage', compact('products', 'categories', 'totalStock'));
     }
 
-    /**
-     * Method helper untuk redirect sesuai role
-     */
     protected function getStockRoute()
     {
-        $user = Auth::user();
-
-        if ($user->role === 'super_admin') {
-            return route('contents.super_admin.stock');
-        } elseif ($user->role === 'admin') {
-            return route('contents.admin.stock');
-        } else {
-            return route('contents.operator.stock');
-        }
+        return route('contents.stockmanage');
     }
 
-    /**
-     * Tambah stok (in) - WAJIB deskripsi
-     */
     public function addStock(Request $request)
     {
         $request->validate([
@@ -82,7 +61,6 @@ class StockController extends Controller
 
             DB::commit();
 
-            // CEK APAKAH AJAX REQUEST
             if ($request->ajax()) {
                 return response()->json([
                     'success' => true,
@@ -108,9 +86,6 @@ class StockController extends Controller
         }
     }
 
-    /**
-     * Kurang stok (out) - WAJIB deskripsi + kondisi barang
-     */
     public function removeStock(Request $request)
     {
         $request->validate([
@@ -175,32 +150,29 @@ class StockController extends Controller
         }
     }
 
-    /**
-     * Histori transaksi per produk (untuk modal)
-     */
     public function history($productId)
     {
         try {
             $product = Product::findOrFail($productId);
 
-            // Ambil transaksi tanpa relasi dulu
             $transactions = StockTransaction::where('product_id', $productId)
                 ->orderBy('transaction_date', 'desc')
                 ->get();
 
             $result = [];
             foreach ($transactions as $transaction) {
-                // Cari user manual
                 $userName = 'System';
                 if ($transaction->created_by) {
                     $user = \App\Models\User::find($transaction->created_by);
-                    $userName = $user ? ($user->name ?? $user->username) : 'Unknown';
+                    $userName = $user ? ($user->username ?? 'Unknown') : 'Unknown';
                 }
 
                 $result[] = [
                     'id' => $transaction->id,
                     'nomor' => $transaction->id,
-                    'tanggal' => $transaction->transaction_date ? date('d F Y H:i', strtotime($transaction->transaction_date)) : '-',
+                    'tanggal' => $transaction->transaction_date 
+                        ? $transaction->transaction_date->translatedFormat('d F Y H:i') . ' WIB'
+                        : '-',
                     'kode' => $product->product_code,
                     'nama' => $product->name,
                     'user' => $userName,
@@ -226,15 +198,10 @@ class StockController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
-                'line' => $e->getLine(),
-                'file' => $e->getFile()
             ], 500);
         }
     }
 
-    /**
-     * Get detail produk untuk modal
-     */
     public function detail($productId)
     {
         $product = Product::with('category')->findOrFail($productId);
