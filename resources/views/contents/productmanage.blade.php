@@ -215,195 +215,179 @@
         </div>
 
         {{-- MODAL TAMBAH PRODUK --}}
-        <div id="modal-tambah" class="modal-overlay">
-            <div class="modal-animation bg-white rounded-3xl p-10 w-full max-w-lg mx-4 my-auto shadow-2xl">
-                <div class="text-center mb-1">
-                    <span class="bg-[#c9973a] text-white text-xs font-bold tracking-wider px-5 py-1 rounded-full">LUXURY
-                        FURNITURE</span>
-                </div>
-                <h2 class="font-playfair text-3xl font-bold text-center text-[#1a1208] mt-2 mb-7">Tambah Produk Baru</h2>
-                <form method="POST" action="{{ route('contents.products.store') }}" enctype="multipart/form-data">
-                    @csrf
-                    <div class="grid grid-cols-2 gap-5">
-                        <div class="flex flex-col gap-1">
-                            <label class="text-sm font-semibold text-[#3a3020]">Image</label>
-                            <div class="flex items-center gap-2 bg-[#f3e4c3] rounded-xl px-4 py-3 cursor-pointer"
-                                onclick="document.getElementById('add-image-input').click()">
-                                <svg width="18" height="18" fill="none" stroke="#c9973a" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                    <polyline points="14 2 14 8 20 8" />
-                                </svg>
-                                <input type="file" id="add-image-input" name="image" accept="image/*" class="hidden"
-                                    onchange="previewImage(this,'add-preview','add-file-label')">
-                                <span id="add-file-label" class="text-[#b09060] text-sm truncate">Pilih gambar</span>
-                            </div>
-                            <div id="add-preview" class="hidden mt-1">
-                                <img class="w-16 h-16 object-cover rounded-xl border border-[#e8d5a8]">
-                            </div>
-                        </div>
-                        <div class="flex flex-col gap-1">
-                            <label class="text-sm font-semibold text-[#3a3020]">Kategori</label>
-                            <div class="flex items-center gap-2 bg-[#f3e4c3] rounded-xl px-4 py-3">
-                                <svg width="18" height="18" fill="none" stroke="#c9973a" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <circle cx="9" cy="21" r="1" />
-                                    <circle cx="20" cy="21" r="1" />
-                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                                </svg>
-                                <select name="category_id"
-                                    class="bg-transparent border-none outline-none text-sm text-[#3a3020] w-full cursor-pointer"
-                                    required>
-                                    <option value="" disabled selected>Pilih Kategori</option>
-                                    @foreach($categories ?? [] as $c)
-                                        <option value="{{ $c->id }}">{{ $c->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="flex flex-col gap-1 col-span-2">
-                            <label class="text-sm font-semibold text-[#3a3020]">Nama Produk</label>
-                            <div class="flex items-center gap-2 bg-[#f3e4c3] rounded-xl px-4 py-3">
-                                <svg width="18" height="18" fill="none" stroke="#c9973a" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <circle cx="9" cy="21" r="1" />
-                                    <circle cx="20" cy="21" r="1" />
-                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                                </svg>
-                                <input type="text" name="name" placeholder="Masukkan Nama Produk"
-                                    class="bg-transparent border-none outline-none text-sm text-[#3a3020] w-full placeholder:text-[#b09060]"
-                                    required>
-                            </div>
-                        </div>
+<div id="modal-tambah" class="modal-overlay fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-xl w-full max-w-sm mx-auto shadow-xl animate-fade-in-up" style="width: 90%; max-width: 360px;">
+        <div class="border-b border-gray-100 px-3 py-2.5 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-box text-[#c9973a] text-sm"></i>
+                <h3 class="font-semibold text-gray-800 text-sm">Tambah Produk Baru</h3>
+            </div>
+            <button onclick="closeModal('modal-tambah')" class="text-gray-400 hover:text-gray-600 transition">
+                <i class="fas fa-times text-sm"></i>
+            </button>
+        </div>
+
+        <form method="POST" action="{{ route('contents.products.store') }}" enctype="multipart/form-data">
+            @csrf
+            <div class="px-3 py-3 space-y-2">
+                <!-- Image Upload -->
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Image</label>
+                    <div class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1.5 cursor-pointer hover:bg-gray-100 transition"
+                        onclick="document.getElementById('add-image-input').click()">
+                        <i class="fas fa-image text-[#c9973a] text-sm"></i>
+                        <span id="add-file-label" class="text-xs text-gray-500 truncate flex-1">Pilih gambar</span>
                     </div>
-                    <button type="submit"
-                        class="mt-7 w-full bg-[#c9973a] hover:bg-[#b07e28] text-white font-bold text-base py-4 rounded-2xl transition-all duration-200 hover:-translate-y-0.5">Tambah</button>
-                </form>
-                <div class="text-center mt-4">
-                    <button onclick="closeModal('modal-tambah')"
-                        class="text-[#9a8060] text-sm bg-transparent border-none cursor-pointer hover:text-[#7a5c1e] transition-colors">Tutup</button>
+                    <input type="file" id="add-image-input" name="image" accept="image/*" class="hidden"
+                        onchange="previewImage(this,'add-preview','add-file-label')">
+                    <div id="add-preview" class="hidden mt-1">
+                        <img class="w-12 h-12 object-cover rounded-lg border border-gray-200">
+                    </div>
+                </div>
+
+                <!-- Kategori -->
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Kategori</label>
+                    <select name="category_id"
+                        class="w-full px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition text-sm text-gray-700"
+                        required>
+                        <option value="" disabled selected>Pilih Kategori</option>
+                        @foreach($categories ?? [] as $c)
+                            <option value="{{ $c->id }}">{{ $c->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Nama Produk -->
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Produk</label>
+                    <input type="text" name="name" placeholder="Masukkan Nama Produk"
+                        class="w-full px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition text-sm text-gray-700"
+                        required>
                 </div>
             </div>
-        </div>
+
+            <div class="border-t border-gray-100 px-3 py-2.5 flex justify-end gap-2">
+                <button type="button" onclick="closeModal('modal-tambah')"
+                    class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-lg transition text-xs">Batal</button>
+                <button type="submit"
+                    class="px-3 py-1 bg-[#c9973a] hover:bg-[#b07e28] text-white rounded-lg transition shadow-sm text-xs">Tambah</button>
+            </div>
+        </form>
+    </div>
+</div>
 
         {{-- MODAL EDIT PRODUK --}}
-        <div id="modal-edit" class="modal-overlay">
-            <div class="modal-animation bg-white rounded-3xl p-10 w-full max-w-lg mx-4 my-auto shadow-2xl">
-                <div class="text-center mb-1">
-                    <span class="bg-[#c9973a] text-white text-xs font-bold tracking-wider px-5 py-1 rounded-full">LUXURY
-                        FURNITURE</span>
-                </div>
-                <h2 class="font-playfair text-3xl font-bold text-center text-[#1a1208] mt-2 mb-7">Edit Produk</h2>
-                <form id="form-edit" method="POST" enctype="multipart/form-data">
-                    @csrf @method('PUT')
-                    <div class="grid grid-cols-2 gap-5">
-                        <div class="flex flex-col gap-1">
-                            <label class="text-sm font-semibold text-[#3a3020]">Kode Produk</label>
-                            <div class="flex items-center gap-2 bg-[#f3e4c3] rounded-xl px-4 py-3">
-                                <svg width="18" height="18" fill="none" stroke="#c9973a" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <rect x="3" y="3" width="18" height="18" rx="2" />
-                                    <line x1="9" y1="9" x2="9" y2="15" />
-                                    <line x1="12" y1="9" x2="12" y2="15" />
-                                    <line x1="15" y1="9" x2="15" y2="15" />
-                                </svg>
-                                <input id="edit-code" type="text" name="product_code" placeholder="Edit Kode Produk"
-                                    class="bg-transparent border-none outline-none text-sm text-[#3a3020] w-full placeholder:text-[#b09060]"
-                                    required>
-                            </div>
-                        </div>
-                        <div class="flex flex-col gap-1">
-                            <label class="text-sm font-semibold text-[#3a3020]">Image</label>
-                            <div class="flex items-center gap-2 bg-[#f3e4c3] rounded-xl px-4 py-3 cursor-pointer"
-                                onclick="document.getElementById('edit-image-input').click()">
-                                <svg width="18" height="18" fill="none" stroke="#c9973a" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                                    <polyline points="14 2 14 8 20 8" />
-                                </svg>
-                                <input type="file" id="edit-image-input" name="image" accept="image/*" class="hidden"
-                                    onchange="previewImage(this,'edit-preview','edit-file-label')">
-                                <span id="edit-file-label" class="text-[#b09060] text-sm truncate">No file chosen</span>
-                            </div>
-                            <div id="edit-preview" class="hidden mt-1">
-                                <img class="w-16 h-16 object-cover rounded-xl border border-[#e8d5a8]">
-                            </div>
-                        </div>
-                        <div class="flex flex-col gap-1">
-                            <label class="text-sm font-semibold text-[#3a3020]">Category</label>
-                            <div class="flex items-center gap-2 bg-[#f3e4c3] rounded-xl px-4 py-3">
-                                <svg width="18" height="18" fill="none" stroke="#c9973a" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <circle cx="9" cy="21" r="1" />
-                                    <circle cx="20" cy="21" r="1" />
-                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                                </svg>
-                                <select id="edit-category" name="category_id"
-                                    class="bg-transparent border-none outline-none text-sm text-[#3a3020] w-full cursor-pointer"
-                                    required>
-                                    <option value="" disabled>Pilih Category</option>
-                                    @if(isset($categories) && count($categories) > 0)
-                                        @foreach($categories as $c)
-                                            <option value="{{ $c->id }}">{{ $c->name }}</option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
-                        </div>
-                        <div class="flex flex-col gap-1">
-                            <label class="text-sm font-semibold text-[#3a3020]">Nama Produk</label>
-                            <div class="flex items-center gap-2 bg-[#f3e4c3] rounded-xl px-4 py-3">
-                                <svg width="18" height="18" fill="none" stroke="#c9973a" stroke-width="2"
-                                    viewBox="0 0 24 24">
-                                    <circle cx="9" cy="21" r="1" />
-                                    <circle cx="20" cy="21" r="1" />
-                                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-                                </svg>
-                                <input id="edit-name" type="text" name="name" placeholder="Edit Nama Produk"
-                                    class="bg-transparent border-none outline-none text-sm text-[#3a3020] w-full placeholder:text-[#b09060]"
-                                    required>
-                            </div>
-                        </div>
-                    </div>
-                    <button type="submit"
-                        class="mt-7 w-full bg-[#c9973a] hover:bg-[#b07e28] text-white font-bold text-base py-4 rounded-2xl transition-all duration-200 hover:-translate-y-0.5">Update</button>
-                </form>
-                <div class="text-center mt-4">
-                    <button onclick="closeModal('modal-edit')"
-                        class="text-[#9a8060] text-sm bg-transparent border-none cursor-pointer hover:text-[#7a5c1e] transition-colors">Tutup</button>
-                </div>
+<div id="modal-edit" class="modal-overlay fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-xl w-full max-w-sm mx-auto shadow-xl animate-fade-in-up" style="width: 90%; max-width: 360px;">
+        <div class="border-b border-gray-100 px-3 py-2.5 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-pen text-yellow-500 text-sm"></i>
+                <h3 class="font-semibold text-gray-800 text-sm">Edit Produk</h3>
             </div>
+            <button onclick="closeModal('modal-edit')" class="text-gray-400 hover:text-gray-600 transition">
+                <i class="fas fa-times text-sm"></i>
+            </button>
         </div>
-        {{-- MODAL DELETE CONFIRMATION --}}
-        <div id="modal-delete" class="modal-overlay">
-            <div class="modal-animation bg-white rounded-3xl p-8 w-full max-w-md mx-4 shadow-2xl">
-                <div class="text-center mb-4">
-                    <div class="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-3">
-                        <i class="fas fa-trash-alt text-red-500 text-2xl"></i>
-                    </div>
-                    <span class="bg-red-100 text-red-600 text-xs font-bold tracking-wider px-4 py-1 rounded-full">
-                        PERINGATAN
-                    </span>
-                </div>
-                <h2 class="font-playfair text-2xl font-bold text-center text-[#1a1208] mb-3">Hapus Produk</h2>
-                <p class="text-center text-gray-500 mb-6" id="delete-message">
-                    Yakin ingin menghapus produk <span id="delete-product-name" class="font-semibold text-gray-800"></span>?
-                </p>
 
-                <form id="form-delete" method="POST" class="flex gap-3">
-                    @csrf
-                    @method('DELETE')
-                    <button type="button" onclick="closeModal('modal-delete')"
-                        class="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-600 hover:bg-gray-50 transition font-medium">
-                        Batal
-                    </button>
-                    <button type="submit"
-                        class="flex-1 px-4 py-3 bg-red-500 hover:bg-red-600 text-white rounded-xl transition font-medium">
-                        <i class="fas fa-trash-alt mr-2"></i> Ya, Hapus
-                    </button>
-                </form>
+        <form id="form-edit" method="POST" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
+            <div class="px-3 py-3 space-y-2">
+                <!-- Kode Produk (readonly) -->
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Kode Produk</label>
+                    <input id="edit-code" type="text" name="product_code" placeholder="Kode Produk"
+                        class="w-full px-2 py-1.5 bg-gray-100 border border-gray-200 rounded-lg text-sm text-gray-500 cursor-not-allowed"
+                        readonly>
+                </div>
+
+                <!-- Nama Produk -->
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Nama Produk</label>
+                    <input id="edit-name" type="text" name="name" placeholder="Edit Nama Produk"
+                        class="w-full px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition text-sm text-gray-700"
+                        required>
+                </div>
+
+                <!-- Kategori -->
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Kategori</label>
+                    <select id="edit-category" name="category_id"
+                        class="w-full px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition text-sm text-gray-700"
+                        required>
+                        <option value="" disabled>Pilih Kategori</option>
+                        @if(isset($categories) && count($categories) > 0)
+                            @foreach($categories as $c)
+                                <option value="{{ $c->id }}">{{ $c->name }}</option>
+                            @endforeach
+                        @endif
+                    </select>
+                </div>
+
+                <!-- Image Upload -->
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Image</label>
+                    <div class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1.5 cursor-pointer hover:bg-gray-100 transition"
+                        onclick="document.getElementById('edit-image-input').click()">
+                        <i class="fas fa-image text-[#c9973a] text-sm"></i>
+                        <span id="edit-file-label" class="text-xs text-gray-500 truncate flex-1">Ganti gambar</span>
+                    </div>
+                    <input type="file" id="edit-image-input" name="image" accept="image/*" class="hidden"
+                        onchange="previewImage(this,'edit-preview','edit-file-label')">
+                    <div id="edit-preview" class="hidden mt-1">
+                        <img class="w-12 h-12 object-cover rounded-lg border border-gray-200">
+                    </div>
+                </div>
             </div>
+
+            <div class="border-t border-gray-100 px-3 py-2.5 flex justify-end gap-2">
+                <button type="button" onclick="closeModal('modal-edit')"
+                    class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-lg transition text-xs">Batal</button>
+                <button type="submit"
+                    class="px-3 py-1 bg-[#c9973a] hover:bg-[#b07e28] text-white rounded-lg transition shadow-sm text-xs">Update</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+        {{-- MODAL DELETE CONFIRMATION --}}
+<div id="modal-delete" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-xl w-full max-w-sm mx-auto shadow-xl animate-fade-in-up" style="width: 90%; max-width: 360px;">
+        <div class="border-b border-gray-100 px-3 py-2.5 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-trash-alt text-red-500 text-sm"></i>
+                <h3 class="font-semibold text-gray-800 text-sm">Hapus Produk</h3>
+            </div>
+            <button onclick="closeModal('modal-delete')" class="text-gray-400 hover:text-gray-600 transition">
+                <i class="fas fa-times text-sm"></i>
+            </button>
         </div>
+
+        <div class="px-3 py-3 text-center">
+            <div class="w-10 h-10 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-2">
+                <i class="fas fa-exclamation-triangle text-red-500 text-sm"></i>
+            </div>
+            <p class="text-sm text-gray-600" id="delete-message">
+                Yakin ingin menghapus produk <span id="delete-product-name" class="font-semibold text-gray-800"></span>?
+            </p>
+            <p class="text-xs text-red-500 mt-2">
+                <i class="fas fa-info-circle mr-1"></i> Tindakan ini tidak dapat dibatalkan!
+            </p>
+        </div>
+
+        <form id="form-delete" method="POST" class="border-t border-gray-100 px-3 py-2.5 flex justify-end gap-2">
+            @csrf
+            @method('DELETE')
+            <button type="button" onclick="closeModal('modal-delete')"
+                class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-lg transition text-xs">Batal</button>
+            <button type="submit"
+                class="px-3 py-1 bg-red-500 hover:bg-red-600 text-white rounded-lg transition shadow-sm text-xs">
+                Ya, Hapus
+            </button>
+        </form>
+    </div>
+</div>
 @endsection
 
     @section('scripts')

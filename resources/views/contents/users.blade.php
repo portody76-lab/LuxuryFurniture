@@ -174,26 +174,33 @@
                                     </span>
                                 </td>
                                 <td class="px-3 sm:px-6 py-3 sm:py-4 text-center">
-                                    <div class="flex items-center justify-center gap-1 sm:gap-2 flex-wrap">
-                                        <button onclick="openToggleModal({{ $user->id }}, '{{ $user->username }}', {{ $user->status }})"
-                                            class="{{ $user->status ? 'text-green-600 hover:text-green-800' : 'text-gray-500 hover:text-gray-700' }} transition p-1"
-                                            title="{{ $user->status ? 'Nonaktifkan' : 'Aktifkan' }}">
-                                            <i class="fas {{ $user->status ? 'fa-toggle-on' : 'fa-toggle-off' }} text-lg sm:text-2xl"></i>
-                                        </button>
-                                        <button onclick="openEditModal({{ $user->id }}, '{{ $user->username }}', '{{ $user->email }}', {{ $user->role_id }})"
-                                            class="text-blue-600 hover:text-blue-800 transition p-1" title="Edit">
-                                            <i class="fas fa-edit text-sm sm:text-lg"></i>
-                                        </button>
-                                        <button onclick="openResetModal({{ $user->id }}, '{{ $user->username }}')"
-                                            class="text-teal-600 hover:text-teal-800 transition p-1" title="Reset Password">
-                                            <i class="fas fa-key text-sm sm:text-lg"></i>
-                                        </button>
-                                        <button onclick="openDeleteModal({{ $user->id }}, '{{ $user->username }}')"
-                                            class="text-red-600 hover:text-red-800 transition p-1" title="Hapus">
-                                            <i class="fas fa-trash-alt text-sm sm:text-lg"></i>
-                                        </button>
-                                    </div>
-                                </td>
+    @if($user->role_id == 3)
+        <!-- Super Admin - Tampilkan badge "Tidak Dapat Dikelola" -->
+        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gray-100 text-gray-500">
+            <i class="fas fa-lock"></i> Tidak Dapat Dikelola
+        </span>
+    @else
+        <div class="flex items-center justify-center gap-1 sm:gap-2 flex-wrap">
+            <button onclick="openToggleModal({{ $user->id }}, '{{ $user->username }}', {{ $user->status }})"
+                class="{{ $user->status ? 'text-green-600 hover:text-green-800' : 'text-gray-500 hover:text-gray-700' }} transition p-1"
+                title="{{ $user->status ? 'Nonaktifkan' : 'Aktifkan' }}">
+                <i class="fas {{ $user->status ? 'fa-toggle-on' : 'fa-toggle-off' }} text-lg sm:text-2xl"></i>
+            </button>
+            <button onclick="openEditModal({{ $user->id }}, '{{ $user->username }}', '{{ $user->email }}', {{ $user->role_id }})"
+                class="text-blue-600 hover:text-blue-800 transition p-1" title="Edit">
+                <i class="fas fa-edit text-sm sm:text-lg"></i>
+            </button>
+            <button onclick="openResetModal({{ $user->id }}, '{{ $user->username }}')"
+                class="text-teal-600 hover:text-teal-800 transition p-1" title="Reset Password">
+                <i class="fas fa-key text-sm sm:text-lg"></i>
+            </button>
+            <button onclick="openDeleteModal({{ $user->id }}, '{{ $user->username }}')"
+                class="text-red-600 hover:text-red-800 transition p-1" title="Hapus">
+                <i class="fas fa-trash-alt text-sm sm:text-lg"></i>
+            </button>
+        </div>
+    @endif
+</td>
                             </tr>
                         @empty
                             <tr>
@@ -215,190 +222,190 @@
 
     <!-- MODALS -->
     <!-- MODAL TAMBAH USER -->
-    <div id="addModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-2xl w-full max-w-md my-8 mx-auto shadow-2xl animate-fade-in-up">
-            <div class="border-b border-gray-100 px-4 sm:px-6 py-4 sm:py-5 flex justify-between items-center">
-                <div class="flex items-center gap-2">
-                    <i class="fas fa-user-plus text-green-500 text-lg sm:text-xl"></i>
-                    <h3 class="text-lg sm:text-xl font-bold text-gray-800">Tambah User Baru</h3>
-                </div>
-                <button onclick="closeAddModal()" class="text-gray-400 hover:text-gray-600 transition">
-                    <i class="fas fa-times text-lg sm:text-xl"></i>
-                </button>
+<div id="addModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-xl w-full max-w-sm mx-auto shadow-xl animate-fade-in-up" style="width: 90%; max-width: 360px;">
+        <div class="border-b border-gray-100 px-3 py-2.5 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-user-plus text-green-500 text-sm"></i>
+                <h3 class="font-semibold text-gray-800 text-sm">Tambah User Baru</h3>
             </div>
-            <form method="POST" action="{{ route('contents.users.store') }}">
-                @csrf
-                <div class="px-4 sm:px-6 py-4 sm:py-6 space-y-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
-                        <input type="text" name="username" required
-                            class="w-full px-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-                        <input type="email" name="email" required
-                            class="w-full px-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Role</label>
-                        <select name="role_id" required
-                            class="w-full px-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition">
-                            <option value="">Pilih Role</option>
-                            @foreach ($roles as $role)
-                                <option value="{{ $role->id }}">{{ $role->role_name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="bg-amber-50 rounded-xl p-3 text-xs sm:text-sm text-amber-700 wrap-break-words">
-                        <i class="fas fa-info-circle mr-1"></i> Password default: <strong>12345678</strong>
-                    </div>
-                </div>
-                <div class="border-t border-gray-100 px-4 sm:px-6 py-4 sm:py-5 flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3">
-                    <button type="button" onclick="closeAddModal()"
-                        class="px-4 sm:px-5 py-2 text-gray-600 hover:bg-gray-100 rounded-xl transition">Batal</button>
-                    <button type="submit"
-                        class="px-5 sm:px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl transition shadow-sm">Simpan</button>
-                </div>
-            </form>
+            <button onclick="closeAddModal()" class="text-gray-400 hover:text-gray-600 transition">
+                <i class="fas fa-times text-sm"></i>
+            </button>
         </div>
+        <form method="POST" action="{{ route('contents.users.store') }}">
+            @csrf
+            <div class="px-3 py-3 space-y-2">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Username</label>
+                    <input type="text" name="username" required
+                        class="w-full px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Email</label>
+                    <input type="email" name="email" required
+                        class="w-full px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Role</label>
+                    <select name="role_id" required
+                        class="w-full px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition text-sm">
+                        <option value="">Pilih Role</option>
+                        @foreach ($roles as $role)
+                            <option value="{{ $role->id }}">{{ $role->role_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="bg-amber-50 rounded-lg p-1.5 text-xs text-amber-700">
+                    <i class="fas fa-info-circle mr-1"></i> Password default: <strong>12345678</strong>
+                </div>
+            </div>
+            <div class="border-t border-gray-100 px-3 py-2.5 flex justify-end gap-2">
+                <button type="button" onclick="closeAddModal()"
+                    class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-lg transition text-xs">Batal</button>
+                <button type="submit"
+                    class="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded-lg transition shadow-sm text-xs">Simpan</button>
+            </div>
+        </form>
     </div>
+</div>
 
     <!-- MODAL EDIT USER -->
-    <div id="editModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-2xl w-full max-w-md my-8 mx-auto shadow-2xl animate-fade-in-up">
-            <div class="border-b border-gray-100 px-4 sm:px-6 py-4 sm:py-5 flex justify-between items-center">
-                <div class="flex items-center gap-2">
-                    <i class="fas fa-user-edit text-blue-500 text-lg sm:text-xl"></i>
-                    <h3 class="text-lg sm:text-xl font-bold text-gray-800">Edit User</h3>
-                </div>
-                <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 transition">
-                    <i class="fas fa-times text-lg sm:text-xl"></i>
-                </button>
+<div id="editModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-xl w-full max-w-sm mx-auto shadow-xl animate-fade-in-up" style="width: 90%; max-width: 360px;">
+        <div class="border-b border-gray-100 px-3 py-2.5 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-user-edit text-blue-500 text-sm"></i>
+                <h3 class="font-semibold text-gray-800 text-sm">Edit User</h3>
             </div>
-            <form id="editForm" method="POST">
-                @csrf
-                @method('PUT')
-                <div class="px-4 sm:px-6 py-4 sm:py-6 space-y-4">
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
-                        <input type="text" name="username" id="edit_username" required
-                            class="w-full px-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Email</label>
-                        <input type="email" name="email" id="edit_email" required
-                            class="w-full px-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">Role</label>
-                        <select name="role_id" id="edit_role_id" required
-                            class="w-full px-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition">
-                            @foreach ($roles as $role)
-                                <option value="{{ $role->id }}">{{ $role->role_name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                <div class="border-t border-gray-100 px-4 sm:px-6 py-4 sm:py-5 flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3">
-                    <button type="button" onclick="closeEditModal()"
-                        class="px-4 sm:px-5 py-2 text-gray-600 hover:bg-gray-100 rounded-xl transition">Batal</button>
-                    <button type="submit"
-                        class="px-5 sm:px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl transition shadow-sm">Update</button>
-                </div>
-            </form>
+            <button onclick="closeEditModal()" class="text-gray-400 hover:text-gray-600 transition">
+                <i class="fas fa-times text-sm"></i>
+            </button>
         </div>
+        <form id="editForm" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="px-3 py-3 space-y-2">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Username</label>
+                    <input type="text" name="username" id="edit_username" required
+                        class="w-full px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Email</label>
+                    <input type="email" name="email" id="edit_email" required
+                        class="w-full px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Role</label>
+                    <select name="role_id" id="edit_role_id" required
+                        class="w-full px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition text-sm">
+                        @foreach ($roles as $role)
+                            <option value="{{ $role->id }}">{{ $role->role_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div class="border-t border-gray-100 px-3 py-2.5 flex justify-end gap-2">
+                <button type="button" onclick="closeEditModal()"
+                    class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-lg transition text-xs">Batal</button>
+                <button type="submit"
+                    class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition shadow-sm text-xs">Update</button>
+            </div>
+        </form>
     </div>
+</div>
 
     <!-- MODAL RESET PASSWORD -->
-    <div id="resetModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-2xl w-full max-w-md my-8 mx-auto shadow-2xl animate-fade-in-up">
-            <div class="border-b border-gray-100 px-4 sm:px-6 py-4 sm:py-5 flex justify-between items-center">
-                <div class="flex items-center gap-2">
-                    <i class="fas fa-key text-teal-500 text-lg sm:text-xl"></i>
-                    <h3 class="text-lg sm:text-xl font-bold text-gray-800">Reset Password</h3>
-                </div>
-                <button onclick="closeResetModal()" class="text-gray-400 hover:text-gray-600 transition">
-                    <i class="fas fa-times text-lg sm:text-xl"></i>
-                </button>
+<div id="resetModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-xl w-full max-w-sm mx-auto shadow-xl animate-fade-in-up" style="width: 90%; max-width: 360px;">
+        <div class="border-b border-gray-100 px-3 py-2.5 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-key text-teal-500 text-sm"></i>
+                <h3 class="font-semibold text-gray-800 text-sm">Reset Password</h3>
             </div>
-            <div class="px-4 sm:px-6 py-4 sm:py-6">
-                <p class="text-sm sm:text-base text-gray-600 wrap-break-words">Yakin ingin reset password user <strong id="reset_username"></strong>?</p>
-                <div class="bg-amber-50 rounded-xl p-3 mt-4 text-xs sm:text-sm text-amber-700 wrap-break-words">
-                    <i class="fas fa-info-circle mr-1"></i> Password akan direset menjadi: <strong>12345678</strong>
-                </div>
-            </div>
-            <form id="resetForm" method="POST">
-                @csrf
-                @method('PUT')
-                <div class="border-t border-gray-100 px-4 sm:px-6 py-4 sm:py-5 flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3">
-                    <button type="button" onclick="closeResetModal()"
-                        class="px-4 sm:px-5 py-2 text-gray-600 hover:bg-gray-100 rounded-xl transition">Batal</button>
-                    <button type="submit"
-                        class="px-5 sm:px-6 py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-xl transition shadow-sm">Ya, Reset</button>
-                </div>
-            </form>
+            <button onclick="closeResetModal()" class="text-gray-400 hover:text-gray-600 transition">
+                <i class="fas fa-times text-sm"></i>
+            </button>
         </div>
+        <div class="px-3 py-3">
+            <p class="text-sm text-gray-600">Yakin ingin reset password user <strong id="reset_username"></strong>?</p>
+            <div class="bg-amber-50 rounded-lg p-2 mt-3 text-xs text-amber-700">
+                <i class="fas fa-info-circle mr-1"></i> Password akan direset menjadi: <strong>12345678</strong>
+            </div>
+        </div>
+        <form id="resetForm" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="border-t border-gray-100 px-3 py-2.5 flex justify-end gap-2">
+                <button type="button" onclick="closeResetModal()"
+                    class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-lg transition text-xs">Batal</button>
+                <button type="submit"
+                    class="px-3 py-1 bg-teal-600 hover:bg-teal-700 text-white rounded-lg transition shadow-sm text-xs">Ya, Reset</button>
+            </div>
+        </form>
     </div>
+</div>
 
     <!-- MODAL TOGGLE STATUS -->
-    <div id="toggleModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-2xl w-full max-w-md my-8 mx-auto shadow-2xl animate-fade-in-up">
-            <div class="border-b border-gray-100 px-4 sm:px-6 py-4 sm:py-5 flex justify-between items-center">
-                <div class="flex items-center gap-2">
-                    <i class="fas fa-power-off text-amber-500 text-lg sm:text-xl"></i>
-                    <h3 class="text-lg sm:text-xl font-bold text-gray-800">Ubah Status User</h3>
-                </div>
-                <button onclick="closeToggleModal()" class="text-gray-400 hover:text-gray-600 transition">
-                    <i class="fas fa-times text-lg sm:text-xl"></i>
-                </button>
+<div id="toggleModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-xl w-full max-w-sm mx-auto shadow-xl animate-fade-in-up" style="width: 90%; max-width: 360px;">
+        <div class="border-b border-gray-100 px-3 py-2.5 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-power-off text-amber-500 text-sm"></i>
+                <h3 class="font-semibold text-gray-800 text-sm">Ubah Status User</h3>
             </div>
-            <div class="px-4 sm:px-6 py-4 sm:py-6">
-                <p class="text-sm sm:text-base text-gray-600 wrap-break-words">Yakin ingin <strong id="toggle_action"></strong> user <strong id="toggle_username"></strong>?</p>
-                <p class="text-xs sm:text-sm mt-2 wrap-break-words" id="toggle_message"></p>
-            </div>
-            <form id="toggleForm" method="POST">
-                @csrf
-                @method('PUT')
-                <div class="border-t border-gray-100 px-4 sm:px-6 py-4 sm:py-5 flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3">
-                    <button type="button" onclick="closeToggleModal()"
-                        class="px-4 sm:px-5 py-2 text-gray-600 hover:bg-gray-100 rounded-xl transition">Batal</button>
-                    <button type="submit"
-                        class="px-5 sm:px-6 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-xl transition shadow-sm">Ya, Ubah</button>
-                </div>
-            </form>
+            <button onclick="closeToggleModal()" class="text-gray-400 hover:text-gray-600 transition">
+                <i class="fas fa-times text-sm"></i>
+            </button>
         </div>
+        <div class="px-3 py-3">
+            <p class="text-sm text-gray-600">Yakin ingin <strong id="toggle_action"></strong> user <strong id="toggle_username"></strong>?</p>
+            <p class="text-xs text-gray-500 mt-2" id="toggle_message"></p>
+        </div>
+        <form id="toggleForm" method="POST">
+            @csrf
+            @method('PUT')
+            <div class="border-t border-gray-100 px-3 py-2.5 flex justify-end gap-2">
+                <button type="button" onclick="closeToggleModal()"
+                    class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-lg transition text-xs">Batal</button>
+                <button type="submit"
+                    class="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition shadow-sm text-xs">Ya, Ubah</button>
+            </div>
+        </form>
     </div>
+</div>
 
     <!-- MODAL HAPUS USER -->
-    <div id="deleteModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-white rounded-2xl w-full max-w-md my-8 mx-auto shadow-2xl animate-fade-in-up">
-            <div class="border-b border-gray-100 px-4 sm:px-6 py-4 sm:py-5 flex justify-between items-center">
-                <div class="flex items-center gap-2">
-                    <i class="fas fa-trash-alt text-red-500 text-lg sm:text-xl"></i>
-                    <h3 class="text-lg sm:text-xl font-bold text-gray-800">Hapus User</h3>
-                </div>
-                <button onclick="closeDeleteModal()" class="text-gray-400 hover:text-gray-600 transition">
-                    <i class="fas fa-times text-lg sm:text-xl"></i>
-                </button>
+<div id="deleteModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-xl w-full max-w-sm mx-auto shadow-xl animate-fade-in-up" style="width: 90%; max-width: 360px;">
+        <div class="border-b border-gray-100 px-3 py-2.5 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-trash-alt text-red-500 text-sm"></i>
+                <h3 class="font-semibold text-gray-800 text-sm">Hapus User</h3>
             </div>
-            <div class="px-4 sm:px-6 py-4 sm:py-6">
-                <p class="text-sm sm:text-base text-gray-600 wrap-break-words">Yakin ingin menghapus user <strong id="delete_username"></strong>?</p>
-                <p class="text-red-500 text-xs sm:text-sm mt-2 flex items-center gap-1">
-                    <i class="fas fa-exclamation-triangle"></i> Tindakan ini tidak dapat dibatalkan!
-                </p>
-            </div>
-            <form id="deleteForm" method="POST">
-                @csrf
-                @method('DELETE')
-                <div class="border-t border-gray-100 px-4 sm:px-6 py-4 sm:py-5 flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3">
-                    <button type="button" onclick="closeDeleteModal()"
-                        class="px-4 sm:px-5 py-2 text-gray-600 hover:bg-gray-100 rounded-xl transition">Batal</button>
-                    <button type="submit"
-                        class="px-5 sm:px-6 py-2 bg-red-600 hover:bg-red-700 text-white rounded-xl transition shadow-sm">Ya, Hapus</button>
-                </div>
-            </form>
+            <button onclick="closeDeleteModal()" class="text-gray-400 hover:text-gray-600 transition">
+                <i class="fas fa-times text-sm"></i>
+            </button>
         </div>
+        <div class="px-3 py-3">
+            <p class="text-sm text-gray-600">Yakin ingin menghapus user <strong id="delete_username"></strong>?</p>
+            <p class="text-red-500 text-xs mt-2 flex items-center gap-1">
+                <i class="fas fa-exclamation-triangle"></i> Tindakan ini tidak dapat dibatalkan!
+            </p>
+        </div>
+        <form id="deleteForm" method="POST">
+            @csrf
+            @method('DELETE')
+            <div class="border-t border-gray-100 px-3 py-2.5 flex justify-end gap-2">
+                <button type="button" onclick="closeDeleteModal()"
+                    class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-lg transition text-xs">Batal</button>
+                <button type="submit"
+                    class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded-lg transition shadow-sm text-xs">Ya, Hapus</button>
+            </div>
+        </form>
     </div>
+</div>
 
     <style>
         @keyframes fadeInUp {
