@@ -3,7 +3,7 @@
 @section('title', 'Trash - Product Management')
 
 @section('content')
-    <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
         <div>
             <h1 class="text-2xl font-bold text-gray-800">Trash - Produk Terhapus</h1>
             <p class="text-[#8b7a66] text-sm mt-1">Produk yang telah dihapus</p>
@@ -48,7 +48,7 @@
                         <line x1="21" y1="21" x2="16.65" y2="16.65" />
                     </svg>
                     <input type="text" id="search-input" placeholder="Search Product..."
-                        class="border border-[#e8d5a8] rounded-xl py-2 pl-9 pr-4 text-sm bg-[#fdf8f0] transition-colors focus:border-[#c9973a] focus:outline-none w-64">
+                        class="border border-[#e8d5a8] rounded-xl py-2 pl-9 pr-4 text-sm bg-[#fdf8f0] transition-colors focus:border-[#c9973a] focus:outline-none w-48 sm:w-64">
                 </div>
                 <button id="search-button"
                     class="bg-[#c9973a] hover:bg-[#b07e28] text-white px-4 py-2 rounded-xl transition-colors">
@@ -134,67 +134,81 @@
 
     <!-- MODAL RESTORE -->
     <div id="modal-restore" class="modal-overlay">
-        <div class="modal-animation bg-white rounded-3xl p-8 w-full max-w-md mx-4 shadow-2xl">
-            <div class="text-center mb-4">
-                <div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-3">
-                    <i class="fa-solid fa-arrows-rotate"></i>
-                </div>
-                <span class="bg-green-100 text-green-600 text-xs font-bold tracking-wider px-4 py-1 rounded-full">RESTORE PRODUK</span>
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fa-solid fa-arrows-rotate text-green-500"></i> Restore Produk
+                </h3>
+                <button onclick="closeModal('modal-restore')" class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <h2 class="font-playfair text-2xl font-bold text-center text-[#1a1208] mb-3">Restore Produk</h2>
-            <p class="text-center text-gray-500 mb-6">
-                Yakin ingin mengembalikan produk <span id="restore-product-name" class="font-semibold text-gray-800"></span>?
-            </p>
-
-            <form id="form-restore" method="POST" class="flex gap-3">
-                @csrf
-                <button type="button" onclick="closeModal('modal-restore')"
-                    class="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-600 hover:bg-gray-50 transition font-medium">
-                    Batal
-                </button>
-                <button type="submit"
-                    class="flex-1 px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl transition font-medium">
-                    <i class="fa-solid fa-arrows-rotate"></i> Ya, Restore
-                </button>
-            </form>
+            <div class="modal-body text-center">
+                <div class="restore-icon">
+                    <i class="fa-solid fa-arrows-rotate text-green-500 text-5xl mb-3"></i>
+                </div>
+                <p class="text-gray-600 mb-2">
+                    Yakin ingin mengembalikan produk <span id="restore-product-name" class="font-semibold text-gray-800"></span>?
+                </p>
+                <p class="text-green-600 text-sm">
+                    <i class="fa-solid fa-arrows-rotate"></i> Produk akan kembali ke daftar aktif
+                </p>
+            </div>
+            <div class="modal-footer">
+                <form id="form-restore" method="POST" class="flex gap-3 w-full">
+                    @csrf
+                    <button type="button" onclick="closeModal('modal-restore')" class="btn-cancel flex-1">
+                        Batal
+                    </button>
+                    <button type="submit" class="btn-restore flex-1">
+                        <i class="fa-solid fa-arrows-rotate"></i> Ya, Restore
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 
     <!-- MODAL FORCE DELETE -->
     <div id="modal-force-delete" class="modal-overlay">
-        <div class="modal-animation bg-white rounded-3xl p-8 w-full max-w-md mx-4 shadow-2xl">
-            <div class="text-center mb-4">
-                <div class="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-3">
-                    <i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
-                </div>
-                <span class="bg-red-100 text-red-600 text-xs font-bold tracking-wider px-4 py-1 rounded-full">HAPUS PERMANEN</span>
+        <div class="modal-container-sm">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-exclamation-triangle text-red-500"></i> Hapus Permanen
+                </h3>
+                <button onclick="closeModal('modal-force-delete')" class="modal-close">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-            <h2 class="font-playfair text-2xl font-bold text-center text-[#1a1208] mb-3">Hapus Permanen</h2>
-            <p class="text-center text-gray-500 mb-6">
-                Yakin ingin menghapus permanen produk <span id="force-delete-product-name" class="font-semibold text-gray-800"></span>?
-            </p>
-            <p class="text-center text-red-500 text-sm mb-6">
-                <i class="fas fa-info-circle"></i> Tindakan ini tidak dapat dibatalkan!
-            </p>
-
-            <form id="form-force-delete" method="POST" class="flex gap-3">
-                @csrf
-                @method('DELETE')
-                <button type="button" onclick="closeModal('modal-force-delete')"
-                    class="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-600 hover:bg-gray-50 transition font-medium">
-                    Batal
-                </button>
-                <button type="submit"
-                    class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl transition font-medium">
-                    <i class="fas fa-trash-alt mr-2"></i> Ya, Hapus
-                </button>
-            </form>
+            <div class="modal-body text-center">
+                <div class="delete-icon">
+                    <i class="fas fa-trash-alt text-red-500 text-5xl mb-3"></i>
+                </div>
+                <p class="text-gray-600 mb-2">
+                    Yakin ingin menghapus permanen produk <span id="force-delete-product-name" class="font-semibold text-gray-800"></span>?
+                </p>
+                <p class="text-red-500 text-sm">
+                    <i class="fas fa-info-circle"></i> Tindakan ini tidak dapat dibatalkan!
+                </p>
+            </div>
+            <div class="modal-footer">
+                <form id="form-force-delete" method="POST" class="flex gap-3 w-full">
+                    @csrf
+                    @method('DELETE')
+                    <button type="button" onclick="closeModal('modal-force-delete')" class="btn-cancel flex-1">
+                        Batal
+                    </button>
+                    <button type="submit" class="btn-delete flex-1">
+                        <i class="fas fa-trash-alt mr-2"></i> Ya, Hapus
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
 @endsection
 
 @section('scripts')
     <style>
+        /* Modal Styles */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -208,9 +222,27 @@
             align-items: center;
             justify-content: center;
         }
-        .modal-animation {
-            animation: modalFadeIn 0.3s ease-out;
+
+        .modal-container {
+            background: white;
+            border-radius: 1.5rem;
+            width: 90%;
+            max-width: 450px;
+            margin: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: modalFadeIn 0.2s ease-out;
         }
+
+        .modal-container-sm {
+            background: white;
+            border-radius: 1.5rem;
+            width: 90%;
+            max-width: 380px;
+            margin: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: modalFadeIn 0.2s ease-out;
+        }
+
         @keyframes modalFadeIn {
             from {
                 opacity: 0;
@@ -221,14 +253,135 @@
                 transform: scale(1);
             }
         }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-close {
+            color: #9ca3af;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: color 0.2s;
+            font-size: 1.25rem;
+        }
+
+        .modal-close:hover {
+            color: #4b5563;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .restore-icon, .delete-icon {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-cancel {
+            padding: 0.625rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            color: #6b7280;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .btn-cancel:hover {
+            background: #f9fafb;
+        }
+
+        .btn-restore {
+            padding: 0.625rem 1rem;
+            background: #22c55e;
+            border: none;
+            border-radius: 0.75rem;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-restore:hover {
+            background: #16a34a;
+        }
+
+        .btn-delete {
+            padding: 0.625rem 1rem;
+            background: #ef4444;
+            border: none;
+            border-radius: 0.75rem;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-delete:hover {
+            background: #dc2626;
+        }
+
         #toast-box {
             animation: toastFade 3s ease-in-out forwards;
         }
+
         @keyframes toastFade {
             0% { opacity: 0; transform: translateY(-20px); }
             15% { opacity: 1; transform: translateY(0); }
             85% { opacity: 1; transform: translateY(0); }
             100% { opacity: 0; transform: translateY(-20px); visibility: hidden; }
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .modal-header {
+                padding: 1rem 1.25rem;
+            }
+            .modal-title {
+                font-size: 1.125rem;
+            }
+            .modal-body {
+                padding: 1.25rem;
+            }
+            .modal-footer {
+                padding: 0.875rem 1.25rem;
+            }
+            .btn-cancel, .btn-restore, .btn-delete {
+                padding: 0.5rem 0.875rem;
+                font-size: 0.875rem;
+            }
         }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -289,6 +442,9 @@
         if (searchInput) searchInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') applySearchAndFilter(); });
         if (categoryFilter) categoryFilter.addEventListener('change', applySearchAndFilter);
 
-        setTimeout(function() { const toast = document.getElementById('toast-box'); if (toast) setTimeout(() => toast.style.display = 'none', 3000); }, 100);
+        setTimeout(function() { 
+            const toast = document.getElementById('toast-box'); 
+            if (toast) setTimeout(() => toast.style.display = 'none', 3000); 
+        }, 100);
     </script>
 @endsection
