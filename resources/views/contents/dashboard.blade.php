@@ -145,7 +145,7 @@
             <div class="border border-orange-200 rounded-2xl overflow-hidden">
                 <div class="bg-orange-50 px-4 py-3 border-b border-orange-200">
                     <h4 class="font-semibold text-orange-700 flex items-center gap-2">
-                        <i class="fas fa-exclamation-triangle"></i> ⚠️ Barang Stok Akan Habis
+                        <i class="fas fa-exclamation-triangle"></i>Barang Stok Akan Habis
                     </h4>
                 </div>
                 <div class="overflow-x-auto max-h-80 overflow-y-auto">
@@ -189,7 +189,7 @@
             <div class="border border-red-200 rounded-2xl overflow-hidden">
                 <div class="bg-red-50 px-4 py-3 border-b border-red-200">
                     <h4 class="font-semibold text-red-700 flex items-center gap-2">
-                        <i class="fas fa-times-circle"></i> ❌ Barang Stok Rusak
+                        <i class="fas fa-times-circle"></i>Barang Stok Rusak
                     </h4>
                 </div>
                 <div class="overflow-x-auto max-h-80 overflow-y-auto">

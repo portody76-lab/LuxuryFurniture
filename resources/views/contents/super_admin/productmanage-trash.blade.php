@@ -8,7 +8,7 @@
             <h1 class="text-2xl font-bold text-gray-800">Trash - Produk Terhapus</h1>
             <p class="text-[#8b7a66] text-sm mt-1">Produk yang telah dihapus</p>
         </div>
-        <a href="{{ route('contents.super_admin.products') }}"
+        <a href="{{ route('contents.productmanage') }}"
             class="bg-[#c9973a] hover:bg-[#a87922] text-white px-4 py-2 rounded-xl transition flex items-center gap-2">
             <i class="fas fa-arrow-left"></i> Kembali ke Produk
         </a>
@@ -17,7 +17,7 @@
     @if(session('success') || session('error'))
         <div class="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
             <div id="toast-box" class="px-8 py-4 rounded-2xl shadow-2xl text-white text-sm font-semibold
-                                        {{ session('success') ? 'bg-green-500' : 'bg-red-500' }}">
+                        {{ session('success') ? 'bg-green-500' : 'bg-red-500' }}">
                 {{ session('success') ?? session('error') }}
             </div>
         </div>
@@ -103,9 +103,15 @@
                                 <td class="px-3 py-3 text-center">
                                     <button type="button"
                                         onclick="openRestoreModal({{ $productId }}, '{{ addslashes($productName) }}')"
-                                        class="bg-green-500 hover:bg-green-600 text-white p-2 rounded-md transition-colors scale-125"
+                                        class="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition-colors"
                                         title="Restore">
                                         <i class="fa-solid fa-arrows-rotate"></i>
+                                    </button>
+                                    <button type="button"
+                                        onclick="openForceDeleteModal({{ $productId }}, '{{ addslashes($productName) }}')"
+                                        class="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors ml-2"
+                                        title="Hapus Permanen">
+                                        <i class="fas fa-trash-alt"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -126,23 +132,18 @@
         @endif
     </div>
 
-    {{-- MODAL RESTORE CONFIRMATION --}}
+    <!-- MODAL RESTORE -->
     <div id="modal-restore" class="modal-overlay">
         <div class="modal-animation bg-white rounded-3xl p-8 w-full max-w-md mx-4 shadow-2xl">
             <div class="text-center mb-4">
                 <div class="w-16 h-16 mx-auto bg-green-100 rounded-full flex items-center justify-center mb-3">
-                    <i class="fas fa-trash-restore text-green-500 text-2xl"></i>
+                    <i class="fa-solid fa-arrows-rotate"></i>
                 </div>
-                <span class="bg-green-100 text-green-600 text-xs font-bold tracking-wider px-4 py-1 rounded-full">
-                    RESTORE PRODUK
-                </span>
+                <span class="bg-green-100 text-green-600 text-xs font-bold tracking-wider px-4 py-1 rounded-full">RESTORE PRODUK</span>
             </div>
             <h2 class="font-playfair text-2xl font-bold text-center text-[#1a1208] mb-3">Restore Produk</h2>
             <p class="text-center text-gray-500 mb-6">
                 Yakin ingin mengembalikan produk <span id="restore-product-name" class="font-semibold text-gray-800"></span>?
-            </p>
-            <p class="text-center text-green-600 text-sm mb-6">
-                <i class="fas fa-info-circle"></i> Produk akan kembali ke daftar produk aktif
             </p>
 
             <form id="form-restore" method="POST" class="flex gap-3">
@@ -153,7 +154,39 @@
                 </button>
                 <button type="submit"
                     class="flex-1 px-4 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl transition font-medium">
-                    <i class="fa-solid fa-arrows-rotate"></i>  Ya, Restore
+                    <i class="fa-solid fa-arrows-rotate"></i> Ya, Restore
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL FORCE DELETE -->
+    <div id="modal-force-delete" class="modal-overlay">
+        <div class="modal-animation bg-white rounded-3xl p-8 w-full max-w-md mx-4 shadow-2xl">
+            <div class="text-center mb-4">
+                <div class="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center mb-3">
+                    <i class="fas fa-exclamation-triangle text-red-500 text-2xl"></i>
+                </div>
+                <span class="bg-red-100 text-red-600 text-xs font-bold tracking-wider px-4 py-1 rounded-full">HAPUS PERMANEN</span>
+            </div>
+            <h2 class="font-playfair text-2xl font-bold text-center text-[#1a1208] mb-3">Hapus Permanen</h2>
+            <p class="text-center text-gray-500 mb-6">
+                Yakin ingin menghapus permanen produk <span id="force-delete-product-name" class="font-semibold text-gray-800"></span>?
+            </p>
+            <p class="text-center text-red-500 text-sm mb-6">
+                <i class="fas fa-info-circle"></i> Tindakan ini tidak dapat dibatalkan!
+            </p>
+
+            <form id="form-force-delete" method="POST" class="flex gap-3">
+                @csrf
+                @method('DELETE')
+                <button type="button" onclick="closeModal('modal-force-delete')"
+                    class="flex-1 px-4 py-3 border border-gray-300 rounded-xl text-gray-600 hover:bg-gray-50 transition font-medium">
+                    Batal
+                </button>
+                <button type="submit"
+                    class="flex-1 px-4 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl transition font-medium">
+                    <i class="fas fa-trash-alt mr-2"></i> Ya, Hapus
                 </button>
             </form>
         </div>
@@ -210,18 +243,29 @@
             document.body.style.overflow = 'auto';
         }
 
-        // Restore modal functions
+        // Restore modal
         let restoreFormAction = '';
-
         function openRestoreModal(productId, productName) {
-            restoreFormAction = '/contents/super-admin/products/' + productId + '/restore';
+            restoreFormAction = '/contents/products/' + productId + '/restore';
             document.getElementById('restore-product-name').innerText = productName;
             openModal('modal-restore');
         }
-
-        document.getElementById('form-restore')?.addEventListener('submit', function (e) {
+        document.getElementById('form-restore')?.addEventListener('submit', function(e) {
             e.preventDefault();
             this.action = restoreFormAction;
+            this.submit();
+        });
+
+        // Force delete modal
+        let forceDeleteFormAction = '';
+        function openForceDeleteModal(productId, productName) {
+            forceDeleteFormAction = '/contents/products/' + productId + '/force';
+            document.getElementById('force-delete-product-name').innerText = productName;
+            openModal('modal-force-delete');
+        }
+        document.getElementById('form-force-delete')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            this.action = forceDeleteFormAction;
             this.submit();
         });
 
@@ -233,7 +277,7 @@
         function applySearchAndFilter() {
             const searchValue = searchInput?.value || '';
             const categoryValue = categoryFilter?.value || '';
-            let url = "{{ route('contents.super_admin.products.trash') }}?";
+            let url = "{{ route('contents.productmanage.trash') }}?";
             const params = [];
             if (searchValue) params.push('search=' + encodeURIComponent(searchValue));
             if (categoryValue && categoryValue !== '') params.push('category_id=' + encodeURIComponent(categoryValue));
@@ -242,9 +286,9 @@
         }
 
         if (searchButton) searchButton.addEventListener('click', applySearchAndFilter);
-        if (searchInput) searchInput.addEventListener('keypress', function (e) { if (e.key === 'Enter') applySearchAndFilter(); });
+        if (searchInput) searchInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') applySearchAndFilter(); });
         if (categoryFilter) categoryFilter.addEventListener('change', applySearchAndFilter);
 
-        setTimeout(function () { const toast = document.getElementById('toast-box'); if (toast) setTimeout(() => toast.style.display = 'none', 3000); }, 100);
+        setTimeout(function() { const toast = document.getElementById('toast-box'); if (toast) setTimeout(() => toast.style.display = 'none', 3000); }, 100);
     </script>
 @endsection

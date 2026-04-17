@@ -53,11 +53,6 @@ Route::middleware(['auth'])
         Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update');
         Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy');
 
-        // Trash - hanya super_admin
-        Route::get('/productmanage/trash', [ProductController::class, 'trash'])->name('productmanage.trash');
-        Route::post('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
-        Route::delete('/products/{id}/force', [ProductController::class, 'forceDelete'])->name('products.force-delete');
-
         // Stock Management - semua role bisa akses
         Route::get('/stock', [StockController::class, 'index'])->name('stock');
         Route::get('/stockmanage', [StockController::class, 'index'])->name('stockmanage');
@@ -66,7 +61,7 @@ Route::middleware(['auth'])
         Route::get('/stock/history/{productId}', [StockController::class, 'history'])->name('stock.history');
         Route::get('/stock/detail/{productId}', [StockController::class, 'detail'])->name('stock.detail');
 
-        /// ========== MUTASI (Semua Role: Super Admin, Admin, Operator) ==========
+        // Mutasi
         Route::middleware(['role:super_admin,admin,operator'])
             ->get('/mutasi', [MutasiController::class, 'index'])
             ->name('mutasi');
@@ -76,7 +71,15 @@ Route::middleware(['auth'])
         Route::get('/reports/download', [ReportController::class, 'downloadPdf'])->name('reports.download');
     });
 
-
+// ========== TRASH - KHUSUS SUPER ADMIN ==========
+Route::middleware(['auth', 'role:super_admin'])
+    ->prefix('contents')
+    ->name('contents.')
+    ->group(function () {
+        Route::get('/productmanage/trash', [ProductController::class, 'trash'])->name('productmanage.trash');
+        Route::post('/products/{id}/restore', [ProductController::class, 'restore'])->name('products.restore');
+        Route::delete('/products/{id}/force', [ProductController::class, 'forceDelete'])->name('products.force-delete');
+    });
 
 // ========== LOGOUT ==========
 Route::post('/logout', [LoginController::class, 'logout'])

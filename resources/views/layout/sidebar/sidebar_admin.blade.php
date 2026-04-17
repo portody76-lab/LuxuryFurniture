@@ -1,5 +1,5 @@
-<aside id="sidebar" class="w-64 p-6 flex flex-col justify-between min-h-screen"
-    style="background: linear-gradient(180deg, #e8d5a8 0%, #ddc89a 100%); box-shadow: 4px 0 20px rgba(180,140,60,0.10);">
+<aside id="sidebar" class="fixed w-64 p-6 flex flex-col justify-between min-h-screen"
+    style="background: linear-gradient(180deg, #e8d5a8 0%, #ddc89a 100%); box-shadow: 4px 0 20px rgba(180,140,60,0.10); z-index: 40;">
 
     <div>
         <!-- Tombol close (mobile) -->
@@ -18,7 +18,7 @@
             {{-- DASHBOARD --}}
             <a href="{{ route('contents.dashboard') }}"
                 class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.dashboard') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
-                <i class="fas fa-tachometer-alt w-5"></i> Dasbor
+                <i class="fas fa-tachometer-alt w-5"></i> Beranda
             </a>
 
             {{-- USER MANAGEMENT --}}
@@ -36,7 +36,7 @@
             {{-- Manajemen Produk (Sub-menu) --}}
             <div class="relative">
                 <button onclick="toggleProductSubmenu()"
-                    class="w-full flex items-center justify-between px-4 py-3 rounded-xl {{ request()->routeIs('contents.productmanage*') || request()->routeIs('contents.stockmanage*') || request()->routeIs('contents.mutasi*') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
+                    class="w-full flex items-center justify-between px-4 py-3 rounded-xl {{ (request()->routeIs('contents.productmanage') || request()->routeIs('contents.stockmanage') || request()->routeIs('contents.mutasi')) ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
                     <div class="flex items-center gap-3">
                         <i class="fas fa-box w-5"></i> Manajemen Produk
                     </div>
@@ -44,7 +44,7 @@
                 </button>
                 <div id="productSubmenu" class="mt-1 ml-6 space-y-1 hidden">
                     <a href="{{ route('contents.productmanage') }}"
-                        class="flex items-center gap-3 px-4 py-2 rounded-lg {{ request()->routeIs('contents.productmanage') ? 'text-[#c9973a] font-semibold' : 'text-[#5a4a1e] hover:text-[#c9973a]' }} text-sm transition">
+                        class="flex items-center gap-3 px-4 py-2 rounded-lg {{ request()->routeIs('contents.productmanage') && !request()->routeIs('contents.productmanage.trash') ? 'text-[#c9973a] font-semibold' : 'text-[#5a4a1e] hover:text-[#c9973a]' }} text-sm transition">
                         <i class="fas fa-cube w-4"></i> Produk
                     </a>
                     <a href="{{ route('contents.stockmanage') }}"
@@ -65,31 +65,13 @@
             </a>
         </nav>
     </div>
-
-    {{-- SETTING (Manage Account + Logout) --}}
+    {{-- PENGATURAN (Langsung ke Manage Account) - Icon Only --}}
     <div class="mt-6">
-        <div class="relative">
-            <button onclick="toggleSettingMenu()"
-                class="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white font-medium text-sm transition-all duration-200 shadow">
-                <div class="flex items-center gap-3">
-                    <i class="fas fa-cog w-5"></i> Pengaturan
-                </div>
-                <i id="settingMenuIcon" class="fas fa-chevron-down text-xs transition-transform duration-200"></i>
-            </button>
-            <div id="settingMenu" class="mt-1 space-y-1 hidden">
-                <a href="{{ route('manage-account') }}"
-                    class="flex items-center gap-3 px-4 py-2 rounded-lg text-[#5a4a1e] hover:text-[#c9973a] text-sm transition">
-                    <i class="fas fa-user-cog w-4"></i> Kelola Akun
-                </a>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit"
-                        class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-red-600 hover:bg-red-50 text-sm transition">
-                        <i class="fas fa-sign-out-alt w-4"></i> Keluar
-                    </button>
-                </form>
-            </div>
-        </div>
+        <a href="{{ route('manage-account') }}"
+            class="inline-flex items-center justify-center p-3 rounded-xl text-[#5a4a1e] hover:text-white transition-all duration-200"
+            title="Pengaturan">
+            <i class="fas fa-cog text-4xl"></i>
+        </a>
     </div>
 </aside>
 
@@ -120,7 +102,10 @@
 
     document.addEventListener('DOMContentLoaded', function() {
         const currentRoute = window.location.href;
-        if (currentRoute.includes('/productmanage') || currentRoute.includes('/stockmanage') || currentRoute.includes('/mutasi')) {
+        // Hanya untuk halaman productmanage, stockmanage, mutasi (bukan trash)
+        if ((currentRoute.includes('/productmanage') && !currentRoute.includes('/trash')) || 
+            currentRoute.includes('/stockmanage') || 
+            currentRoute.includes('/mutasi')) {
             const submenu = document.getElementById('productSubmenu');
             const icon = document.getElementById('productSubmenuIcon');
             if (submenu && submenu.classList.contains('hidden')) {

@@ -6,7 +6,8 @@
     <div class="min-h-[calc(100vh-3rem)] flex items-center justify-center">
         <div class="max-w-4xl w-full mx-auto">
 
-            <div class="mb-8 text-center">
+            <!-- Header -->
+            <div class="text-center mb-8">
                 <div class="mb-4">
                     <div
                         class="w-16 h-16 sm:w-20 sm:h-20 bg-linear-to-br from-amber-400 to-amber-600 rounded-full flex items-center justify-center mx-auto shadow-lg">
@@ -20,6 +21,18 @@
                     <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Manage Account Operator</h1>
                     <p class="text-gray-500 mt-1">Kelola data akun Operator Anda sendiri</p>
                 @endif
+            </div>
+
+            <!-- Tombol Logout (diatas informasi akun) -->
+            <div class="flex justify-end mb-4">
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit"
+                        class="bg-white border border-gray-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 text-gray-600 px-8 py-2 rounded-xl transition-all duration-200 flex items-center gap-2 shadow-sm">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </button>
+                </form>
             </div>
 
             <!-- Info Card -->

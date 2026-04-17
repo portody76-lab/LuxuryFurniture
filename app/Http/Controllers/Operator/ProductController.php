@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
+    /**
+     * Menampilkan daftar produk aktif
+     */
     public function index(Request $request)
     {
         $query = Product::with('category')->where('is_deleted', false);
@@ -35,6 +38,9 @@ class ProductController extends Controller
         return view('contents.productmanage', compact('products', 'categories', 'totalProduct'));
     }
 
+    /**
+     * Menyimpan produk baru
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -62,6 +68,9 @@ class ProductController extends Controller
             ->with('success', 'Produk berhasil ditambahkan! (Kode: ' . $productCode . ')');
     }
 
+    /**
+     * Mengupdate produk
+     */
     public function update(Request $request, $id)
     {
         $product = Product::findOrFail($id);
@@ -101,6 +110,9 @@ class ProductController extends Controller
             ->with('success', $message);
     }
 
+    /**
+     * Menghapus produk (soft delete jika punya transaksi, hard delete jika tidak)
+     */
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
@@ -128,8 +140,16 @@ class ProductController extends Controller
             ->with('success', $message);
     }
 
+    /**
+     * Menampilkan produk yang sudah soft delete (Trash) - HANYA SUPER ADMIN
+     */
     public function trash(Request $request)
     {
+        // Hanya Super Admin yang bisa akses
+        if (auth()->user()->role->role_name !== 'super_admin') {
+            abort(403, 'Akses ditolak. Halaman ini hanya untuk Super Admin.');
+        }
+
         $query = Product::with('category')->where('is_deleted', true);
 
         if ($request->filled('category_id')) {
@@ -151,13 +171,44 @@ class ProductController extends Controller
         return view('contents.super_admin.productmanage-trash', compact('products', 'categories', 'totalTrash'));
     }
 
+    /**
+     * Mengembalikan produk dari trash - HANYA SUPER ADMIN
+     */
     public function restore($id)
     {
+        // Hanya Super Admin yang bisa akses
+        if (auth()->user()->role->role_name !== 'super_admin') {
+            abort(403, 'Akses ditolak. Halaman ini hanya untuk Super Admin.');
+        }
+
         $product = Product::where('is_deleted', true)->findOrFail($id);
         $product->is_deleted = false;
         $product->save();
 
         return redirect()->route('contents.productmanage.trash')
             ->with('success', 'Produk "' . $product->name . '" berhasil direstore!');
+    }
+
+    /**
+     * Menghapus permanen produk dari trash - HANYA SUPER ADMIN
+     */
+    public function forceDelete($id)
+    {
+        // Hanya Super Admin yang bisa akses
+        if (auth()->user()->role->role_name !== 'super_admin') {
+            abort(403, 'Akses ditolak. Halaman ini hanya untuk Super Admin.');
+        }
+
+        $product = Product::where('is_deleted', true)->findOrFail($id);
+        
+        // Hapus file image jika ada
+        if ($product->image && file_exists(storage_path('app/public/' . $product->image))) {
+            unlink(storage_path('app/public/' . $product->image));
+        }
+        
+        $product->forceDelete();
+        
+        return redirect()->route('contents.productmanage.trash')
+            ->with('success', 'Produk berhasil dihapus permanen!');
     }
 }
