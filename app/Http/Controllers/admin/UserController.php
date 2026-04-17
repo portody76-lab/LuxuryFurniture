@@ -12,6 +12,13 @@ use App\Models\Role;
 
 class UserController extends Controller
 {
+    // Helper untuk cek apakah user adalah Super Admin
+    private function isSuperAdmin($userId)
+    {
+        $user = User::find($userId);
+        return $user && $user->role_id == 3;
+    }
+
     public function index(Request $request)
     {
         $users = User::with('role')
@@ -40,6 +47,11 @@ class UserController extends Controller
             'role_id' => 'required|exists:roles,id',
         ]);
 
+        // Cegah pembuatan user Super Admin baru melalui form
+        if ($request->role_id == 3) {
+            return redirect()->back()->with('error', 'Tidak dapat membuat akun Super Admin!');
+        }
+
         $user = User::create([
             'username' => $request->username,
             'email' => $request->email,
@@ -56,6 +68,12 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
+        // Cegah update Super Admin
+        if ($this->isSuperAdmin($id)) {
+            return redirect()->route('contents.users')
+                ->with('error', 'Akun Super Admin tidak dapat diedit!');
+        }
+
         $user = User::findOrFail($id);
 
         $request->validate([
@@ -63,6 +81,11 @@ class UserController extends Controller
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($id)],
             'role_id' => 'required|exists:roles,id',
         ]);
+
+        // Cegah perubahan role menjadi Super Admin
+        if ($request->role_id == 3) {
+            return redirect()->back()->with('error', 'Tidak dapat mengubah role menjadi Super Admin!');
+        }
 
         $user->update([
             'username' => $request->username,
@@ -77,6 +100,12 @@ class UserController extends Controller
 
     public function destroy($id)
     {
+        // Cegah penghapusan Super Admin
+        if ($this->isSuperAdmin($id)) {
+            return redirect()->route('contents.users')
+                ->with('error', 'Akun Super Admin tidak dapat dihapus!');
+        }
+
         if ($id == Auth::id()) {
             return redirect()->route('contents.users')
                 ->with('error', 'Anda tidak bisa menghapus akun sendiri!');
@@ -91,6 +120,12 @@ class UserController extends Controller
 
     public function resetPassword($id)
     {
+        // Cegah reset password Super Admin
+        if ($this->isSuperAdmin($id)) {
+            return redirect()->route('contents.users')
+                ->with('error', 'Password akun Super Admin tidak dapat direset!');
+        }
+
         $user = User::findOrFail($id);
 
         $user->update([
@@ -104,13 +139,18 @@ class UserController extends Controller
 
     public function toggleStatus($id)
     {
-        $user = User::findOrFail($id);
+        // Cegah toggle status Super Admin
+        if ($this->isSuperAdmin($id)) {
+            return redirect()->route('contents.users')
+                ->with('error', 'Status akun Super Admin tidak dapat diubah!');
+        }
 
         if ($id == Auth::id()) {
             return redirect()->route('contents.users')
                 ->with('error', 'Anda tidak bisa mengubah status akun sendiri!');
         }
 
+        $user = User::findOrFail($id);
         $user->status = !$user->status;
         $user->updated_by = Auth::id();
         $user->save();
