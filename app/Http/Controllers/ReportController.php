@@ -137,7 +137,6 @@ private function getTransactionReport($startDate, $endDate)
                 'products.name as product_name',
                 'categories.name as category_name',
                 'products.stock',
-                'products.description'
             )
             ->orderBy('products.name', 'asc')
             ->get();
@@ -147,7 +146,7 @@ private function getTransactionReport($startDate, $endDate)
             'product' => $item->product_name,
             'category' => $item->category_name,
             'stock' => $item->stock ?? 0,
-            'status' => $item->stock <= 5 ? '⚠️ Stok Menipis' : ($item->stock == 0 ? 'Habis' : 'Aman'),
+            'status' => $item->stock <= 25 ? 'Stok Menipis' : ($item->stock == 0 ? 'Habis' : 'Aman'),
             'description' => $item->description ?? '-'
         ])->toArray();
 

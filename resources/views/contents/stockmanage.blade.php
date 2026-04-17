@@ -94,9 +94,9 @@
                                 <span
                                     class="text-sm font-semibold px-3 py-1 rounded-lg {{ $stockClass }}">{{ number_format($p->stock ?? 0) }}</span>
                                 @if (($p->stock ?? 0) <= 25 && ($p->stock ?? 0) > 0)
-                                    <span class="text-xs text-orange-500 block">⚠️ Stok akan habis!</span>
+                                    <span class="text-xs text-orange-500 block">Stok akan habis!</span>
                                 @elseif(($p->stock ?? 0) == 0)
-                                    <span class="text-xs text-red-500 block">❌ Habis!</span>
+                                    <span class="text-xs text-red-500 block">Habis!</span>
                                 @endif
                             </td>
                             <td class="px-4 py-3 text-center">

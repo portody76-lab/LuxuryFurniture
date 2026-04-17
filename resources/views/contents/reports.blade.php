@@ -175,13 +175,13 @@
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['category'] ?? '-' }}</td>
                                         <td class="px-4 py-3 text-sm">
                                             <span
-                                                class="px-2 py-1 rounded-full text-xs {{ ($row['stock'] ?? 0) <= 5 ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700' }}">
+                                                class="px-2 py-1 rounded-full text-xs {{ ($row['stock'] ?? 0) <= 25 ? 'bg-orange-100 text-orange-500' : 'bg-green-100 text-green-700' }}">
                                                 {{ number_format($row['stock'] ?? 0) }}
                                             </span>
                                             </span>
                                         <td class="px-4 py-3 text-sm">
                                             <span
-                                                class="px-2 py-1 rounded-full text-xs {{ $row['status'] == 'Stok Menipis' ? 'bg-red-100 text-red-700' : ($row['status'] == 'Habis' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700') }}">
+                                                class="px-2 py-1 rounded-full text-xs {{ $row['status'] == 'Stok Menipis' ? 'bg-orange-100 text-orange-500' : ($row['status'] == 'Habis' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700') }}">
                                                 {{ $row['status'] ?? '-' }}
                                             </span>
                                             </span>
