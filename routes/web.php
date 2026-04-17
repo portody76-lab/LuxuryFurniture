@@ -33,6 +33,10 @@ Route::middleware(['auth'])
         // Dashboard - semua role bisa akses
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+        // ========== API ROUTES FOR DASHBOARD CHARTS (AJAX) ==========
+        Route::get('/dashboard/chart-data', [DashboardController::class, 'getChartData'])->name('dashboard.chart-data');
+        Route::get('/dashboard/damaged-stock-data', [DashboardController::class, 'getDamagedStockData'])->name('dashboard.damaged-stock-data');
+
         // Categories - hanya admin & super_admin
         Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
         Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');

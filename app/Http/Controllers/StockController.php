@@ -117,7 +117,6 @@ class StockController extends Controller
                 'quantity' => $request->quantity,
                 'type' => 'out',
                 'condition' => $request->condition,
-                'damage_reason' => null,
                 'description' => $request->description,
                 'transaction_date' => now(),
                 'created_by' => $userId,
