@@ -1,10 +1,10 @@
 @extends('layout.content')
 
-@section('title', auth()->user()->role->role_name === 'admin' ? 'Manage Account Admin' : 'Manage Account Operator')
+@section('title', auth()->user()->role->role_name === 'super_admin' ? 'Manage Account Super Admin' : (auth()->user()->role->role_name === 'admin' ? 'Manage Account Admin' : 'Manage Account Operator'))
 
 @section('content')
     <div class="min-h-[calc(100vh-3rem)] flex items-center justify-center">
-        <div class="max-w-4xl w-full mx-auto">
+        <div class="max-w-4xl w-full mx-auto px-4 sm:px-6">
 
             <!-- Header -->
             <div class="text-center mb-8">
@@ -14,11 +14,14 @@
                         <i class="fas fa-user-circle text-white text-4xl sm:text-5xl"></i>
                     </div>
                 </div>
-                @if (auth()->user()->role->role_name === 'admin')
-                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight">Manage Account Admin</h1>
+                @if (auth()->user()->role->role_name === 'super_admin')
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight">Kelola Akun Super Admin</h1>
+                    <p class="text-gray-500 mt-1">Kelola data akun Super Admin Anda sendiri</p>
+                @elseif (auth()->user()->role->role_name === 'admin')
+                    <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight">Kelola Akun Admin</h1>
                     <p class="text-gray-500 mt-1">Kelola data akun admin Anda sendiri</p>
                 @else
-                    <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Manage Account Operator</h1>
+                    <h1 class="text-3xl font-bold text-gray-800 tracking-tight">Kelola Akun Operator</h1>
                     <p class="text-gray-500 mt-1">Kelola data akun Operator Anda sendiri</p>
                 @endif
             </div>
@@ -49,7 +52,7 @@
                     </div>
                     <div>
                         <p class="text-xs text-gray-500 uppercase tracking-wide">Role</p>
-                        <p class="text-gray-800 font-medium">{{ auth()->user()->role->role_name ?? 'Admin' }}</p>
+                        <p class="text-gray-800 font-medium">{{ ucfirst(auth()->user()->role->role_name ?? 'Admin') }}</p>
                     </div>
                     <div>
                         <p class="text-xs text-gray-500 uppercase tracking-wide">Status</p>
@@ -125,89 +128,89 @@
 
     <!-- MODAL EDIT USERNAME -->
     <div id="usernameModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-    <div class="bg-white rounded-xl w-full max-w-sm mx-auto shadow-xl animate-fade-in-up" style="width: 90%; max-width: 360px;">
-        <div class="border-b border-gray-100 px-3 py-2.5 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <i class="fas fa-user-pen text-amber-500 text-sm"></i>
-                <h3 class="font-semibold text-gray-800 text-sm">Edit Username</h3>
-            </div>
-            <button type="button" onclick="closeUsernameModal()" class="text-gray-400 hover:text-gray-600 transition">
-                <i class="fas fa-times text-sm"></i>
-            </button>
-        </div>
-
-        <form id="usernameFormElement" method="POST" action="{{ route('manage-account.update-username') }}">
-            @csrf
-            @method('PUT')
-
-            <div class="px-3 py-3 space-y-2">
-                <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">Username</label>
-                    <input type="text" name="username" value="{{ old('username', auth()->user()->username) }}"
-                        class="w-full px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition text-sm"
-                        placeholder="Masukkan username baru" required>
-                    <div id="usernameError" class="text-red-500 text-xs mt-1 hidden"></div>
+        <div class="bg-white rounded-xl w-full max-w-sm mx-auto shadow-xl animate-fade-in-up" style="width: 90%; max-width: 360px;">
+            <div class="border-b border-gray-100 px-3 py-2.5 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-user-pen text-amber-500 text-sm"></i>
+                    <h3 class="font-semibold text-gray-800 text-sm">Edit Username</h3>
                 </div>
+                <button type="button" onclick="closeUsernameModal()" class="text-gray-400 hover:text-gray-600 transition">
+                    <i class="fas fa-times text-sm"></i>
+                </button>
             </div>
 
-            <div class="border-t border-gray-100 px-3 py-2.5 flex justify-end gap-2">
-                <button type="button" onclick="closeUsernameModal()"
-                    class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-lg transition text-xs">Batal</button>
-                <button type="submit" id="submitUsernameBtn"
-                    class="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition shadow-sm text-xs">Update</button>
-            </div>
-        </form>
+            <form id="usernameFormElement" method="POST" action="{{ route('manage-account.update-username') }}">
+                @csrf
+                @method('PUT')
+
+                <div class="px-3 py-3 space-y-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Username</label>
+                        <input type="text" name="username" value="{{ old('username', auth()->user()->username) }}"
+                            class="w-full px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition text-sm"
+                            placeholder="Masukkan username baru" required>
+                        <div id="usernameError" class="text-red-500 text-xs mt-1 hidden"></div>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-100 px-3 py-2.5 flex justify-end gap-2">
+                    <button type="button" onclick="closeUsernameModal()"
+                        class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-lg transition text-xs">Batal</button>
+                    <button type="submit" id="submitUsernameBtn"
+                        class="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition shadow-sm text-xs">Update</button>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
     <!-- MODAL EDIT PASSWORD -->
     <div id="passwordModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-    <div class="bg-white rounded-xl w-full max-w-sm mx-auto shadow-xl animate-fade-in-up" style="width: 90%; max-width: 360px;">
-        <div class="border-b border-gray-100 px-3 py-2.5 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <i class="fas fa-lock text-amber-500 text-sm"></i>
-                <h3 class="font-semibold text-gray-800 text-sm">Edit Password</h3>
+        <div class="bg-white rounded-xl w-full max-w-sm mx-auto shadow-xl animate-fade-in-up" style="width: 90%; max-width: 360px;">
+            <div class="border-b border-gray-100 px-3 py-2.5 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-lock text-amber-500 text-sm"></i>
+                    <h3 class="font-semibold text-gray-800 text-sm">Edit Password</h3>
+                </div>
+                <button type="button" onclick="closePasswordModal()" class="text-gray-400 hover:text-gray-600 transition">
+                    <i class="fas fa-times text-sm"></i>
+                </button>
             </div>
-            <button type="button" onclick="closePasswordModal()" class="text-gray-400 hover:text-gray-600 transition">
-                <i class="fas fa-times text-sm"></i>
-            </button>
+
+            <form id="passwordFormElement" method="POST" action="{{ route('manage-account.update-password') }}">
+                @csrf
+                @method('PUT')
+
+                <div class="px-3 py-3 space-y-2">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Password Lama</label>
+                        <input type="password" name="current_password"
+                            class="w-full px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition text-sm"
+                            placeholder="Masukkan password lama" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Password Baru</label>
+                        <input type="password" name="new_password"
+                            class="w-full px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition text-sm"
+                            placeholder="Masukkan password baru" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-700 mb-1">Konfirmasi Password Baru</label>
+                        <input type="password" name="new_password_confirmation"
+                            class="w-full px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition text-sm"
+                            placeholder="Konfirmasi password baru" required>
+                    </div>
+                    <div id="passwordError" class="text-red-500 text-xs mt-1 hidden"></div>
+                </div>
+
+                <div class="border-t border-gray-100 px-3 py-2.5 flex justify-end gap-2">
+                    <button type="button" onclick="closePasswordModal()"
+                        class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-lg transition text-xs">Batal</button>
+                    <button type="submit" id="submitPasswordBtn"
+                        class="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition shadow-sm text-xs">Update Password</button>
+                </div>
+            </form>
         </div>
-
-        <form id="passwordFormElement" method="POST" action="{{ route('manage-account.update-password') }}">
-            @csrf
-            @method('PUT')
-
-            <div class="px-3 py-3 space-y-2">
-                <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">Password Lama</label>
-                    <input type="password" name="current_password"
-                        class="w-full px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition text-sm"
-                        placeholder="Masukkan password lama" required>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">Password Baru</label>
-                    <input type="password" name="new_password"
-                        class="w-full px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition text-sm"
-                        placeholder="Masukkan password baru" required>
-                </div>
-                <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">Konfirmasi Password Baru</label>
-                    <input type="password" name="new_password_confirmation"
-                        class="w-full px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg focus:bg-white focus:ring-2 focus:ring-amber-400 focus:border-transparent outline-none transition text-sm"
-                        placeholder="Konfirmasi password baru" required>
-                </div>
-                <div id="passwordError" class="text-red-500 text-xs mt-1 hidden"></div>
-            </div>
-
-            <div class="border-t border-gray-100 px-3 py-2.5 flex justify-end gap-2">
-                <button type="button" onclick="closePasswordModal()"
-                    class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-lg transition text-xs">Batal</button>
-                <button type="submit" id="submitPasswordBtn"
-                    class="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition shadow-sm text-xs">Update Password</button>
-            </div>
-        </form>
     </div>
-</div>
 
     <style>
         @keyframes fadeInUp {
@@ -215,7 +218,6 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);

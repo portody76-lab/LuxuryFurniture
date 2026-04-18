@@ -55,9 +55,7 @@
                         <i class="fas fa-exclamation-circle text-red-500 mt-0.5"></i>
                         <div class="text-sm text-red-700">
                             <p class="font-semibold mb-1">Login gagal!</p>
-                            @foreach($errors->all() as $error)
-                                <p class="text-red-600">{{ $error }}</p>
-                            @endforeach
+<p>{{ session('error') }}</p>
                         </div>
                     </div>
                 </div>

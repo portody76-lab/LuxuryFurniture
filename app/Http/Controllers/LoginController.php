@@ -14,33 +14,25 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $request->validate([
             'username' => 'required',
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($request->only('username', 'password'))) {
             $request->session()->regenerate();
 
             $user = Auth::user();
-            $role = $user->role->role_name ?? null;
 
-            // ========== CEK STATUS AKUN ==========
             if ($user->status == 0) {
                 Auth::logout();
-                return back()->withErrors([
-                    'username' => 'Status akun Anda nonaktif. Hubungi admin segera!',
-                ])->onlyInput('username');
+                return back()->with('error', 'Status akun Anda nonaktif. Hubungi admin segera!');
             }
 
-            // SEMUA ROLE SEKARANG PAKAI ROUTE YANG SAMA
             return redirect()->route('contents.dashboard');
         }
 
-        // Kirim error message
-        return back()->withErrors([
-            'username' => 'Username atau password salah.',
-        ])->withInput($request->except('password'));
+        return back()->with('error', 'Username atau password salah!')->withInput($request->except('password'));
     }
 
     public function logout(Request $request)
