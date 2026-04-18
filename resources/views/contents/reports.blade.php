@@ -83,8 +83,8 @@
                 <h2 class="text-xl font-bold">LUXURY FURNITURE</h2>
                 <p class="text-sm">{{ $reportTitle ?? 'Laporan' }}</p>
                 <p class="text-xs text-gray-500">
-                    Periode: {{ $startDate ? date('d/m/Y', strtotime($startDate)) : 'Semua' }} -
-                    {{ $endDate ? date('d/m/Y', strtotime($endDate)) : 'Semua' }}
+                    Periode: {{ $startDate ? \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') : 'Semua' }} -
+                    {{ $endDate ? \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') : 'Semua' }}
                 </p>
                 <p class="text-xs text-gray-500 mt-1">
                     Dicetak oleh: {{ Auth::user()->username ?? 'System' }}
@@ -154,15 +154,13 @@
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product_code'] ?? '-' }}</td>
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product'] ?? '-' }}</td>
                                         <td class="px-4 py-3 text-sm">
-                                            <span
-                                                class="px-2 py-1 rounded-full text-xs {{ ($row['type'] ?? '') == 'Masuk' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+                                            <span class="px-2 py-1 rounded-full text-xs {{ ($row['type'] ?? '') == 'Masuk' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
                                                 {{ $row['type'] ?? '-' }}
                                             </span>
                                         </td>
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['quantity'] ?? 0) }}</td>
                                         <td class="px-4 py-3 text-sm">
-                                            <span
-                                                class="px-2 py-1 rounded-full text-xs {{ ($row['condition'] ?? '') == 'Aman' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+                                            <span class="px-2 py-1 rounded-full text-xs {{ ($row['condition'] ?? '') == 'Aman' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
                                                 {{ $row['condition'] ?? '-' }}
                                             </span>
                                         </td>
@@ -174,25 +172,22 @@
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product'] ?? '-' }}</td>
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['category'] ?? '-' }}</td>
                                         <td class="px-4 py-3 text-sm">
-                                            <span
-                                                class="px-2 py-1 rounded-full text-xs {{ ($row['stock'] ?? 0) <= 25 ? 'bg-orange-100 text-orange-500' : 'bg-green-100 text-green-700' }}">
+                                            <span class="px-2 py-1 rounded-full text-xs {{ ($row['stock'] ?? 0) <= 25 ? 'bg-orange-100 text-orange-500' : 'bg-green-100 text-green-700' }}">
                                                 {{ number_format($row['stock'] ?? 0) }}
                                             </span>
-                                            </span>
+                                        </td>
                                         <td class="px-4 py-3 text-sm">
-                                            <span
-                                                class="px-2 py-1 rounded-full text-xs {{ $row['status'] == 'Stok Menipis' ? 'bg-orange-100 text-orange-500' : ($row['status'] == 'Habis' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700') }}">
+                                            <span class="px-2 py-1 rounded-full text-xs {{ $row['status'] == 'Stok Menipis' ? 'bg-orange-100 text-orange-500' : ($row['status'] == 'Habis' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700') }}">
                                                 {{ $row['status'] ?? '-' }}
                                             </span>
-                                            </span>
+                                        </td>
 
                                     @elseif($reportType == 'category')
-                                            <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['category'] ?? '-' }}</td>
-                                            <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['total_products'] ?? 0) }}
-                                            </td>
-                                            <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['total_stock'] ?? 0) }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['category'] ?? '-' }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['total_products'] ?? 0) }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['total_stock'] ?? 0) }}</td>
 
-                                        @elseif($reportType == 'damaged')
+                                    @elseif($reportType == 'damaged')
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['date'] ?? '-' }}</td>
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product_code'] ?? '-' }}</td>
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product'] ?? '-' }}</td>
@@ -211,7 +206,7 @@
 
                 <div class="print-footer text-center text-xs text-gray-500 mt-6 hidden print:block">
                     <hr class="my-3">
-                    <p>Dicetak pada: {{ date('d/m/Y H:i:s') }}</p>
+                    <p>Dicetak pada: {{ \Carbon\Carbon::now()->translatedFormat('d F Y H:i:s') }}</p>
                     <p>&copy; {{ date('Y') }} Luxury Furniture - All rights reserved</p>
                 </div>
             @endif
@@ -226,28 +221,28 @@
             const printWindow = window.open('', '_blank');
 
             printWindow.document.write(`
-                    <html>
-                    <head>
-                        <title>Laporan Luxury Furniture</title>
-                        <style>
-                            body { font-family: 'Inter', sans-serif; padding: 30px; margin: 0; }
-                            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-                            th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
-                            th { background-color: #f3e4c3; font-weight: 600; }
-                            .text-center { text-align: center; }
-                            .text-xs { font-size: 12px; }
-                            .text-sm { font-size: 14px; }
-                            .text-xl { font-size: 20px; }
-                            .font-bold { font-weight: bold; }
-                            .text-gray-500 { color: #6b7280; }
-                            hr { border: none; border-top: 1px solid #ddd; margin: 16px 0; }
-                        </style>
-                    </head>
-                    <body>
-                        ${printContent.cloneNode(true).innerHTML}
-                    </body>
-                    </html>
-                `);
+                <html>
+                <head>
+                    <title>Laporan Luxury Furniture</title>
+                    <style>
+                        body { font-family: 'Inter', sans-serif; padding: 30px; margin: 0; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+                        th { background-color: #f3e4c3; font-weight: 600; }
+                        .text-center { text-align: center; }
+                        .text-xs { font-size: 12px; }
+                        .text-sm { font-size: 14px; }
+                        .text-xl { font-size: 20px; }
+                        .font-bold { font-weight: bold; }
+                        .text-gray-500 { color: #6b7280; }
+                        hr { border: none; border-top: 1px solid #ddd; margin: 16px 0; }
+                    </style>
+                </head>
+                <body>
+                    ${printContent.cloneNode(true).innerHTML}
+                </body>
+                </html>
+            `);
 
             printWindow.document.close();
             printWindow.print();
@@ -284,7 +279,6 @@
 
     <style>
         @media print {
-
             .sidebar,
             .bg-white:first-child,
             form,
