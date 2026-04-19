@@ -30,8 +30,7 @@
                             class="w-full pl-9 pr-3 py-2.5 border border-[#e8d5a8] rounded-xl bg-[#fdf8f0] focus:border-[#c9973a] focus:outline-none text-sm text-gray-700 appearance-none cursor-pointer">
                             <option value="">-- Semua Produk --</option>
                             @foreach ($products as $product)
-                                <option value="{{ $product->id }}"
-                                    {{ $selectedProductId == $product->id ? 'selected' : '' }}>
+                                <option value="{{ $product->id }}" {{ $selectedProductId == $product->id ? 'selected' : '' }}>
                                     {{ $product->product_code }} - {{ $product->name }}
                                 </option>
                             @endforeach
@@ -49,8 +48,7 @@
                             class="w-full pl-9 pr-3 py-2.5 border border-[#e8d5a8] rounded-xl bg-[#fdf8f0] focus:border-[#c9973a] focus:outline-none text-sm text-gray-700 appearance-none cursor-pointer">
                             <option value="">-- Semua Kategori --</option>
                             @foreach ($categories as $category)
-                                <option value="{{ $category->id }}"
-                                    {{ $selectedCategoryId == $category->id ? 'selected' : '' }}>
+                                <option value="{{ $category->id }}" {{ $selectedCategoryId == $category->id ? 'selected' : '' }}>
                                     {{ $category->name }}
                                 </option>
                             @endforeach
@@ -143,7 +141,7 @@
                         <tr class="border-b border-[#f3e4c3] hover:bg-[#fdf8f0] transition-colors">
                             <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $transactions->firstItem() + $index }}</td>
                             <td class="px-4 py-3 text-sm text-[#3a3020]">
-                                {{ \Carbon\Carbon::parse($item->transaction_date)->translatedFormat('d/m/Y H:i') }} WIB
+                                {{ \Carbon\Carbon::parse($item->transaction_date)->translatedFormat('d F Y') }}
                             </td>
                             <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $item->product_code }}</td>
                             <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $item->product_name }}</td>
@@ -224,7 +222,7 @@
         const customDateRange = document.getElementById('customDateRange');
 
         if (filterType) {
-            filterType.addEventListener('change', function() {
+            filterType.addEventListener('change', function () {
                 if (this.value === 'custom') {
                     customDateRange.classList.remove('hidden');
                 } else {

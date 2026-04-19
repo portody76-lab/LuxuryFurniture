@@ -6,7 +6,7 @@
     <div class="flex-1 p-4 sm:p-6">
 
         <div class="bg-white p-4 sm:p-6 rounded-2xl mb-6 shadow-md border border-[#e7ddcf]">
-            <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Categories</h2>
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Kategori</h2>
             <p class="text-[#8b7a66] text-sm sm:text-base mt-1">Kelola kategori produk furniture Anda</p>
         </div>
 
@@ -70,7 +70,7 @@
         <div class="bg-white rounded-2xl shadow-md overflow-hidden border border-[#e7ddcf]">
             <div class="px-4 sm:px-6 py-4 border-b border-[#e7ddcf] bg-[#faf6ef]">
                 <h3 class="font-bold text-gray-700 flex items-center gap-2">
-                    <i class="fas fa-list text-[#cbb892]"></i> Category List
+                    <i class="fas fa-list text-[#cbb892]"></i> Daftar Kategori
                 </h3>
             </div>
 
@@ -175,7 +175,7 @@
                         Batal
                     </button>
                     <button type="submit" class="btn-save">
-                        <i class="fas fa-save"></i> Update
+                        <i class="fas fa-save"></i> Perbarui
                     </button>
                 </div>
             </form>
@@ -203,7 +203,7 @@
                 </p>
             </div>
             <div class="modal-footer">
-                <form id="deleteForm" method="POST">
+                <form id="deleteForm" method="POST" class="flex gap-6 justify-between">
                     @csrf
                     @method('DELETE')
                     <button type="button" onclick="closeDeleteModal()" class="btn-cancel">

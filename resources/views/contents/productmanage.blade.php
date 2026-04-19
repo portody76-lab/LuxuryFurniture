@@ -6,7 +6,7 @@
     {{-- TAMBAH overflow-x-hidden di container utama --}}
     <div class="overflow-x-hidden">
         <div class="bg-white p-4 sm:p-6 rounded-2xl mb-6 shadow-md border border-[#e7ddcf]">
-            <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Product Management</h2>
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Manajemen Produk</h2>
             <p class="text-[#8b7a66] text-sm sm:text-base mt-1">Kelola produk furniture Anda</p>
         </div>
 
@@ -61,7 +61,7 @@
         {{-- TABLE PRODUCT --}}
         <div class="bg-white rounded-2xl p-4 sm:p-6 shadow">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-5 gap-3">
-                <h2 class="font-playfair font-semibold text-base sm:text-lg text-[#3a2c0a]">List Product</h2>
+                <h2 class="font-playfair font-semibold text-base sm:text-lg text-[#3a2c0a]">Daftar Produk</h2>
                 <div class="flex flex-wrap gap-2 w-full sm:w-auto">
                     <div class="relative flex-1 sm:w-48">
                         <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-[#c9973a]" width="14" height="14"
@@ -69,7 +69,7 @@
                             <circle cx="11" cy="11" r="8" />
                             <line x1="21" y1="21" x2="16.65" y2="16.65" />
                         </svg>
-                        <input type="text" id="search-input" placeholder="Search Product..."
+                        <input type="text" id="search-input" placeholder="Cari Produk..."
                             class="w-full border border-[#e8d5a8] rounded-xl py-2 pl-9 pr-4 text-sm bg-[#fdf8f0] transition-colors focus:border-[#c9973a] focus:outline-none">
                     </div>
                     <button id="search-button"
@@ -81,7 +81,7 @@
                     </button>
                     <select id="category-filter"
                         class="border border-[#e8d5a8] rounded-xl py-2 px-3 text-sm bg-[#fdf8f0] cursor-pointer outline-none focus:border-[#c9973a]">
-                        <option value="">All Category</option>
+                        <option value="">Semua Kategori</option>
                         @if(isset($categories) && count($categories) > 0)
                             @foreach($categories as $c)
                                 <option value="{{ $c->id }}" {{ request('category_id') == $c->id ? 'selected' : '' }}>
@@ -100,7 +100,7 @@
                         "{{ request('search') }}"
                     </span>
                     <a href="{{ route('contents.productmanage') }}" class="text-xs text-[#c9973a] hover:underline">
-                        Clear search
+                        Reset
                     </a>
                 </div>
             @endif
@@ -112,7 +112,7 @@
                         <tr class="bg-[#f3e4c3]">
                             <th
                                 style="padding: 12px 8px; text-align: left; font-weight: 600; color: #7a5c1e; font-size: 12px; border-top-left-radius: 12px;">
-                                Image</th>
+                                Gambar</th>
                             <th
                                 style="padding: 12px 8px; text-align: left; font-weight: 600; color: #7a5c1e; font-size: 12px;">
                                 Kode</th>
@@ -232,7 +232,7 @@
             <div class="px-3 py-3 space-y-2">
                 <!-- Image Upload -->
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">Image</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Gambar</label>
                     <div class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1.5 cursor-pointer hover:bg-gray-100 transition"
                         onclick="document.getElementById('add-image-input').click()">
                         <i class="fas fa-image text-[#c9973a] text-sm"></i>
@@ -327,7 +327,7 @@
 
                 <!-- Image Upload -->
                 <div>
-                    <label class="block text-xs font-semibold text-gray-700 mb-1">Image</label>
+                    <label class="block text-xs font-semibold text-gray-700 mb-1">Gambar</label>
                     <div class="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-2 py-1.5 cursor-pointer hover:bg-gray-100 transition"
                         onclick="document.getElementById('edit-image-input').click()">
                         <i class="fas fa-image text-[#c9973a] text-sm"></i>
@@ -345,7 +345,7 @@
                 <button type="button" onclick="closeModal('modal-edit')"
                     class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-lg transition text-xs">Batal</button>
                 <button type="submit"
-                    class="px-3 py-1 bg-[#c9973a] hover:bg-[#b07e28] text-white rounded-lg transition shadow-sm text-xs">Update</button>
+                    class="px-3 py-1 bg-[#c9973a] hover:bg-[#b07e28] text-white rounded-lg transition shadow-sm text-xs">Perbarui</button>
             </div>
         </form>
     </div>

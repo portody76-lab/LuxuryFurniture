@@ -169,7 +169,7 @@ class StockController extends Controller
                 $tanggal = '-';
                 if ($transaction->transaction_date) {
                     $date = \Carbon\Carbon::parse($transaction->transaction_date);
-                    $tanggal = $date->translatedFormat('l, d/m/Y');
+                    $tanggal = $date->translatedFormat('d F Y');
                 }
 
                 $result[] = [

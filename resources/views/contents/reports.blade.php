@@ -4,14 +4,14 @@
 
 @section('content')
     <div class="bg-white p-6 rounded-2xl mb-6 shadow-md border border-[#e7ddcf]">
-        <h2 class="text-2xl font-bold text-gray-800">Reports</h2>
+        <h2 class="text-2xl font-bold text-gray-800">Laporan</h2>
         <p class="text-[#8b7a66] mt-1">Lihat dan export laporan data furniture</p>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="bg-white rounded-2xl p-6 shadow h-fit">
             <h3 class="font-bold text-lg text-gray-800 mb-4 flex items-center gap-2">
-                <i class="fas fa-filter text-[#c9973a]"></i> Report Filter
+                <i class="fas fa-filter text-[#c9973a]"></i> Filter Laporan
             </h3>
 
             <form method="GET" action="{{ route('contents.reports') }}" id="reportForm">
@@ -34,13 +34,13 @@
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Periode</label>
                     <div class="grid grid-cols-2 gap-2">
                         <div>
-                            <label class="text-xs text-gray-500">Start Date</label>
+                            <label class="text-xs text-gray-500">Tanggal Awal</label>
                             <input type="date" name="start_date" id="start_date" value="{{ $startDate }}"
                                 max="{{ date('Y-m-d') }}"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm">
                         </div>
                         <div>
-                            <label class="text-xs text-gray-500">End Date</label>
+                            <label class="text-xs text-gray-500">Tanggal Akhir</label>
                             <input type="date" name="end_date" id="end_date" value="{{ $endDate }}"
                                 max="{{ date('Y-m-d') }}"
                                 class="w-full px-3 py-2 border border-gray-300 rounded-xl text-sm">
@@ -48,13 +48,13 @@
                     </div>
                     <button type="button" onclick="clearPeriod()"
                         class="mt-2 text-sm text-[#c9973a] hover:text-[#b07e28] transition flex items-center gap-1">
-                        <i class="fas fa-eraser"></i> Clear Period
+                        <i class="fas fa-eraser"></i> Clear Periode
                     </button>
                 </div>
 
                 <button type="submit" id="generateBtn"
                     class="w-full bg-[#c9973a] hover:bg-[#b07e28] text-white font-semibold py-2 rounded-xl transition">
-                    <i class="fas fa-chart-line mr-2"></i> Generate Report
+                    <i class="fas fa-chart-line mr-2"></i> Cek Laporan
                 </button>
             </form>
         </div>

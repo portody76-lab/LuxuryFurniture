@@ -5,7 +5,7 @@
 @section('content')
     <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">Trash - Produk Terhapus</h1>
+            <h1 class="text-2xl font-bold text-gray-800">Sampah - Produk Terhapus</h1>
             <p class="text-[#8b7a66] text-sm mt-1">Produk yang telah dihapus</p>
         </div>
         <a href="{{ route('contents.productmanage') }}"
@@ -17,7 +17,7 @@
     @if(session('success') || session('error'))
         <div class="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
             <div id="toast-box" class="px-8 py-4 rounded-2xl shadow-2xl text-white text-sm font-semibold
-                        {{ session('success') ? 'bg-green-500' : 'bg-red-500' }}">
+                                {{ session('success') ? 'bg-green-500' : 'bg-red-500' }}">
                 {{ session('success') ?? session('error') }}
             </div>
         </div>
@@ -29,7 +29,7 @@
                 <i class="fas fa-trash-alt text-white text-xl"></i>
             </div>
             <div>
-                <p class="text-gray-500 text-sm mb-1">Total Produk di Trash</p>
+                <p class="text-gray-500 text-sm mb-1">Total Produk di Sampah</p>
                 <span class="bg-red-500 text-white text-sm font-semibold px-5 py-2 rounded-xl inline-block">
                     {{ $totalTrash ?? 0 }} Produk
                 </span>
@@ -39,7 +39,7 @@
 
     <div class="bg-white rounded-2xl p-6 shadow">
         <div class="flex items-center justify-between mb-5 flex-wrap gap-3">
-            <h2 class="font-playfair font-semibold text-lg text-[#3a2c0a]">List Produk Terhapus</h2>
+            <h2 class="font-playfair font-semibold text-lg text-[#3a2c0a]">Daftar Produk Terhapus</h2>
             <div class="flex gap-3 flex-wrap">
                 <div class="relative">
                     <svg class="absolute left-3 top-1/2 -translate-y-1/2 text-[#c9973a]" width="14" height="14" fill="none"
@@ -47,7 +47,7 @@
                         <circle cx="11" cy="11" r="8" />
                         <line x1="21" y1="21" x2="16.65" y2="16.65" />
                     </svg>
-                    <input type="text" id="search-input" placeholder="Search Product..."
+                    <input type="text" id="search-input" placeholder="Cari Produk..."
                         class="border border-[#e8d5a8] rounded-xl py-2 pl-9 pr-4 text-sm bg-[#fdf8f0] transition-colors focus:border-[#c9973a] focus:outline-none w-48 sm:w-64">
                 </div>
                 <button id="search-button"
@@ -59,7 +59,7 @@
                 </button>
                 <select id="category-filter"
                     class="border border-[#e8d5a8] rounded-xl py-2 px-4 text-sm bg-[#fdf8f0] cursor-pointer outline-none focus:border-[#c9973a]">
-                    <option value="">All Category</option>
+                    <option value="">Semua Kategori</option>
                     @if(isset($categories) && count($categories) > 0)
                         @foreach($categories as $c)
                             <option value="{{ $c->id }}" {{ request('category_id') == $c->id ? 'selected' : '' }}>{{ $c->name }}
@@ -74,12 +74,14 @@
             <table class="w-full">
                 <thead>
                     <tr class="bg-[#f3e4c3]">
-                        <th class="rounded-l-xl px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Image</th>
+                        <th class="rounded-l-xl px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">
+                            Gambar</th>
                         <th class="px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Kode</th>
-                        <th class="px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Nama Item</th>
+                        <th class="px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Nama Produk</th>
                         <th class="px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Kategori</th>
                         <th class="px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Stok</th>
-                        <th class="rounded-r-xl px-3 py-3 text-center font-semibold text-[#7a5c1e] text-xs tracking-wider">Aksi</th>
+                        <th class="rounded-r-xl px-3 py-3 text-center font-semibold text-[#7a5c1e] text-xs tracking-wider">
+                            Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -98,7 +100,9 @@
                                         class="w-14 h-14 object-cover rounded-xl opacity-50"></td>
                                 <td class="px-3 py-3 text-sm text-gray-400 line-through">{{ $productCode }}</td>
                                 <td class="px-3 py-3 text-sm text-gray-400 line-through">{{ $productName }}</td>
-                                <td class="px-3 py-3"><span class="bg-gray-200 text-gray-500 text-xs font-medium px-3 py-1 rounded-lg">{{ $categoryName }}</span></td>
+                                <td class="px-3 py-3"><span
+                                        class="bg-gray-200 text-gray-500 text-xs font-medium px-3 py-1 rounded-lg">{{ $categoryName }}</span>
+                                </td>
                                 <td class="px-3 py-3 text-sm text-gray-400">{{ $stockValue }}</td>
                                 <td class="px-3 py-3 text-center">
                                     <button type="button"
@@ -137,7 +141,7 @@
         <div class="modal-container">
             <div class="modal-header">
                 <h3 class="modal-title">
-                    <i class="fa-solid fa-arrows-rotate text-green-500"></i> Restore Produk
+                    <i class="fa-solid fa-arrows-rotate text-green-500"></i> Kembalikan Produk
                 </h3>
                 <button onclick="closeModal('modal-restore')" class="modal-close">
                     <i class="fas fa-times"></i>
@@ -148,7 +152,8 @@
                     <i class="fa-solid fa-arrows-rotate text-green-500 text-5xl mb-3"></i>
                 </div>
                 <p class="text-gray-600 mb-2">
-                    Yakin ingin mengembalikan produk <span id="restore-product-name" class="font-semibold text-gray-800"></span>?
+                    Yakin ingin mengembalikan produk <span id="restore-product-name"
+                        class="font-semibold text-gray-800"></span>?
                 </p>
                 <p class="text-green-600 text-sm">
                     <i class="fa-solid fa-arrows-rotate"></i> Produk akan kembali ke daftar aktif
@@ -161,7 +166,10 @@
                         Batal
                     </button>
                     <button type="submit" class="btn-restore flex-1">
-                        <i class="fa-solid fa-arrows-rotate"></i> Ya, Restore
+                        <p>
+                            <i class="fa-solid fa-arrows-rotate"></i>  Ya, Kembalikan
+                        </p>
+
                     </button>
                 </form>
             </div>
@@ -184,7 +192,8 @@
                     <i class="fas fa-trash-alt text-red-500 text-5xl mb-3"></i>
                 </div>
                 <p class="text-gray-600 mb-2">
-                    Yakin ingin menghapus permanen produk <span id="force-delete-product-name" class="font-semibold text-gray-800"></span>?
+                    Yakin ingin menghapus permanen produk <span id="force-delete-product-name"
+                        class="font-semibold text-gray-800"></span>?
                 </p>
                 <p class="text-red-500 text-sm">
                     <i class="fas fa-info-circle"></i> Tindakan ini tidak dapat dibatalkan!
@@ -248,6 +257,7 @@
                 opacity: 0;
                 transform: scale(0.95);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1);
@@ -296,7 +306,8 @@
             border-top: 1px solid #e5e7eb;
         }
 
-        .restore-icon, .delete-icon {
+        .restore-icon,
+        .delete-icon {
             display: flex;
             justify-content: center;
             margin-bottom: 0.5rem;
@@ -358,10 +369,26 @@
         }
 
         @keyframes toastFade {
-            0% { opacity: 0; transform: translateY(-20px); }
-            15% { opacity: 1; transform: translateY(0); }
-            85% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-20px); visibility: hidden; }
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            15% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            85% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-20px);
+                visibility: hidden;
+            }
         }
 
         /* Responsive */
@@ -369,16 +396,22 @@
             .modal-header {
                 padding: 1rem 1.25rem;
             }
+
             .modal-title {
                 font-size: 1.125rem;
             }
+
             .modal-body {
                 padding: 1.25rem;
             }
+
             .modal-footer {
                 padding: 0.875rem 1.25rem;
             }
-            .btn-cancel, .btn-restore, .btn-delete {
+
+            .btn-cancel,
+            .btn-restore,
+            .btn-delete {
                 padding: 0.5rem 0.875rem;
                 font-size: 0.875rem;
             }
@@ -403,7 +436,7 @@
             document.getElementById('restore-product-name').innerText = productName;
             openModal('modal-restore');
         }
-        document.getElementById('form-restore')?.addEventListener('submit', function(e) {
+        document.getElementById('form-restore')?.addEventListener('submit', function (e) {
             e.preventDefault();
             this.action = restoreFormAction;
             this.submit();
@@ -416,7 +449,7 @@
             document.getElementById('force-delete-product-name').innerText = productName;
             openModal('modal-force-delete');
         }
-        document.getElementById('form-force-delete')?.addEventListener('submit', function(e) {
+        document.getElementById('form-force-delete')?.addEventListener('submit', function (e) {
             e.preventDefault();
             this.action = forceDeleteFormAction;
             this.submit();
@@ -439,12 +472,12 @@
         }
 
         if (searchButton) searchButton.addEventListener('click', applySearchAndFilter);
-        if (searchInput) searchInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') applySearchAndFilter(); });
+        if (searchInput) searchInput.addEventListener('keypress', function (e) { if (e.key === 'Enter') applySearchAndFilter(); });
         if (categoryFilter) categoryFilter.addEventListener('change', applySearchAndFilter);
 
-        setTimeout(function() { 
-            const toast = document.getElementById('toast-box'); 
-            if (toast) setTimeout(() => toast.style.display = 'none', 3000); 
+        setTimeout(function () {
+            const toast = document.getElementById('toast-box');
+            if (toast) setTimeout(() => toast.style.display = 'none', 3000);
         }, 100);
     </script>
 @endsection

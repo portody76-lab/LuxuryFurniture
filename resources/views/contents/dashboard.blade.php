@@ -281,7 +281,8 @@
                                         </span>
                                     </td>
                                     <td class="px-4 py-3 text-center text-xs text-gray-500">
-                                        {{ number_format($item->min_stock_threshold) }}</td>
+                                        {{ number_format($item->min_stock_threshold) }}
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
@@ -317,8 +318,9 @@
                         <tbody class="divide-y divide-gray-100" id="damagedStockTableBody">
                             @forelse($damagedStockProducts as $item)
                                 <tr class="hover:bg-red-50/50 transition">
-                                    <td class="px-4 py-3 text-xs text-gray-600">
-                                        {{ date('d/m/Y', strtotime($item->transaction_date)) }}</td>
+                                    <td class="px-4 py-3 text-sm text-gray-600">
+                                        {{ \Carbon\Carbon::parse($item->transaction_date)->translatedFormat('d F Y') }}
+                                    </td>
                                     <td class="px-4 py-3 text-xs text-gray-600">{{ $item->product_code }}</td>
                                     <td class="px-4 py-3 text-sm text-gray-800">{{ $item->name }}</td>
                                     <td class="px-4 py-3 text-center">
@@ -444,7 +446,8 @@
         const initialRankingLabels = @json(
             $rankingProducts->map(function ($item) {
                 return strlen($item->name) > 15 ? substr($item->name, 0, 12) . '...' : $item->name;
-            }));
+            })
+        );
         const initialRankingData = @json($rankingProducts->pluck('transaction_count'));
 
         @if (in_array($role, ['admin', 'super_admin']))
@@ -456,47 +459,47 @@
             });
         @endif
 
-        // Initialize Product Chart
-        function initProductChart(labels, inData, outData) {
-            const canvas = document.getElementById('productChart');
-            const ctx = canvas?.getContext('2d');
-            if (!ctx) return;
+            // Initialize Product Chart
+            function initProductChart(labels, inData, outData) {
+                const canvas = document.getElementById('productChart');
+                const ctx = canvas?.getContext('2d');
+                if (!ctx) return;
 
-            if (productChart) productChart.destroy();
+                if (productChart) productChart.destroy();
 
-            const hasData = inData.some(v => v > 0) || outData.some(v => v > 0);
+                const hasData = inData.some(v => v > 0) || outData.some(v => v > 0);
 
-            if (!hasData) {
-                canvas.style.display = 'none';
-                let emptyDiv = document.getElementById('productChartEmpty');
-                if (!emptyDiv) {
-                    emptyDiv = document.createElement('div');
-                    emptyDiv.id = 'productChartEmpty';
-                    emptyDiv.className = 'empty-state absolute inset-0 flex items-center justify-center';
-                    emptyDiv.innerHTML = `
-                        <div class="text-center">
-                            <div class="empty-state-icon mx-auto"><i class="fas fa-chart-line"></i></div>
-                            <h3 class="empty-state-title">Belum Ada Data Transaksi</h3>
-                            <p class="empty-state-desc">Belum ada transaksi yang tercatat untuk periode ini</p>
-                        </div>
-                    `;
-                    canvas.parentNode.style.position = 'relative';
-                    canvas.parentNode.appendChild(emptyDiv);
-                } else {
-                    emptyDiv.style.display = 'flex';
+                if (!hasData) {
+                    canvas.style.display = 'none';
+                    let emptyDiv = document.getElementById('productChartEmpty');
+                    if (!emptyDiv) {
+                        emptyDiv = document.createElement('div');
+                        emptyDiv.id = 'productChartEmpty';
+                        emptyDiv.className = 'empty-state absolute inset-0 flex items-center justify-center';
+                        emptyDiv.innerHTML = `
+                            <div class="text-center">
+                                <div class="empty-state-icon mx-auto"><i class="fas fa-chart-line"></i></div>
+                                <h3 class="empty-state-title">Belum Ada Data Transaksi</h3>
+                                <p class="empty-state-desc">Belum ada transaksi yang tercatat untuk periode ini</p>
+                            </div>
+                        `;
+                        canvas.parentNode.style.position = 'relative';
+                        canvas.parentNode.appendChild(emptyDiv);
+                    } else {
+                        emptyDiv.style.display = 'flex';
+                    }
+                    return;
                 }
-                return;
-            }
 
-            canvas.style.display = 'block';
-            const emptyDiv = document.getElementById('productChartEmpty');
-            if (emptyDiv) emptyDiv.style.display = 'none';
+                canvas.style.display = 'block';
+                const emptyDiv = document.getElementById('productChartEmpty');
+                if (emptyDiv) emptyDiv.style.display = 'none';
 
-            productChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
+                productChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
                             label: '📦 Barang Masuk',
                             data: inData,
                             backgroundColor: '#4caf50',
@@ -510,49 +513,49 @@
                             borderRadius: 8,
                             barPercentage: 0.65
                         }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'top'
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': ' + context.raw.toLocaleString() +
-                                    ' unit';
-                                }
-                            }
-                        }
+                        ]
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1,
-                                precision: 0,
-                                callback: function(value) {
-                                    return value.toLocaleString();
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        return context.dataset.label + ': ' + context.raw.toLocaleString() +
+                                            ' unit';
+                                    }
                                 }
                             }
                         },
-                        x: {
-                            ticks: {
-                                rotate: 45,
-                                maxRotation: 45,
-                                minRotation: 45,
-                                font: {
-                                    size: 10
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1,
+                                    precision: 0,
+                                    callback: function (value) {
+                                        return value.toLocaleString();
+                                    }
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    rotate: 45,
+                                    maxRotation: 45,
+                                    minRotation: 45,
+                                    font: {
+                                        size: 10
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            });
-        }
+                });
+            }
 
         // Initialize Ranking Chart
         function initRankingChart(labels, data) {
@@ -572,12 +575,12 @@
                     emptyDiv.id = 'rankingChartEmpty';
                     emptyDiv.className = 'empty-state absolute inset-0 flex items-center justify-center';
                     emptyDiv.innerHTML = `
-                        <div class="text-center">
-                            <div class="empty-state-icon mx-auto"><i class="fas fa-star"></i></div>
-                            <h3 class="empty-state-title">Belum Ada Data Transaksi</h3>
-                            <p class="empty-state-desc">Belum ada transaksi yang tercatat untuk periode ini</p>
-                        </div>
-                    `;
+                            <div class="text-center">
+                                <div class="empty-state-icon mx-auto"><i class="fas fa-star"></i></div>
+                                <h3 class="empty-state-title">Belum Ada Data Transaksi</h3>
+                                <p class="empty-state-desc">Belum ada transaksi yang tercatat untuk periode ini</p>
+                            </div>
+                        `;
                     canvas.parentNode.style.position = 'relative';
                     canvas.parentNode.appendChild(emptyDiv);
                 } else {
@@ -612,7 +615,7 @@
                         },
                         tooltip: {
                             callbacks: {
-                                label: function(context) {
+                                label: function (context) {
                                     return 'Frekuensi: ' + context.raw + 'x transaksi';
                                 }
                             }
@@ -624,7 +627,7 @@
                             ticks: {
                                 stepSize: 1,
                                 precision: 0,
-                                callback: function(value) {
+                                callback: function (value) {
                                     return value + 'x';
                                 }
                             },
@@ -674,12 +677,12 @@
                     emptyDiv.id = 'userChartEmpty';
                     emptyDiv.className = 'empty-state absolute inset-0 flex items-center justify-center';
                     emptyDiv.innerHTML = `
-                        <div class="text-center">
-                            <div class="empty-state-icon mx-auto"><i class="fas fa-users"></i></div>
-                            <h3 class="empty-state-title">Belum Ada Data User</h3>
-                            <p class="empty-state-desc">Belum ada user yang terdaftar untuk periode ini</p>
-                        </div>
-                    `;
+                            <div class="text-center">
+                                <div class="empty-state-icon mx-auto"><i class="fas fa-users"></i></div>
+                                <h3 class="empty-state-title">Belum Ada Data User</h3>
+                                <p class="empty-state-desc">Belum ada user yang terdaftar untuk periode ini</p>
+                            </div>
+                        `;
                     canvas.parentNode.style.position = 'relative';
                     canvas.parentNode.appendChild(emptyDiv);
                 } else {
@@ -744,17 +747,17 @@
         }
 
         // Close panels when clicking outside
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             if (!event.target.closest('#productFilterPanel') && !event.target.closest(
-                    'button[onclick="toggleProductFilter()"]')) {
+                'button[onclick="toggleProductFilter()"]')) {
                 document.getElementById('productFilterPanel')?.classList.add('hidden');
             }
             if (!event.target.closest('#rankingFilterPanel') && !event.target.closest(
-                    'button[onclick="toggleRankingFilter()"]')) {
+                'button[onclick="toggleRankingFilter()"]')) {
                 document.getElementById('rankingFilterPanel')?.classList.add('hidden');
             }
             if (!event.target.closest('#userFilterPanel') && !event.target.closest(
-                    'button[onclick="toggleUserFilter()"]')) {
+                'button[onclick="toggleUserFilter()"]')) {
                 document.getElementById('userFilterPanel')?.classList.add('hidden');
             }
         });
@@ -908,33 +911,33 @@
 
             if (data.length === 0) {
                 tbody.innerHTML = `
-            <tr>
-                <td colspan="5" class="px-4 py-8 text-center text-gray-400">
-                    <i class="fas fa-check-circle text-green-400 text-2xl mb-2 block"></i>
-                    Tidak ada barang rusak
-                </td>
-            </tr>
-        `;
+                <tr>
+                    <td colspan="5" class="px-4 py-8 text-center text-gray-400">
+                        <i class="fas fa-check-circle text-green-400 text-2xl mb-2 block"></i>
+                        Tidak ada barang rusak
+                    </td>
+                </tr>
+            `;
                 return;
             }
 
             let html = '';
             data.forEach(item => {
                 html += `
-            <tr class="hover:bg-red-50/50 transition">
-                <td class="px-4 py-3 text-xs text-gray-600">${item.transaction_date}</td>
-                <td class="px-4 py-3 text-xs text-gray-600">${item.product_code}</td>
-                <td class="px-4 py-3 text-sm text-gray-800">${escapeHtml(item.name)}</td>
-                <td class="px-4 py-3 text-center">
-                    <span class="inline-flex px-2 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
-                        ${item.damaged_quantity}
-                    </span>
-                </td>
-                <td class="px-4 py-3 text-xs text-gray-500 max-w-37.5 truncate" title="${escapeHtml(item.description)}">
-                    ${escapeHtml(item.description)}
-                </td>
-            </tr>
-        `;
+                <tr class="hover:bg-red-50/50 transition">
+                    <td class="px-4 py-3 text-xs text-gray-600">${item.transaction_date}</td>
+                    <td class="px-4 py-3 text-xs text-gray-600">${item.product_code}</td>
+                    <td class="px-4 py-3 text-sm text-gray-800">${escapeHtml(item.name)}</td>
+                    <td class="px-4 py-3 text-center">
+                        <span class="inline-flex px-2 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                            ${item.damaged_quantity}
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-xs text-gray-500 max-w-37.5 truncate" title="${escapeHtml(item.description)}">
+                        ${escapeHtml(item.description)}
+                    </td>
+                </tr>
+            `;
             });
             tbody.innerHTML = html;
         }
@@ -942,7 +945,7 @@
         // Helper function to escape HTML
         function escapeHtml(str) {
             if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
+            return str.replace(/[&<>]/g, function (m) {
                 if (m === '&') return '&amp;';
                 if (m === '<') return '&lt;';
                 if (m === '>') return '&gt;';
@@ -951,7 +954,7 @@
         }
 
         // Initialize all charts and event listeners on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Product Chart
             initProductChart(initialMonths, initialInData, initialOutData);
 
@@ -965,8 +968,8 @@
                 initUserChart(monthsList, initialUserData);
             @endif
 
-            // ========== TOGGLE CUSTOM DATE RANGE FOR DAMAGED STOCK ==========
-            const damagedFilterType = document.getElementById('damaged_filter_type');
+                // ========== TOGGLE CUSTOM DATE RANGE FOR DAMAGED STOCK ==========
+                const damagedFilterType = document.getElementById('damaged_filter_type');
             const damagedCustomRange = document.getElementById('damaged_custom_range');
 
             if (damagedFilterType && damagedCustomRange) {
@@ -978,7 +981,7 @@
                 }
 
                 // Event listener untuk perubahan dropdown
-                damagedFilterType.addEventListener('change', function() {
+                damagedFilterType.addEventListener('change', function () {
                     if (this.value === 'custom') {
                         damagedCustomRange.classList.remove('hidden');
                     } else {

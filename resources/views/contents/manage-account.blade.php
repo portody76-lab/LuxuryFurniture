@@ -97,7 +97,7 @@
                             class="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-amber-200 transition">
                             <i class="fas fa-user-pen text-amber-600 text-xl"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-1">Change Username</h3>
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">Ganti Username</h3>
                         <p class="text-gray-400 text-sm mb-5">Perbarui username akun Anda</p>
                         <button onclick="openUsernameModal()"
                             class="w-full bg-gray-50 hover:bg-amber-50 text-gray-700 hover:text-amber-700 font-medium py-2.5 rounded-xl transition-all duration-200 border border-gray-200 hover:border-amber-200">
@@ -114,7 +114,7 @@
                             class="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-amber-200 transition">
                             <i class="fas fa-key text-amber-600 text-xl"></i>
                         </div>
-                        <h3 class="text-xl font-bold text-gray-800 mb-1">Change Password</h3>
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">Ganti Password</h3>
                         <p class="text-gray-400 text-sm mb-5">Perbarui password akun Anda</p>
                         <button onclick="openPasswordModal()"
                             class="w-full bg-gray-50 hover:bg-amber-50 text-gray-700 hover:text-amber-700 font-medium py-2.5 rounded-xl transition-all duration-200 border border-gray-200 hover:border-amber-200">
@@ -157,7 +157,7 @@
                     <button type="button" onclick="closeUsernameModal()"
                         class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-lg transition text-xs">Batal</button>
                     <button type="submit" id="submitUsernameBtn"
-                        class="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition shadow-sm text-xs">Update</button>
+                        class="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition shadow-sm text-xs">Perbarui</button>
                 </div>
             </form>
         </div>
@@ -206,7 +206,7 @@
                     <button type="button" onclick="closePasswordModal()"
                         class="px-3 py-1 text-gray-600 hover:bg-gray-100 rounded-lg transition text-xs">Batal</button>
                     <button type="submit" id="submitPasswordBtn"
-                        class="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition shadow-sm text-xs">Update Password</button>
+                        class="px-3 py-1 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition shadow-sm text-xs">Perbarui Password</button>
                 </div>
             </form>
         </div>
