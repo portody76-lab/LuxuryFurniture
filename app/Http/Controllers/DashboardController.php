@@ -188,7 +188,7 @@ class DashboardController extends Controller
             'success' => true,
             'data' => $damagedStockProducts->map(function($item) {
                 return [
-                    'transaction_date' => date('d/m/Y', strtotime($item->transaction_date)),
+                    'transaction_date' => Carbon::parse($item->transaction_date)->translatedFormat('d F Y'),
                     'product_code' => $item->product_code,
                     'name' => $item->name,
                     'damaged_quantity' => number_format($item->damaged_quantity),

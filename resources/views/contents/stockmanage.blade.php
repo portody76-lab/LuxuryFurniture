@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="bg-white p-6 rounded-2xl mb-6 shadow-md border border-[#e7ddcf]">
-        <h2 class="text-2xl font-bold text-gray-800">Stock Management</h2>
+        <h2 class="text-2xl font-bold text-gray-800">Manajemen Stok</h2>
         <p class="text-[#8b7a66] mt-1">Kelola stok produk furniture Anda</p>
     </div>
 
@@ -55,7 +55,7 @@
                 "{{ request('search') }}"
             </span>
             <a href="{{ route('contents.productmanage') }}" class="text-xs text-[#c9973a] hover:underline">
-                Clear search
+                Reset
             </a>
         </div>
     @endif
