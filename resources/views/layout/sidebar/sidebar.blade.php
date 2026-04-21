@@ -21,7 +21,7 @@
                 <i class="fas fa-tachometer-alt w-5"></i> Beranda
             </a>
 
-            {{-- USER MANAGEMENT (hanya super admin & admin) --}}
+            {{-- USER MANAGEMENT (hanya super_admin & admin) --}}
             @if(auth()->user()->role->role_name === 'super_admin' || auth()->user()->role->role_name === 'admin')
                 <a href="{{ route('contents.users') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.users') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
@@ -29,7 +29,7 @@
                 </a>
             @endif
 
-            {{-- CATEGORY (hanya super admin & admin) --}}
+            {{-- CATEGORY (hanya super_admin & admin) --}}
             @if(auth()->user()->role->role_name === 'super_admin' || auth()->user()->role->role_name === 'admin')
                 <a href="{{ route('contents.categories') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.categories') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
@@ -44,8 +44,7 @@
                     <div class="flex items-center gap-3">
                         <i class="fas fa-box w-5"></i> Manajemen Produk
                     </div>
-                    <i id="productSubmenuIcon"
-                        class="fas fa-chevron-down text-xs transition-transform duration-200"></i>
+                    <i id="productSubmenuIcon" class="fas fa-chevron-down text-xs transition-transform duration-200"></i>
                 </button>
                 <div id="productSubmenu" class="mt-1 ml-6 space-y-1 hidden">
                     <a href="{{ route('contents.productmanage') }}"
@@ -69,7 +68,7 @@
                 <i class="fas fa-chart-line w-5"></i> Laporan
             </a>
 
-            {{-- TRASH (hanya super admin) --}}
+            {{-- TRASH (hanya super_admin) --}}
             @if(auth()->user()->role->role_name === 'super_admin')
                 <a href="{{ route('contents.productmanage.trash') }}"
                     class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('contents.productmanage.trash') ? 'bg-[#c9973a] text-white' : 'bg-white text-[#5a4a1e] hover:bg-[#c9973a] hover:text-white' }} font-medium text-sm transition-all duration-200 shadow">
@@ -78,8 +77,6 @@
             @endif
         </nav>
     </div>
-
-
 
     {{-- PENGATURAN (Langsung ke Manage Account) - Icon Only --}}
     <div class="mt-6">
@@ -104,7 +101,7 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const currentRoute = window.location.href;
         // Cek apakah di halaman productmanage (tapi bukan trash)
         const isProductPage = currentRoute.includes('/productmanage') && !currentRoute.includes('/trash');
