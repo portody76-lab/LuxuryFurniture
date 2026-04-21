@@ -5,7 +5,7 @@
 @section('content')
     <div class="bg-white p-6 rounded-2xl mb-6 shadow-md border border-[#e7ddcf]">
         <h2 class="text-2xl font-bold text-gray-800">Laporan</h2>
-        <p class="text-[#8b7a66] mt-1">Lihat dan export laporan data furniture</p>
+        <p class="text-[#8b7a66] mt-1">Lihat dan cetak laporan data furniture</p>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
