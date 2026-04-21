@@ -111,12 +111,6 @@
                                         title="Restore">
                                         <i class="fa-solid fa-arrows-rotate"></i>
                                     </button>
-                                    <button type="button"
-                                        onclick="openForceDeleteModal({{ $productId }}, '{{ addslashes($productName) }}')"
-                                        class="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg transition-colors ml-2"
-                                        title="Hapus Permanen">
-                                        <i class="fas fa-trash-alt"></i>
-                                    </button>
                                 </td>
                             </tr>
                         @endforeach
