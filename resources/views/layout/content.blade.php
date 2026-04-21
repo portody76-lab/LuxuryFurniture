@@ -122,13 +122,7 @@
 
     <div class="flex min-h-screen">
         @auth
-            @if(auth()->user()->role->role_name === 'super_admin')
-                @include('layout.sidebar.sidebar_super_admin')
-            @elseif(auth()->user()->role->role_name === 'admin')
-                @include('layout.sidebar.sidebar_admin')
-            @elseif(auth()->user()->role->role_name === 'operator')
-                @include('layout.sidebar.sidebar_operator')
-            @endif
+            @include('layout.sidebar.sidebar')
         @endauth
 
         <div id="mainContent" class="flex-1 p-3 sm:p-4 md:p-6 overflow-x-hidden w-full max-w-full">
