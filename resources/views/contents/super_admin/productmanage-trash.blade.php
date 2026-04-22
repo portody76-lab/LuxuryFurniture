@@ -74,14 +74,11 @@
             <table class="w-full">
                 <thead>
                     <tr class="bg-[#f3e4c3]">
-                        <th class="rounded-l-xl px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">
-                            Gambar</th>
-                        <th class="px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Kode</th>
+                        <th class="rounded-l-xl px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Kode</th>
                         <th class="px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Nama Produk</th>
                         <th class="px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Kategori</th>
                         <th class="px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Stok</th>
-                        <th class="rounded-r-xl px-3 py-3 text-center font-semibold text-[#7a5c1e] text-xs tracking-wider">
-                            Aksi</th>
+                        <th class="rounded-r-xl px-3 py-3 text-center font-semibold text-[#7a5c1e] text-xs tracking-wider">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -93,30 +90,25 @@
                                 $productName = $p->name ?? '-';
                                 $categoryName = isset($p->category) && $p->category ? $p->category->name : 'Tidak Ada Kategori';
                                 $stockValue = $p->stock ?? 0;
-                                $imageUrl = isset($p->image) && $p->image ? asset('storage/' . $p->image) : asset('images/placeholder.png');
                             @endphp
                             <tr class="border-b border-[#f3e4c3] hover:bg-[#fdf8f0] transition-colors bg-red-50">
-                                <td class="px-3 py-3"><img src="{{ $imageUrl }}" alt="{{ $productName }}"
-                                        class="w-14 h-14 object-cover rounded-xl opacity-50"></td>
                                 <td class="px-3 py-3 text-sm text-gray-400 line-through">{{ $productCode }}</td>
                                 <td class="px-3 py-3 text-sm text-gray-400 line-through">{{ $productName }}</td>
-                                <td class="px-3 py-3"><span
-                                        class="bg-gray-200 text-gray-500 text-xs font-medium px-3 py-1 rounded-lg">{{ $categoryName }}</span>
-                                </td>
+                                <td class="px-3 py-3"><span class="bg-gray-200 text-gray-500 text-xs font-medium px-3 py-1 rounded-lg">{{ $categoryName }}</span></td>
                                 <td class="px-3 py-3 text-sm text-gray-400">{{ $stockValue }}</td>
                                 <td class="px-3 py-3 text-center">
                                     <button type="button"
                                         onclick="openRestoreModal({{ $productId }}, '{{ addslashes($productName) }}')"
                                         class="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition-colors"
                                         title="Restore">
-                                        <i class="fa-solid fa-arrows-rotate"></i>
+                                        <i class="fas fa-trash-restore"></i>
                                     </button>
                                 </td>
                             </tr>
                         @endforeach
                     @else
                         <tr>
-                            <td colspan="6" class="px-4 py-8 text-center text-gray-500">
+                            <td colspan="5" class="px-4 py-8 text-center text-gray-500">
                                 <i class="fas fa-trash-alt text-4xl text-gray-300 mb-2 block"></i>
                                 <p>Tidak ada produk di trash</p>
                             </td>
@@ -135,7 +127,7 @@
         <div class="modal-container">
             <div class="modal-header">
                 <h3 class="modal-title">
-                    <i class="fa-solid fa-arrows-rotate text-green-500"></i> Kembalikan Produk
+                    <i class="fas fa-trash-restore text-green-500"></i> Kembalikan Produk
                 </h3>
                 <button onclick="closeModal('modal-restore')" class="modal-close">
                     <i class="fas fa-times"></i>
@@ -143,14 +135,13 @@
             </div>
             <div class="modal-body text-center">
                 <div class="restore-icon">
-                    <i class="fa-solid fa-arrows-rotate text-green-500 text-5xl mb-3"></i>
+                    <i class="fas fa-trash-restore text-green-500 text-5xl mb-3"></i>
                 </div>
                 <p class="text-gray-600 mb-2">
-                    Yakin ingin mengembalikan produk <span id="restore-product-name"
-                        class="font-semibold text-gray-800"></span>?
+                    Yakin ingin mengembalikan produk <span id="restore-product-name" class="font-semibold text-gray-800"></span>?
                 </p>
                 <p class="text-green-600 text-sm">
-                    <i class="fa-solid fa-arrows-rotate"></i> Produk akan kembali ke daftar aktif
+                    <i class="fas fa-info-circle"></i> Produk akan kembali ke daftar aktif
                 </p>
             </div>
             <div class="modal-footer">
@@ -160,10 +151,7 @@
                         Batal
                     </button>
                     <button type="submit" class="btn-restore flex-1">
-                        <p>
-                            <i class="fa-solid fa-arrows-rotate"></i>  Ya, Kembalikan
-                        </p>
-
+                        <i class="fas fa-trash-restore mr-2"></i> Ya, Kembalikan
                     </button>
                 </form>
             </div>
@@ -186,8 +174,7 @@
                     <i class="fas fa-trash-alt text-red-500 text-5xl mb-3"></i>
                 </div>
                 <p class="text-gray-600 mb-2">
-                    Yakin ingin menghapus permanen produk <span id="force-delete-product-name"
-                        class="font-semibold text-gray-800"></span>?
+                    Yakin ingin menghapus permanen produk <span id="force-delete-product-name" class="font-semibold text-gray-800"></span>?
                 </p>
                 <p class="text-red-500 text-sm">
                     <i class="fas fa-info-circle"></i> Tindakan ini tidak dapat dibatalkan!
@@ -211,7 +198,6 @@
 
 @section('scripts')
     <style>
-        /* Modal Styles */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -251,7 +237,6 @@
                 opacity: 0;
                 transform: scale(0.95);
             }
-
             to {
                 opacity: 1;
                 transform: scale(1);
@@ -300,8 +285,7 @@
             border-top: 1px solid #e5e7eb;
         }
 
-        .restore-icon,
-        .delete-icon {
+        .restore-icon, .delete-icon {
             display: flex;
             justify-content: center;
             margin-bottom: 0.5rem;
@@ -363,49 +347,26 @@
         }
 
         @keyframes toastFade {
-            0% {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-
-            15% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-            85% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-
-            100% {
-                opacity: 0;
-                transform: translateY(-20px);
-                visibility: hidden;
-            }
+            0% { opacity: 0; transform: translateY(-20px); }
+            15% { opacity: 1; transform: translateY(0); }
+            85% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); visibility: hidden; }
         }
 
-        /* Responsive */
         @media (max-width: 640px) {
             .modal-header {
                 padding: 1rem 1.25rem;
             }
-
             .modal-title {
                 font-size: 1.125rem;
             }
-
             .modal-body {
                 padding: 1.25rem;
             }
-
             .modal-footer {
                 padding: 0.875rem 1.25rem;
             }
-
-            .btn-cancel,
-            .btn-restore,
-            .btn-delete {
+            .btn-cancel, .btn-restore, .btn-delete {
                 padding: 0.5rem 0.875rem;
                 font-size: 0.875rem;
             }
@@ -413,7 +374,6 @@
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script>
-        // Modal functions
         function openModal(modalId) {
             document.getElementById(modalId).style.display = 'flex';
             document.body.style.overflow = 'hidden';
@@ -423,33 +383,30 @@
             document.body.style.overflow = 'auto';
         }
 
-        // Restore modal
         let restoreFormAction = '';
         function openRestoreModal(productId, productName) {
             restoreFormAction = '/contents/products/' + productId + '/restore';
             document.getElementById('restore-product-name').innerText = productName;
             openModal('modal-restore');
         }
-        document.getElementById('form-restore')?.addEventListener('submit', function (e) {
+        document.getElementById('form-restore')?.addEventListener('submit', function(e) {
             e.preventDefault();
             this.action = restoreFormAction;
             this.submit();
         });
 
-        // Force delete modal
         let forceDeleteFormAction = '';
         function openForceDeleteModal(productId, productName) {
             forceDeleteFormAction = '/contents/products/' + productId + '/force';
             document.getElementById('force-delete-product-name').innerText = productName;
             openModal('modal-force-delete');
         }
-        document.getElementById('form-force-delete')?.addEventListener('submit', function (e) {
+        document.getElementById('form-force-delete')?.addEventListener('submit', function(e) {
             e.preventDefault();
             this.action = forceDeleteFormAction;
             this.submit();
         });
 
-        // Search functionality
         const searchInput = document.getElementById('search-input');
         const searchButton = document.getElementById('search-button');
         const categoryFilter = document.getElementById('category-filter');
@@ -466,10 +423,10 @@
         }
 
         if (searchButton) searchButton.addEventListener('click', applySearchAndFilter);
-        if (searchInput) searchInput.addEventListener('keypress', function (e) { if (e.key === 'Enter') applySearchAndFilter(); });
+        if (searchInput) searchInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') applySearchAndFilter(); });
         if (categoryFilter) categoryFilter.addEventListener('change', applySearchAndFilter);
 
-        setTimeout(function () {
+        setTimeout(function() {
             const toast = document.getElementById('toast-box');
             if (toast) setTimeout(() => toast.style.display = 'none', 3000);
         }, 100);

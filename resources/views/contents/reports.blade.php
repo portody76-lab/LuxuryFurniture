@@ -65,7 +65,7 @@
                 <h3 class="font-bold text-lg text-gray-800">
                     <i class="fas fa-table text-[#c9973a] mr-2"></i> Data Laporan
                 </h3>
-                @if (isset($reportType) && $reportType && isset($reportData) && count($reportData) > 0)
+                @if (isset($reportType) && $reportType && isset($reportData) && $reportData->count() > 0)
                     <form method="GET" action="{{ route('contents.reports.download') }}" target="_blank">
                         <input type="hidden" name="report_type" value="{{ $reportType }}">
                         <input type="hidden" name="start_date" value="{{ $startDate }}">
@@ -100,7 +100,7 @@
                     <h4 class="text-gray-500 font-medium">Pilih Tipe Laporan</h4>
                     <p class="text-gray-400 text-sm mt-1">Silahkan pilih tipe laporan terlebih dahulu</p>
                 </div>
-            @elseif(isset($reportData) && count($reportData) == 0)
+            @elseif(isset($reportData) && $reportData->count() == 0)
                 <div class="text-center py-12">
                     <div class="w-20 h-20 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-4">
                         <i class="fas fa-chart-simple text-3xl text-gray-400"></i>
@@ -132,8 +132,7 @@
                                 @elseif($reportType == 'category')
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Kategori</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Total Produk</th>
-                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Total Stok
-                                    </th>
+                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Total Stok</th>
                                 @elseif($reportType == 'damaged')
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Tanggal</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Kode Produk</th>
@@ -147,7 +146,7 @@
                         <tbody>
                             @foreach ($reportData as $index => $row)
                                 <tr class="border-b border-[#f3e4c3] hover:bg-[#fdf8f0] transition-colors">
-                                    <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $index + 1 }}</td>
+                                    <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $reportData->firstItem() + $index }}</td>
 
                                     @if ($reportType == 'transaction')
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['date'] ?? '-' }}</td>
@@ -200,8 +199,15 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="mt-4 text-right text-sm text-gray-500 print:hidden">
-                    Total data: {{ count($reportData) }} record
+
+                <!-- Pagination -->
+                <div class="mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div class="text-sm text-gray-500">
+                        Menampilkan {{ $reportData->firstItem() }} sampai {{ $reportData->lastItem() }} dari {{ $reportData->total() }} data
+                    </div>
+                    <div>
+                        {{ $reportData->appends(request()->query())->links() }}
+                    </div>
                 </div>
 
                 <div class="print-footer text-center text-xs text-gray-500 mt-6 hidden print:block">

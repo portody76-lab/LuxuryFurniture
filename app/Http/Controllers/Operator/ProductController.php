@@ -46,7 +46,7 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:10000',
+            // HAPUS 'image' => 'nullable|image|mimes:jpeg,png,jpg|max:10000',
         ]);
 
         $productCode = ProductCodeHelper::generate($request->category_id);
@@ -57,10 +57,11 @@ class ProductController extends Controller
         $product->category_id = $request->category_id;
         $product->is_deleted = false;
 
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'public');
-            $product->image = $path;
-        }
+        // HAPUS UPLOAD IMAGE
+        // if ($request->hasFile('image')) {
+        //     $path = $request->file('image')->store('products', 'public');
+        //     $product->image = $path;
+        // }
 
         $product->save();
 
@@ -79,7 +80,7 @@ class ProductController extends Controller
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
             'product_code' => 'required|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg|max:10000',
+            // HAPUS 'image' => 'nullable|image|mimes:jpeg,png,jpg|max:10000',
         ]);
 
         $oldCategoryId = $product->category_id;
@@ -94,10 +95,11 @@ class ProductController extends Controller
             $product->product_code = $request->product_code;
         }
 
-        if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('products', 'public');
-            $product->image = $path;
-        }
+        // HAPUS UPLOAD IMAGE
+        // if ($request->hasFile('image')) {
+        //     $path = $request->file('image')->store('products', 'public');
+        //     $product->image = $path;
+        // }
 
         $product->save();
 
@@ -127,9 +129,10 @@ class ProductController extends Controller
 
             $message = 'Produk berhasil disembunyikan (soft delete).';
         } else {
-            if ($product->image && file_exists(storage_path('app/public/' . $product->image))) {
-                unlink(storage_path('app/public/' . $product->image));
-            }
+            // HAPUS PENGHAPUSAN FILE IMAGE
+            // if ($product->image && file_exists(storage_path('app/public/' . $product->image))) {
+            //     unlink(storage_path('app/public/' . $product->image));
+            // }
 
             $product->delete();
 
@@ -201,10 +204,10 @@ class ProductController extends Controller
 
         $product = Product::where('is_deleted', true)->findOrFail($id);
         
-        // Hapus file image jika ada
-        if ($product->image && file_exists(storage_path('app/public/' . $product->image))) {
-            unlink(storage_path('app/public/' . $product->image));
-        }
+        // HAPUS PENGHAPUSAN FILE IMAGE
+        // if ($product->image && file_exists(storage_path('app/public/' . $product->image))) {
+        //     unlink(storage_path('app/public/' . $product->image));
+        // }
         
         $product->forceDelete();
         

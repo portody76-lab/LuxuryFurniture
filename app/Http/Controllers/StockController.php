@@ -215,7 +215,7 @@ class StockController extends Controller
                 'category' => $product->category->name ?? '-',
                 'stock' => $product->stock,
                 'min_stock_threshold' => $product->min_stock_threshold ?? 25,
-                'image_url' => $product->image ? asset('storage/' . $product->image) : asset('images/placeholder.png'),
+                // HAPUS 'image_url' => $product->image ? asset('storage/' . $product->image) : asset('images/placeholder.png'),
                 'description' => $product->description ?? '-',
             ]
         ]);
