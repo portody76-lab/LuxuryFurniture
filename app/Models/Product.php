@@ -10,12 +10,12 @@ class Product extends Model
         'product_code',
         'category_id',
         'name',
-        'image',
+        // 'image', ← HAPUS
         'stock',
         'is_deleted',
         'created_by',
         'updated_by',
-        'min_stock_threshold', // baru: threshold stok minimal (default 25)
+        'min_stock_threshold', // threshold stok minimal (default 25)
     ];
 
     protected $casts = [
@@ -44,14 +44,14 @@ class Product extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
-    // Accessor for image URL
-    public function getImageUrlAttribute(): string
-    {
-        if ($this->image) {
-            return asset('storage/' . $this->image);
-        }
-        return asset('images/placeholder.png');
-    }
+    // HAPUS method getImageUrlAttribute
+    // public function getImageUrlAttribute(): string
+    // {
+    //     if ($this->image) {
+    //         return asset('storage/' . $this->image);
+    //     }
+    //     return asset('images/placeholder.png');
+    // }
 
     // Calculate current stock (gunakan kolom stock langsung, bukan dari transaksi)
     public function getCurrentStockAttribute(): int

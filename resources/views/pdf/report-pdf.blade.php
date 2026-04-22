@@ -37,7 +37,6 @@
         }
 
         th {
-            background-color: #f3e4c3;
             padding: 10px;
             text-align: left;
             font-weight: bold;

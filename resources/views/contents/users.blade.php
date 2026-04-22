@@ -75,14 +75,6 @@
         </div>
 
         <!-- ALERT MESSAGES -->
-        @if (session('success'))
-            <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-3 sm:p-4 rounded-xl mb-4 sm:mb-6 shadow-sm">
-                <div class="flex items-center gap-2 text-sm sm:text-base wrap-break-words">
-                    <i class="fas fa-check-circle text-green-500 shrink-0"></i>
-                    <span>{{ session('success') }}</span>
-                </div>
-            </div>
-        @endif
 
         @if (session('error'))
             <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-3 sm:p-4 rounded-xl mb-4 sm:mb-6 shadow-sm">
