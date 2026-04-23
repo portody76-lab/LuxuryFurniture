@@ -180,7 +180,6 @@ class StockController extends Controller
                     'jumlah' => $transaction->quantity,
                     'kondisi' => $transaction->condition === 'good' ? 'Aman' : 'Rusak',
                     'deskripsi' => $transaction->description ?? '-',
-                    'alasan_rusak' => $transaction->description ?? '-',
                 ];
             }
 
@@ -215,7 +214,6 @@ class StockController extends Controller
                 'category' => $product->category->name ?? '-',
                 'stock' => $product->stock,
                 'min_stock_threshold' => $product->min_stock_threshold ?? 25,
-                // HAPUS 'image_url' => $product->image ? asset('storage/' . $product->image) : asset('images/placeholder.png'),
                 'description' => $product->description ?? '-',
             ]
         ]);

@@ -16,9 +16,8 @@ class StockTransaction extends Model
         'transaction_date',
         'created_by',
         'updated_by',
-        'condition',        // baru: good/damaged
-        'description',      // baru: deskripsi wajib
-        'damage_reason',    // baru: alasan jika rusak
+        'condition',      
+        'description',      
     ];
 
     // Relasi ke User (siapa yang melakukan transaksi)
