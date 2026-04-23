@@ -10,11 +10,6 @@
             <p class="text-[#8b7a66] text-sm sm:text-base mt-1">Kelola kategori produk furniture Anda</p>
         </div>
 
-        @if (session('success'))
-            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded-lg mb-4 shadow-sm">
-                <i class="fas fa-check-circle mr-2"></i> {{ session('success') }}
-            </div>
-        @endif
 
         @if (session('error'))
             <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-4 shadow-sm">

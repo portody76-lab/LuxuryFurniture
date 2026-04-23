@@ -44,14 +44,6 @@ class Product extends Model
         return $this->belongsTo(User::class, 'updated_by');
     }
 
-    // HAPUS method getImageUrlAttribute
-    // public function getImageUrlAttribute(): string
-    // {
-    //     if ($this->image) {
-    //         return asset('storage/' . $this->image);
-    //     }
-    //     return asset('images/placeholder.png');
-    // }
 
     // Calculate current stock (gunakan kolom stock langsung, bukan dari transaksi)
     public function getCurrentStockAttribute(): int
@@ -69,7 +61,7 @@ class Product extends Model
         return $this->stockTransactions()->create([
             'type' => 'in',
             'quantity' => $quantity,
-            'stock' => $this->stock, // stok setelah transaksi
+            'stock' => $this->stock, 
             'transaction_date' => now(),
             'created_by' => $userId,
             'updated_by' => $userId,
@@ -80,7 +72,7 @@ class Product extends Model
     }
 
     // Method untuk mengurangi stok
-    public function removeStock($quantity, $userId, $description = null, $condition = 'good', $damageReason = null)
+    public function removeStock($quantity, $userId, $description = null, $condition = 'good',)
     {
         if ($this->stock < $quantity) {
             throw new \Exception('Stok tidak mencukupi');
@@ -99,7 +91,6 @@ class Product extends Model
             'updated_by' => $userId,
             'condition' => $condition,
             'description' => $description,
-            'damage_reason' => $damageReason,
         ]);
     }
 
