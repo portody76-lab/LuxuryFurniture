@@ -40,7 +40,7 @@ class StockTransaction extends Model
     // Accessor untuk menampilkan kondisi dalam Bahasa Indonesia
     public function getConditionLabelAttribute()
     {
-        return $this->condition === 'good' ? 'Aman' : 'Rusak';
+        return $this->condition === 'good' ? 'Baik' : 'Rusak';
     }
 
     // Accessor untuk menampilkan type dalam Bahasa Indonesia

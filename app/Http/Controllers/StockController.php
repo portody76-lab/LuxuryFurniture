@@ -178,7 +178,7 @@ class StockController extends Controller
                     'user' => $userName,
                     'jenis' => $transaction->type === 'in' ? 'Masuk' : 'Keluar',
                     'jumlah' => $transaction->quantity,
-                    'kondisi' => $transaction->condition === 'good' ? 'Aman' : 'Rusak',
+                    'kondisi' => $transaction->condition === 'good' ? 'Baik' : 'Rusak',
                     'deskripsi' => $transaction->description ?? '-',
                 ];
             }

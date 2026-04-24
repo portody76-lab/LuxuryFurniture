@@ -157,7 +157,7 @@
                             <td class="px-4 py-3 text-center">
                                 <span
                                     class="inline-flex px-2 py-1 rounded-full text-xs font-semibold {{ $item->condition == 'good' ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700' }}">
-                                    {{ $item->condition == 'good' ? 'Aman' : 'Rusak' }}
+                                    {{ $item->condition == 'good' ? 'Baik' : 'Rusak' }}
                                 </span>
                             </td>
                             <td class="px-4 py-3 text-sm text-[#3a3020] max-w-xs truncate"

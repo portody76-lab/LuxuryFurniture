@@ -25,12 +25,13 @@
                         </option>
                         <option value="stock" {{ $reportType == 'stock' ? 'selected' : '' }}>Laporan Stok Produk</option>
                         <option value="category" {{ $reportType == 'category' ? 'selected' : '' }}>Laporan Kategori</option>
-                        <option value="damaged" {{ $reportType == 'damaged' ? 'selected' : '' }}>Laporan Barang Rusak</option>
+                        <option value="damaged" {{ $reportType == 'damaged' ? 'selected' : '' }}>Laporan Barang Rusak
+                        </option>
                     </select>
                 </div>
 
                 <div class="mb-4" id="periodDiv"
-                    style="{{ $reportType && $reportType != 'stock' && $reportType != 'category' ? '' : 'display: none;' }}">
+                    style="{{ $reportType && ($reportType == 'transaction' || $reportType == 'damaged') ? '' : 'display: none;' }}">
                     <label class="block text-sm font-semibold text-gray-700 mb-2">Periode</label>
                     <div class="grid grid-cols-2 gap-2">
                         <div>
@@ -122,75 +123,87 @@
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Jumlah</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Kondisi</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Deskripsi</th>
-                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">User</th>
+                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">User
+                                    </th>
                                 @elseif($reportType == 'stock')
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Kode</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Produk</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Kategori</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Stok</th>
-                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Status</th>
+                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">
+                                        Status</th>
                                 @elseif($reportType == 'category')
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Kategori</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Total Produk</th>
-                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Total Stok</th>
+                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Total
+                                        Stok</th>
                                 @elseif($reportType == 'damaged')
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Tanggal</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Kode Produk</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Nama Produk</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Jumlah</th>
                                     <th class="px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">Deskripsi</th>
-                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">User</th>
+                                    <th class="rounded-r-xl px-4 py-3 text-left text-sm font-semibold text-[#7a5c1e]">User
+                                    </th>
                                 @endif
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($reportData as $index => $row)
                                 <tr class="border-b border-[#f3e4c3] hover:bg-[#fdf8f0] transition-colors">
-                                    <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $reportData->firstItem() + $index }}</td>
+                                    <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $reportData->firstItem() + $index }}
+                                    </td>
 
                                     @if ($reportType == 'transaction')
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['date'] ?? '-' }}</td>
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product_code'] ?? '-' }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product_code'] ?? '-' }}
+                                        </td>
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product'] ?? '-' }}</td>
                                         <td class="px-4 py-3 text-sm">
-                                            <span class="px-2 py-1 rounded-full text-xs {{ ($row['type'] ?? '') == 'Masuk' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+                                            <span
+                                                class="px-2 py-1 rounded-full text-xs {{ ($row['type'] ?? '') == 'Masuk' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
                                                 {{ $row['type'] ?? '-' }}
                                             </span>
                                         </td>
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['quantity'] ?? 0) }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">
+                                            {{ number_format($row['quantity'] ?? 0) }}</td>
                                         <td class="px-4 py-3 text-sm">
-                                            <span class="px-2 py-1 rounded-full text-xs {{ ($row['condition'] ?? '') == 'Aman' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
+                                            <span
+                                                class="px-2 py-1 rounded-full text-xs {{ ($row['condition'] ?? '') == 'Baik' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' }}">
                                                 {{ $row['condition'] ?? '-' }}
                                             </span>
                                         </td>
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['description'] ?? '-' }}</td>
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['user'] ?? '-' }}</td>
-
                                     @elseif($reportType == 'stock')
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['code'] ?? '-' }}</td>
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product'] ?? '-' }}</td>
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['category'] ?? '-' }}</td>
                                         <td class="px-4 py-3 text-sm">
-                                            <span class="px-2 py-1 rounded-full text-xs {{ ($row['stock'] ?? 0) <= 25 ? 'bg-orange-100 text-orange-500' : 'bg-green-100 text-green-700' }}">
+                                            <span
+                                                class="px-2 py-1 rounded-full text-xs {{ ($row['stock'] ?? 0) <= 25 ? 'bg-orange-100 text-orange-500' : 'bg-green-100 text-green-700' }}">
                                                 {{ number_format($row['stock'] ?? 0) }}
                                             </span>
                                         </td>
                                         <td class="px-4 py-3 text-sm">
-                                            <span class="px-2 py-1 rounded-full text-xs {{ $row['status'] == 'Stok Menipis' ? 'bg-orange-100 text-orange-500' : ($row['status'] == 'Habis' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700') }}">
+                                            <span
+                                                class="px-2 py-1 rounded-full text-xs {{ $row['status'] == 'Stok Menipis' ? 'bg-orange-100 text-orange-500' : ($row['status'] == 'Habis' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700') }}">
                                                 {{ $row['status'] ?? '-' }}
                                             </span>
                                         </td>
-
                                     @elseif($reportType == 'category')
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['category'] ?? '-' }}</td>
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['total_products'] ?? 0) }}</td>
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['total_stock'] ?? 0) }}</td>
-
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">
+                                            {{ number_format($row['total_products'] ?? 0) }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">
+                                            {{ number_format($row['total_stock'] ?? 0) }}</td>
                                     @elseif($reportType == 'damaged')
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['date'] ?? '-' }}</td>
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product_code'] ?? '-' }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product_code'] ?? '-' }}
+                                        </td>
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['product'] ?? '-' }}</td>
-                                        <td class="px-4 py-3 text-sm text-[#3a3020]">{{ number_format($row['quantity'] ?? 0) }}</td>
+                                        <td class="px-4 py-3 text-sm text-[#3a3020]">
+                                            {{ number_format($row['quantity'] ?? 0) }}</td>
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['description'] ?? '-' }}</td>
                                         <td class="px-4 py-3 text-sm text-[#3a3020]">{{ $row['user'] ?? '-' }}</td>
                                     @endif
@@ -203,7 +216,8 @@
                 <!-- Pagination -->
                 <div class="mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
                     <div class="text-sm text-gray-500">
-                        Menampilkan {{ $reportData->firstItem() }} sampai {{ $reportData->lastItem() }} dari {{ $reportData->total() }} data
+                        Menampilkan {{ $reportData->firstItem() }} sampai {{ $reportData->lastItem() }} dari
+                        {{ $reportData->total() }} data
                     </div>
                     <div>
                         {{ $reportData->appends(request()->query())->links() }}
@@ -265,9 +279,8 @@
 
         function togglePeriod() {
             const type = reportType.value;
-            if (type === 'stock' || type === 'category' || type === 'damaged') {
-                periodDiv.style.display = 'none';
-            } else if (type === 'transaction') {
+            // Tampilkan periode untuk transaction DAN damaged
+            if (type === 'transaction' || type === 'damaged') {
                 periodDiv.style.display = 'block';
             } else {
                 periodDiv.style.display = 'none';
@@ -285,6 +298,7 @@
 
     <style>
         @media print {
+
             .sidebar,
             .bg-white:first-child,
             form,

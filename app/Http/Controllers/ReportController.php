@@ -82,7 +82,7 @@ class ReportController extends Controller
             'endDate' => $endDate
         ]);
 
-        $pdf->setPaper('A4', 'landscape');
+        $pdf->setPaper('A4', 'portrait');
 
         return $pdf->download('laporan_' . $reportType . '_' . date('Ymd_His') . '.pdf');
     }
@@ -92,6 +92,7 @@ class ReportController extends Controller
         $query = DB::table('stock_transactions')
             ->join('products', 'stock_transactions.product_id', '=', 'products.id')
             ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->leftJoin('users', 'stock_transactions.created_by', '=', 'users.id')  // <-- GANTI
             ->select(
                 'stock_transactions.transaction_date',
                 'products.product_code',
@@ -100,8 +101,9 @@ class ReportController extends Controller
                 'stock_transactions.type',
                 'stock_transactions.quantity',
                 'stock_transactions.condition',
-                'stock_transactions.created_by',
-                'stock_transactions.stock'
+                'stock_transactions.description',  // <-- TAMBAHKAN
+                'stock_transactions.stock',
+                'users.username as user_name'      // <-- LANGSUNG
             )
             ->orderBy('stock_transactions.transaction_date', 'desc');
 
@@ -111,7 +113,7 @@ class ReportController extends Controller
         }
 
         $results = $query->paginate($perPage);
-        
+
         $results->getCollection()->transform(function ($item) {
             return [
                 'date' => \Carbon\Carbon::parse($item->transaction_date)->translatedFormat('d/m/Y H:i'),
@@ -120,12 +122,13 @@ class ReportController extends Controller
                 'category' => $item->category_name,
                 'type' => $item->type == 'in' ? 'Masuk' : 'Keluar',
                 'quantity' => $item->quantity,
-                'condition' => $item->condition == 'good' ? 'Aman' : 'Rusak',
-                'user' => $this->getUserName($item->created_by),
+                'condition' => $item->condition == 'good' ? 'Baik' : 'Rusak',
+                'description' => $item->description ?? '-',  // <-- TAMBAHKAN
+                'user' => $item->user_name ?? 'System',      // <-- LANGSUNG
                 'stock' => $item->stock ?? 0
             ];
         });
-        
+
         return $results;
     }
 
@@ -149,7 +152,7 @@ class ReportController extends Controller
                 'product' => $item->product_name,
                 'category' => $item->category_name,
                 'stock' => $item->stock ?? 0,
-                'status' => $item->stock <= 5 ? '⚠️ Stok Menipis' : ($item->stock == 0 ? '❌ Habis' : '✅ Aman')
+                'status' => $item->stock <= 5 ? 'Stok Menipis' : ($item->stock == 0 ? 'Habis' : 'Baik')
             ];
         });
 
@@ -185,12 +188,14 @@ class ReportController extends Controller
     {
         $query = DB::table('stock_transactions')
             ->join('products', 'stock_transactions.product_id', '=', 'products.id')
+            ->leftJoin('users', 'stock_transactions.created_by', '=', 'users.id')  // <-- GANTI
             ->select(
                 'stock_transactions.transaction_date',
                 'products.product_code',
                 'products.name as product_name',
                 'stock_transactions.quantity',
-                'stock_transactions.created_by'
+                'stock_transactions.description',  // <-- TAMBAHKAN
+                'users.username as user_name'      // <-- LANGSUNG
             )
             ->where('stock_transactions.condition', 'damaged')
             ->orderBy('stock_transactions.transaction_date', 'desc');
@@ -208,7 +213,8 @@ class ReportController extends Controller
                 'product_code' => $item->product_code,
                 'product' => $item->product_name,
                 'quantity' => $item->quantity,
-                'user' => $this->getUserName($item->created_by)
+                'description' => $item->description ?? '-',  // <-- TAMBAHKAN
+                'user' => $item->user_name ?? 'System'
             ];
         });
 
@@ -222,6 +228,7 @@ class ReportController extends Controller
         $query = DB::table('stock_transactions')
             ->join('products', 'stock_transactions.product_id', '=', 'products.id')
             ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->leftJoin('users', 'stock_transactions.created_by', '=', 'users.id')  // <-- GANTI jadi leftJoin
             ->select(
                 'stock_transactions.transaction_date',
                 'products.product_code',
@@ -230,8 +237,9 @@ class ReportController extends Controller
                 'stock_transactions.type',
                 'stock_transactions.quantity',
                 'stock_transactions.condition',
-                'stock_transactions.created_by',
-                'stock_transactions.stock'
+                'stock_transactions.description',  // <-- PASTIKAN INI ADA
+                'stock_transactions.stock',
+                'users.username as user_name'      // <-- LANGSUNG AMBIL USERNAME
             )
             ->orderBy('stock_transactions.transaction_date', 'desc');
 
@@ -247,8 +255,9 @@ class ReportController extends Controller
             'category' => $item->category_name,
             'type' => $item->type == 'in' ? 'Masuk' : 'Keluar',
             'quantity' => $item->quantity,
-            'condition' => $item->condition == 'good' ? 'Aman' : 'Rusak',
-            'user' => $this->getUserName($item->created_by),
+            'condition' => $item->condition == 'good' ? 'Baik' : 'Rusak',
+            'description' => $item->description ?? '-',  // <-- PASTIKAN INI ADA
+            'user' => $item->user_name ?? 'System',      // <-- LANGSUNG PAKAI
             'stock' => $item->stock ?? 0
         ])->toArray();
     }
@@ -268,9 +277,10 @@ class ReportController extends Controller
             ->get()
             ->map(fn($item) => [
                 'code' => $item->product_code ?? '-',
-                'product' => $item->product_name,                'category' => $item->category_name,
+                'product' => $item->product_name,
+                'category' => $item->category_name,
                 'stock' => $item->stock ?? 0,
-                'status' => $item->stock <= 5 ? '⚠️ Stok Menipis' : ($item->stock == 0 ? '❌ Habis' : '✅ Aman')
+                'status' => $item->stock <= 5 ? 'Stok Menipis' : ($item->stock == 0 ? 'Habis' : 'Baik')
             ])->toArray();
     }
 
@@ -298,12 +308,14 @@ class ReportController extends Controller
     {
         $query = DB::table('stock_transactions')
             ->join('products', 'stock_transactions.product_id', '=', 'products.id')
+            ->leftJoin('users', 'stock_transactions.created_by', '=', 'users.id')  // <-- GANTI
             ->select(
                 'stock_transactions.transaction_date',
                 'products.product_code',
                 'products.name as product_name',
                 'stock_transactions.quantity',
-                'stock_transactions.created_by'
+                'stock_transactions.description',  // <-- PASTIKAN INI ADA
+                'users.username as user_name'      // <-- LANGSUNG
             )
             ->where('stock_transactions.condition', 'damaged')
             ->orderBy('stock_transactions.transaction_date', 'desc');
@@ -318,14 +330,14 @@ class ReportController extends Controller
             'product_code' => $item->product_code,
             'product' => $item->product_name,
             'quantity' => $item->quantity,
-            'user' => $this->getUserName($item->created_by)
+            'description' => $item->description ?? '-',  // <-- PASTIKAN INI ADA
+            'user' => $item->user_name ?? 'System'
         ])->toArray();
     }
 
     private function getUserName($userId)
     {
-        if (!$userId) return 'System';
-        $user = DB::table('users')->where('id', $userId)->first();
-        return $user ? ($user->username ?? 'Unknown') : 'Unknown';
+        // Fungsi ini tidak dipakai lagi karena sudah mengambil user_name langsung dari query
+        return 'System';
     }
 }

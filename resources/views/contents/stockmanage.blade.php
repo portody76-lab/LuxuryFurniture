@@ -210,7 +210,7 @@
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="radio" name="condition" value="good" checked
                                 class="w-4 h-4 text-green-600 focus:ring-green-500">
-                            <span class="text-sm text-gray-700">Aman</span>
+                            <span class="text-sm text-gray-700">Baik</span>
                         </label>
                         <label class="flex items-center gap-2 cursor-pointer">
                             <input type="radio" name="condition" value="damaged"
@@ -446,7 +446,7 @@
                         let html = '';
                         data.transactions.forEach((t, idx) => {
                             const jenisClass = t.jenis === 'Masuk' ? 'text-green-600' : 'text-red-600';
-                            const kondisiClass = t.kondisi === 'Aman' ? 'text-green-600' : 'text-orange-600';
+                            const kondisiClass = t.kondisi === 'Baik' ? 'text-green-600' : 'text-orange-600';
                             html += `<tr class="border-b"><td class="px-3 py-2">${idx + 1}</td><td class="px-3 py-2">${t.tanggal}</td><td class="px-3 py-2">${t.user}</td><td class="px-3 py-2 text-center ${jenisClass}">${t.jenis}</td><td class="px-3 py-2 text-center">${t.jumlah}</td><td class="px-3 py-2 text-center ${kondisiClass}">${t.kondisi}</td><td class="px-3 py-2">${t.deskripsi}</td></tr>`;
                         });
                         document.getElementById('historyTableBody').innerHTML = html;
