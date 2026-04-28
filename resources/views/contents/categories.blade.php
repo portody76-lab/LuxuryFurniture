@@ -11,12 +11,6 @@
         </div>
 
 
-        @if (session('error'))
-            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-4 shadow-sm">
-                <i class="fas fa-exclamation-circle mr-2"></i> {{ session('error') }}
-            </div>
-        @endif
-
         @if ($errors->any())
             <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-4 shadow-sm">
                 <ul class="list-disc pl-5">

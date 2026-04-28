@@ -39,7 +39,7 @@ class CategoryController extends Controller
         ]);
 
         return redirect()->route('contents.categories')
-            ->with('success', 'Category berhasil ditambahkan');
+            ->with('success', 'Kategori berhasil ditambahkan');
     }
 
     public function update(Request $request, $id)
@@ -56,7 +56,7 @@ class CategoryController extends Controller
         ]);
 
         return redirect()->route('contents.categories')
-            ->with('success', 'Category berhasil diupdate');
+            ->with('success', 'Kategori berhasil diperbarui');
     }
 
     public function destroy($id)
@@ -67,7 +67,7 @@ class CategoryController extends Controller
 
         if ($hasProducts) {
             return redirect()->route('contents.categories')
-                ->with('error', 'Category tidak bisa dihapus karena masih memiliki produk! Hapus atau pindahkan produk terlebih dahulu.');
+                ->with('error', 'Kategori tidak bisa dihapus karena masih memiliki produk! Hapus atau pindahkan produk terlebih dahulu.');
         }
 
         $category->delete();
