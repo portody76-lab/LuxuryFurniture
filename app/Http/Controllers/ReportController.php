@@ -116,7 +116,7 @@ class ReportController extends Controller
 
         $results->getCollection()->transform(function ($item) {
             return [
-                'date' => \Carbon\Carbon::parse($item->transaction_date)->translatedFormat('d/m/Y H:i'),
+                'date' => \Carbon\Carbon::parse($item->transaction_date)->translatedFormat('d F Y'),
                 'product_code' => $item->product_code,
                 'product' => $item->product_name,
                 'category' => $item->category_name,
@@ -209,7 +209,7 @@ class ReportController extends Controller
 
         $results->getCollection()->transform(function ($item) {
             return [
-                'date' => \Carbon\Carbon::parse($item->transaction_date)->translatedFormat('d/m/Y H:i'),
+                'date' => \Carbon\Carbon::parse($item->transaction_date)->translatedFormat('d F Y'),
                 'product_code' => $item->product_code,
                 'product' => $item->product_name,
                 'quantity' => $item->quantity,
@@ -249,7 +249,7 @@ class ReportController extends Controller
         }
 
         return $query->get()->map(fn($item) => [
-            'date' => \Carbon\Carbon::parse($item->transaction_date)->translatedFormat('d/m/Y H:i'),
+            'date' => \Carbon\Carbon::parse($item->transaction_date)->translatedFormat('d F Y'),
             'product_code' => $item->product_code,
             'product' => $item->product_name,
             'category' => $item->category_name,
@@ -326,7 +326,7 @@ class ReportController extends Controller
         }
 
         return $query->get()->map(fn($item) => [
-            'date' => \Carbon\Carbon::parse($item->transaction_date)->translatedFormat('d/m/Y H:i'),
+            'date' => \Carbon\Carbon::parse($item->transaction_date)->translatedFormat('d F Y'),
             'product_code' => $item->product_code,
             'product' => $item->product_name,
             'quantity' => $item->quantity,
