@@ -119,8 +119,8 @@
         <div class="bg-white rounded-2xl shadow-md p-4 sm:p-6 hover:shadow-lg transition-shadow duration-300">
             <div class="flex justify-between items-center mb-4 sm:mb-5 pb-3 border-b border-gray-100">
                 <div class="flex items-center gap-3">
-                    <i class="fas fa-chart-simple text-[#c9973a] text-lg sm:text-xl"></i>
-                    <h4 class="font-semibold text-gray-800 text-base sm:text-lg">🏆 Top 5 Barang Paling Aktif</h4>
+                    <i class="fa-solid text-[#b68b40] fa-trophy"></i>
+                    <h4 class="font-semibold text-gray-800 text-base sm:text-lg">Top 5 Barang Paling Aktif</h4>
                 </div>
                 <!-- Filter untuk Ranking Chart -->
                 <div class="relative">
@@ -500,14 +500,14 @@
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: '📦 Barang Masuk',
+                            label: 'Barang Masuk',
                             data: inData,
                             backgroundColor: '#4caf50',
                             borderRadius: 8,
                             barPercentage: 0.65
                         },
                         {
-                            label: '📤 Barang Keluar',
+                            label: 'Barang Keluar',
                             data: outData,
                             backgroundColor: '#f44336',
                             borderRadius: 8,
