@@ -87,10 +87,10 @@
                         <div class="space-y-2">
                             <select id="product_filter_type"
                                 class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm">
-                                <option value="custom">📅 Custom</option>
-                                <option value="daily">📅 Harian</option>
-                                <option value="weekly">📆 Mingguan</option>
-                                <option value="monthly">📅 Bulanan</option>
+                                <option value="custom"> Custom</option>
+                                <option value="daily"> Harian</option>
+                                <option value="weekly"> Mingguan</option>
+                                <option value="monthly"> Bulanan</option>
                             </select>
                             <div id="product_custom_range" class="flex gap-2">
                                 <input type="date" id="product_start_date"
@@ -133,10 +133,10 @@
                         <div class="space-y-2">
                             <select id="ranking_filter_type"
                                 class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm">
-                                <option value="custom">📅 Custom</option>
-                                <option value="daily">📅 Harian</option>
-                                <option value="weekly">📆 Mingguan</option>
-                                <option value="monthly">📅 Bulanan</option>
+                                <option value="custom"> Custom</option>
+                                <option value="daily"> Harian</option>
+                                <option value="weekly"> Mingguan</option>
+                                <option value="monthly"> Bulanan</option>
                             </select>
                             <div id="ranking_custom_range" class="flex gap-2">
                                 <input type="date" id="ranking_start_date"
@@ -182,10 +182,10 @@
                             <div class="space-y-2">
                                 <select id="user_filter_type"
                                     class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm">
-                                    <option value="custom">📅 Custom</option>
-                                    <option value="daily">📅 Harian</option>
-                                    <option value="weekly">📆 Mingguan</option>
-                                    <option value="monthly">📅 Bulanan</option>
+                                    <option value="custom"> Custom</option>
+                                    <option value="daily"> Harian</option>
+                                    <option value="weekly"> Mingguan</option>
+                                    <option value="monthly"> Bulanan</option>
                                 </select>
                                 <div id="user_custom_range" class="flex gap-2">
                                     <input type="date" id="user_start_date"
@@ -223,10 +223,10 @@
             <div class="flex flex-wrap items-center gap-2">
                 <select id="damaged_filter_type"
                     class="border border-gray-300 rounded-xl px-3 py-2 text-sm focus:border-[#c9973a] focus:outline-none">
-                    <option value="custom" {{ $filterType == 'custom' ? 'selected' : '' }}>📅 Custom</option>
-                    <option value="daily" {{ $filterType == 'daily' ? 'selected' : '' }}>📅 Harian</option>
-                    <option value="weekly" {{ $filterType == 'weekly' ? 'selected' : '' }}>📆 Mingguan</option>
-                    <option value="monthly" {{ $filterType == 'monthly' ? 'selected' : '' }}>📅 Bulanan</option>
+                    <option value="custom" {{ $filterType == 'custom' ? 'selected' : '' }}> Custom</option>
+                    <option value="daily" {{ $filterType == 'daily' ? 'selected' : '' }}> Harian</option>
+                    <option value="weekly" {{ $filterType == 'weekly' ? 'selected' : '' }}> Mingguan</option>
+                    <option value="monthly" {{ $filterType == 'monthly' ? 'selected' : '' }}> Bulanan</option>
                 </select>
 
                 <div id="damaged_custom_range" class="flex gap-2 {{ $filterType == 'custom' ? '' : 'hidden' }}">

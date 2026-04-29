@@ -67,10 +67,10 @@
                         <i class="fas fa-calendar-alt absolute left-3 top-1/2 -translate-y-1/2 text-[#c9973a] text-sm"></i>
                         <select name="filter_type" id="filter_type"
                             class="w-full pl-9 pr-3 py-2.5 border border-[#e8d5a8] rounded-xl bg-[#fdf8f0] focus:border-[#c9973a] focus:outline-none text-sm text-gray-700 appearance-none cursor-pointer">
-                            <option value="daily" {{ $selectedFilterType == 'daily' ? 'selected' : '' }}>📅 Harian</option>
-                            <option value="weekly" {{ $selectedFilterType == 'weekly' ? 'selected' : '' }}>📆 Mingguan
+                            <option value="daily" {{ $selectedFilterType == 'daily' ? 'selected' : '' }}> Harian</option>
+                            <option value="weekly" {{ $selectedFilterType == 'weekly' ? 'selected' : '' }}> Mingguan
                             </option>
-                            <option value="monthly" {{ $selectedFilterType == 'monthly' ? 'selected' : '' }}>📅 Bulanan
+                            <option value="monthly" {{ $selectedFilterType == 'monthly' ? 'selected' : '' }}> Bulanan
                             </option>
                         </select>
                         <i
