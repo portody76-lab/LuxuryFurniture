@@ -73,6 +73,6 @@ class CategoryController extends Controller
         $category->delete();
 
         return redirect()->route('contents.categories')
-            ->with('success', 'Category berhasil dihapus');
+            ->with('success', 'Kategori berhasil dihapus');
     }
 }
