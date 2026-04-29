@@ -6,10 +6,11 @@
     {{-- TAMBAHKAN overflow-x-hidden di container utama --}}
     <div class="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-8 overflow-x-hidden">
 
-        <div class="mb-6 sm:mb-8">
-            <h1 class="text-2xl sm:text-3xl font-bold text-gray-800 tracking-tight wrap-break-words">Manajemen User</h1>
-            <p class="text-sm sm:text-base text-gray-500 mt-1 wrap-break-words">Kelola semua user (Admin & Operator)</p>
+        <div class="bg-white p-4 sm:p-6 rounded-2xl mb-6 shadow-md border border-[#e7ddcf]">
+            <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Manajemen User</h2>
+            <p class="text-[#8b7a66] text-sm sm:text-base mt-1">Kelola semua user (Admin & Operator)</p>
         </div>
+
 
         <!-- STATISTIK CARDS -->
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 sm:gap-5 mb-6 sm:mb-8">
