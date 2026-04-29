@@ -17,7 +17,7 @@
     @if(session('success') || session('error'))
         <div class="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
             <div id="toast-box" class="px-8 py-4 rounded-2xl shadow-2xl text-white text-sm font-semibold
-                                {{ session('success') ? 'bg-green-500' : 'bg-red-500' }}">
+                                        {{ session('success') ? 'bg-green-500' : 'bg-red-500' }}">
                 {{ session('success') ?? session('error') }}
             </div>
         </div>
@@ -74,11 +74,13 @@
             <table class="w-full">
                 <thead>
                     <tr class="bg-[#f3e4c3]">
-                        <th class="rounded-l-xl px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Kode</th>
+                        <th class="rounded-l-xl px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">
+                            Kode</th>
                         <th class="px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Nama Produk</th>
                         <th class="px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Kategori</th>
                         <th class="px-3 py-3 text-left font-semibold text-[#7a5c1e] text-xs tracking-wider">Stok</th>
-                        <th class="rounded-r-xl px-3 py-3 text-center font-semibold text-[#7a5c1e] text-xs tracking-wider">Aksi</th>
+                        <th class="rounded-r-xl px-3 py-3 text-center font-semibold text-[#7a5c1e] text-xs tracking-wider">
+                            Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -94,14 +96,16 @@
                             <tr class="border-b border-[#f3e4c3] hover:bg-[#fdf8f0] transition-colors bg-red-50">
                                 <td class="px-3 py-3 text-sm text-gray-400 line-through">{{ $productCode }}</td>
                                 <td class="px-3 py-3 text-sm text-gray-400 line-through">{{ $productName }}</td>
-                                <td class="px-3 py-3"><span class="bg-gray-200 text-gray-500 text-xs font-medium px-3 py-1 rounded-lg">{{ $categoryName }}</span></td>
+                                <td class="px-3 py-3"><span
+                                        class="bg-gray-200 text-gray-500 text-xs font-medium px-3 py-1 rounded-lg">{{ $categoryName }}</span>
+                                </td>
                                 <td class="px-3 py-3 text-sm text-gray-400">{{ $stockValue }}</td>
                                 <td class="px-3 py-3 text-center">
                                     <button type="button"
                                         onclick="openRestoreModal({{ $productId }}, '{{ addslashes($productName) }}')"
                                         class="bg-green-500 hover:bg-green-600 text-white p-2 rounded-lg transition-colors"
                                         title="Restore">
-                                        <i class="fas fa-trash-restore"></i>
+                                        <i class="fa-solid fa-arrows-rotate"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -127,7 +131,7 @@
         <div class="modal-container">
             <div class="modal-header">
                 <h3 class="modal-title">
-                    <i class="fas fa-trash-restore text-green-500"></i> Kembalikan Produk
+                    <i class="fa-solid fa-arrows-rotate text-green-500"></i> Kembalikan Produk
                 </h3>
                 <button onclick="closeModal('modal-restore')" class="modal-close">
                     <i class="fas fa-times"></i>
@@ -135,10 +139,11 @@
             </div>
             <div class="modal-body text-center">
                 <div class="restore-icon">
-                    <i class="fas fa-trash-restore text-green-500 text-5xl mb-3"></i>
+                    <i class="fa-solid fa-arrows-rotate text-green-500 text-5xl mb-3"></i>
                 </div>
                 <p class="text-gray-600 mb-2">
-                    Yakin ingin mengembalikan produk <span id="restore-product-name" class="font-semibold text-gray-800"></span>?
+                    Yakin ingin mengembalikan produk <span id="restore-product-name"
+                        class="font-semibold text-gray-800"></span>?
                 </p>
                 <p class="text-green-600 text-sm">
                     <i class="fas fa-info-circle"></i> Produk akan kembali ke daftar aktif
@@ -151,49 +156,15 @@
                         Batal
                     </button>
                     <button type="submit" class="btn-restore flex-1">
-                        <i class="fas fa-trash-restore mr-2"></i> Ya, Kembalikan
+                        <span>
+                            <i class="fa-solid fa-arrows-rotate text-white"></i> Ya, kembalikan
+                        </span>
                     </button>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- MODAL FORCE DELETE -->
-    <div id="modal-force-delete" class="modal-overlay">
-        <div class="modal-container-sm">
-            <div class="modal-header">
-                <h3 class="modal-title">
-                    <i class="fas fa-exclamation-triangle text-red-500"></i> Hapus Permanen
-                </h3>
-                <button onclick="closeModal('modal-force-delete')" class="modal-close">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body text-center">
-                <div class="delete-icon">
-                    <i class="fas fa-trash-alt text-red-500 text-5xl mb-3"></i>
-                </div>
-                <p class="text-gray-600 mb-2">
-                    Yakin ingin menghapus permanen produk <span id="force-delete-product-name" class="font-semibold text-gray-800"></span>?
-                </p>
-                <p class="text-red-500 text-sm">
-                    <i class="fas fa-info-circle"></i> Tindakan ini tidak dapat dibatalkan!
-                </p>
-            </div>
-            <div class="modal-footer">
-                <form id="form-force-delete" method="POST" class="flex gap-3 w-full">
-                    @csrf
-                    @method('DELETE')
-                    <button type="button" onclick="closeModal('modal-force-delete')" class="btn-cancel flex-1">
-                        Batal
-                    </button>
-                    <button type="submit" class="btn-delete flex-1">
-                        <i class="fas fa-trash-alt mr-2"></i> Ya, Hapus
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
 @endsection
 
 @section('scripts')
@@ -237,6 +208,7 @@
                 opacity: 0;
                 transform: scale(0.95);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1);
@@ -285,7 +257,8 @@
             border-top: 1px solid #e5e7eb;
         }
 
-        .restore-icon, .delete-icon {
+        .restore-icon,
+        .delete-icon {
             display: flex;
             justify-content: center;
             margin-bottom: 0.5rem;
@@ -347,26 +320,48 @@
         }
 
         @keyframes toastFade {
-            0% { opacity: 0; transform: translateY(-20px); }
-            15% { opacity: 1; transform: translateY(0); }
-            85% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-20px); visibility: hidden; }
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            15% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            85% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-20px);
+                visibility: hidden;
+            }
         }
 
         @media (max-width: 640px) {
             .modal-header {
                 padding: 1rem 1.25rem;
             }
+
             .modal-title {
                 font-size: 1.125rem;
             }
+
             .modal-body {
                 padding: 1.25rem;
             }
+
             .modal-footer {
                 padding: 0.875rem 1.25rem;
             }
-            .btn-cancel, .btn-restore, .btn-delete {
+
+            .btn-cancel,
+            .btn-restore,
+            .btn-delete {
                 padding: 0.5rem 0.875rem;
                 font-size: 0.875rem;
             }
@@ -389,7 +384,7 @@
             document.getElementById('restore-product-name').innerText = productName;
             openModal('modal-restore');
         }
-        document.getElementById('form-restore')?.addEventListener('submit', function(e) {
+        document.getElementById('form-restore')?.addEventListener('submit', function (e) {
             e.preventDefault();
             this.action = restoreFormAction;
             this.submit();
@@ -401,7 +396,7 @@
             document.getElementById('force-delete-product-name').innerText = productName;
             openModal('modal-force-delete');
         }
-        document.getElementById('form-force-delete')?.addEventListener('submit', function(e) {
+        document.getElementById('form-force-delete')?.addEventListener('submit', function (e) {
             e.preventDefault();
             this.action = forceDeleteFormAction;
             this.submit();
@@ -423,10 +418,10 @@
         }
 
         if (searchButton) searchButton.addEventListener('click', applySearchAndFilter);
-        if (searchInput) searchInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') applySearchAndFilter(); });
+        if (searchInput) searchInput.addEventListener('keypress', function (e) { if (e.key === 'Enter') applySearchAndFilter(); });
         if (categoryFilter) categoryFilter.addEventListener('change', applySearchAndFilter);
 
-        setTimeout(function() {
+        setTimeout(function () {
             const toast = document.getElementById('toast-box');
             if (toast) setTimeout(() => toast.style.display = 'none', 3000);
         }, 100);

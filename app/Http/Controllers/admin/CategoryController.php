@@ -67,7 +67,7 @@ class CategoryController extends Controller
 
         if ($hasProducts) {
             return redirect()->route('contents.categories')
-                ->with('error', 'Kategori tidak bisa dihapus karena masih memiliki produk! Hapus atau pindahkan produk terlebih dahulu.');
+                ->with('error', 'Kategori tidak bisa dihapus karena masih memiliki produk!');
         }
 
         $category->delete();
