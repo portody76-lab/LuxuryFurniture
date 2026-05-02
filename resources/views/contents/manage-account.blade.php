@@ -1,6 +1,12 @@
 @extends('layout.content')
-
-@section('title', auth()->user()->role->role_name === 'super_admin' ? 'Manage Account Super Admin' : (auth()->user()->role->role_name === 'admin' ? 'Manage Account Admin' : 'Manage Account Operator'))
+@section('customHeader')
+    <style>
+        #mainContent > div:first-child {
+            display: none !important;
+        }
+    </style>
+@endsection
+@section('title', auth()->user()->role->role_name === 'super_admin' ? 'Pengaturan Akun Super Admin' : (auth()->user()->role->role_name === 'admin' ? 'Pengaturan Akun Admin' : 'Pengaturan Akun Operator'))
 
 @section('content')
     <div class="min-h-[calc(100vh-3rem)] flex items-center justify-center">
@@ -33,7 +39,7 @@
                     <button type="submit"
                         class="bg-white border border-gray-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200 text-gray-600 px-8 py-2 rounded-xl transition-all duration-200 flex items-center gap-2 shadow-sm">
                         <i class="fas fa-sign-out-alt"></i>
-                        <span>Logout</span>
+                        <span>Keluar</span>
                     </button>
                 </form>
             </div>
@@ -101,7 +107,7 @@
                         <p class="text-gray-400 text-sm mb-5">Perbarui username akun Anda</p>
                         <button onclick="openUsernameModal()"
                             class="w-full bg-gray-50 hover:bg-amber-50 text-gray-700 hover:text-amber-700 font-medium py-2.5 rounded-xl transition-all duration-200 border border-gray-200 hover:border-amber-200">
-                            Edit Username
+                            Ganti Username
                         </button>
                     </div>
                 </div>
@@ -118,7 +124,7 @@
                         <p class="text-gray-400 text-sm mb-5">Perbarui password akun Anda</p>
                         <button onclick="openPasswordModal()"
                             class="w-full bg-gray-50 hover:bg-amber-50 text-gray-700 hover:text-amber-700 font-medium py-2.5 rounded-xl transition-all duration-200 border border-gray-200 hover:border-amber-200">
-                            Edit Password
+                            Ganti Password
                         </button>
                     </div>
                 </div>
@@ -132,7 +138,7 @@
             <div class="border-b border-gray-100 px-3 py-2.5 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <i class="fas fa-user-pen text-amber-500 text-sm"></i>
-                    <h3 class="font-semibold text-gray-800 text-sm">Edit Username</h3>
+                    <h3 class="font-semibold text-gray-800 text-sm">Ganti Username</h3>
                 </div>
                 <button type="button" onclick="closeUsernameModal()" class="text-gray-400 hover:text-gray-600 transition">
                     <i class="fas fa-times text-sm"></i>
@@ -169,7 +175,7 @@
             <div class="border-b border-gray-100 px-3 py-2.5 flex justify-between items-center">
                 <div class="flex items-center gap-2">
                     <i class="fas fa-lock text-amber-500 text-sm"></i>
-                    <h3 class="font-semibold text-gray-800 text-sm">Edit Password</h3>
+                    <h3 class="font-semibold text-gray-800 text-sm">Ganti Password</h3>
                 </div>
                 <button type="button" onclick="closePasswordModal()" class="text-gray-400 hover:text-gray-600 transition">
                     <i class="fas fa-times text-sm"></i>

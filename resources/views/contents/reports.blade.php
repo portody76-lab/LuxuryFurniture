@@ -1,12 +1,19 @@
 @extends('layout.content')
 
-@section('title', 'Reports - Luxury Furniture')
+@section('title', 'Laporan')
 
 @section('content')
-    <div class="bg-white p-6 rounded-2xl mb-6 shadow-md border border-[#e7ddcf]">
-        <h2 class="text-2xl font-bold text-gray-800">Laporan</h2>
-        <p class="text-[#8b7a66] mt-1">Lihat dan cetak laporan data furniture</p>
-    </div>
+
+            @section('customHeader')
+            <div class="bg-white p-5 sm:p-8 rounded-2xl mb-6 sm:mb-8 shadow-md border border-[#e7ddcf]">
+                <h2 class="text-xl sm:text-3xl font-bold text-gray-800">
+                    Laporan
+                </h2>
+                <p class="text-[#8b7a66] text-sm sm:text-base mt-2">
+                   Lihat dan cetak laporan data furniture
+                </p>
+            </div>
+        @endsection
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div class="bg-white rounded-2xl p-6 shadow h-fit">
@@ -215,10 +222,6 @@
 
                 <!-- Pagination -->
                 <div class="mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <div class="text-sm text-gray-500">
-                        Menampilkan {{ $reportData->firstItem() }} sampai {{ $reportData->lastItem() }} dari
-                        {{ $reportData->total() }} data
-                    </div>
                     <div>
                         {{ $reportData->appends(request()->query())->links() }}
                     </div>

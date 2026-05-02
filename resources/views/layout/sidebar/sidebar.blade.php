@@ -44,7 +44,8 @@
                     <div class="flex items-center gap-3">
                         <i class="fas fa-box w-5"></i> Manajemen Produk
                     </div>
-                    <i id="productSubmenuIcon" class="fas fa-chevron-down text-xs transition-transform duration-200"></i>
+                    <i id="productSubmenuIcon"
+                        class="fas fa-chevron-down text-xs transition-transform duration-200"></i>
                 </button>
                 <div id="productSubmenu" class="mt-1 ml-6 space-y-1 hidden">
                     <a href="{{ route('contents.productmanage') }}"
@@ -78,14 +79,13 @@
         </nav>
     </div>
 
-    {{-- PENGATURAN (Langsung ke Manage Account) - Icon Only --}}
-    <div class="mt-6">
-        <a href="{{ route('manage-account') }}"
-            class="inline-flex items-center justify-center p-3 rounded-xl text-[#5a4a1e] hover:text-white transition-all duration-200"
-            title="Pengaturan">
-            <i class="fas fa-cog text-4xl"></i>
-        </a>
-    </div>
+{{-- PENGATURAN (Langsung ke Manage Account) --}}
+<div class="mt-6 pt-4">
+    <a href="{{ route('manage-account') }}"
+        class="flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 border border-white text-white/80 hover:border-[#c9973a] hover:text-white hover:bg-[#c9973a]">
+        <span class="font-bold text-lg">Pengaturan</span>
+    </a>
+</div>
 </aside>
 
 <script>
@@ -101,7 +101,7 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const currentRoute = window.location.href;
         // Cek apakah di halaman productmanage (tapi bukan trash)
         const isProductPage = currentRoute.includes('/productmanage') && !currentRoute.includes('/trash');

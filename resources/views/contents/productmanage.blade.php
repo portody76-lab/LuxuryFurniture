@@ -1,19 +1,26 @@
 @extends('layout.content')
 
-@section('title', 'Product Management')
+@section('title', 'Produk')
 
 @section('content')
     {{-- TAMBAH overflow-x-hidden di container utama --}}
     <div class="overflow-x-hidden">
-        <div class="bg-white p-4 sm:p-6 rounded-2xl mb-6 shadow-md border border-[#e7ddcf]">
-            <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Manajemen Produk</h2>
-            <p class="text-[#8b7a66] text-sm sm:text-base mt-1">Kelola produk furniture Anda</p>
-        </div>
+
+        @section('customHeader')
+            <div class="bg-white p-5 sm:p-8 rounded-2xl mb-6 sm:mb-8 shadow-md border border-[#e7ddcf]">
+                <h2 class="text-xl sm:text-3xl font-bold text-gray-800">
+                    Manajemen Produk
+                </h2>
+                <p class="text-[#8b7a66] text-sm sm:text-base mt-2">
+                    Kelola produk furniture Anda
+                </p>
+            </div>
+        @endsection
 
         @if(session('success') || session('error'))
             <div class="fixed inset-0 flex items-center justify-center z-50 pointer-events-none">
                 <div id="toast-box" class="px-8 py-4 rounded-2xl shadow-2xl text-white text-sm font-semibold
-                                        {{ session('success') ? 'bg-green-500' : 'bg-red-500' }}">
+                                                {{ session('success') ? 'bg-green-500' : 'bg-red-500' }}">
                     {{ session('success') ?? session('error') }}
                 </div>
             </div>
@@ -109,11 +116,21 @@
                 <table style="min-width: 500px; width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr class="bg-[#f3e4c3]">
-                            <th style="padding: 12px 8px; text-align: left; font-weight: 600; color: #7a5c1e; font-size: 12px; border-top-left-radius: 12px;">Kode</th>
-                            <th style="padding: 12px 8px; text-align: left; font-weight: 600; color: #7a5c1e; font-size: 12px;">Nama Item</th>
-                            <th style="padding: 12px 8px; text-align: left; font-weight: 600; color: #7a5c1e; font-size: 12px;">Kategori</th>
-                            <th style="padding: 12px 8px; text-align: left; font-weight: 600; color: #7a5c1e; font-size: 12px;">Stok</th>
-                            <th style="padding: 12px 8px; text-align: center; font-weight: 600; color: #7a5c1e; font-size: 12px; border-top-right-radius: 12px;">Aksi</th>
+                            <th
+                                style="padding: 12px 8px; text-align: left; font-weight: 600; color: #7a5c1e; font-size: 12px; border-top-left-radius: 12px;">
+                                Kode</th>
+                            <th
+                                style="padding: 12px 8px; text-align: left; font-weight: 600; color: #7a5c1e; font-size: 12px;">
+                                Nama Item</th>
+                            <th
+                                style="padding: 12px 8px; text-align: left; font-weight: 600; color: #7a5c1e; font-size: 12px;">
+                                Kategori</th>
+                            <th
+                                style="padding: 12px 8px; text-align: left; font-weight: 600; color: #7a5c1e; font-size: 12px;">
+                                Stok</th>
+                            <th
+                                style="padding: 12px 8px; text-align: center; font-weight: 600; color: #7a5c1e; font-size: 12px; border-top-right-radius: 12px;">
+                                Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -133,23 +150,27 @@
                                         {{ $productName }}
                                     </td>
                                     <td style="padding: 12px 8px;">
-                                        <span style="background: #f3e4c3; color: #7a5c1e; font-size: 11px; padding: 4px 10px; border-radius: 8px; white-space: nowrap;">
+                                        <span
+                                            style="background: #f3e4c3; color: #7a5c1e; font-size: 11px; padding: 4px 10px; border-radius: 8px; white-space: nowrap;">
                                             {{ $categoryName }}
                                         </span>
                                     </td>
                                     <td style="padding: 12px 8px; font-size: 13px; color: #3a3020;">{{ $stockValue }}</td>
                                     <td style="padding: 12px 8px; text-align: center;">
                                         <div style="display: flex; gap: 6px; justify-content: center;">
-                                            <button onclick="openEditModal({{ $productId }}, '{{ addslashes($productCode) }}', '{{ addslashes($productName) }}', {{ $categoryId }})"
+                                            <button
+                                                onclick="openEditModal({{ $productId }}, '{{ addslashes($productCode) }}', '{{ addslashes($productName) }}', {{ $categoryId }})"
                                                 style="background: #c9973a; border: none; padding: 6px 10px; border-radius: 8px; cursor: pointer;">
-                                                <svg width="12" height="12" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24">
+                                                <svg width="12" height="12" fill="none" stroke="white" stroke-width="2.5"
+                                                    viewBox="0 0 24 24">
                                                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                                                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                                                 </svg>
                                             </button>
                                             <button onclick="openDeleteModal({{ $p->id }}, '{{ addslashes($productName) }}')"
                                                 style="background: #ef4444; border: none; padding: 6px 10px; border-radius: 8px; cursor: pointer;">
-                                                <svg width="12" height="12" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24">
+                                                <svg width="12" height="12" fill="none" stroke="white" stroke-width="2.5"
+                                                    viewBox="0 0 24 24">
                                                     <polyline points="3 6 5 6 21 6" />
                                                     <path d="M19 6l-1 14H6L5 6" />
                                                     <path d="M10 11v6" />
@@ -192,8 +213,10 @@
         </div>
 
         {{-- MODAL TAMBAH PRODUK (TANPA GAMBAR) --}}
-        <div id="modal-tambah" class="modal-overlay fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-            <div class="bg-white rounded-xl w-full max-w-sm mx-auto shadow-xl animate-fade-in-up" style="width: 90%; max-width: 360px;">
+        <div id="modal-tambah"
+            class="modal-overlay fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+            <div class="bg-white rounded-xl w-full max-w-sm mx-auto shadow-xl animate-fade-in-up"
+                style="width: 90%; max-width: 360px;">
                 <div class="border-b border-gray-100 px-3 py-2.5 flex justify-between items-center">
                     <div class="flex items-center gap-2">
                         <i class="fas fa-box text-[#c9973a] text-sm"></i>
@@ -240,8 +263,10 @@
         </div>
 
         {{-- MODAL EDIT PRODUK (TANPA GAMBAR) --}}
-        <div id="modal-edit" class="modal-overlay fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-            <div class="bg-white rounded-xl w-full max-w-sm mx-auto shadow-xl animate-fade-in-up" style="width: 90%; max-width: 360px;">
+        <div id="modal-edit"
+            class="modal-overlay fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+            <div class="bg-white rounded-xl w-full max-w-sm mx-auto shadow-xl animate-fade-in-up"
+                style="width: 90%; max-width: 360px;">
                 <div class="border-b border-gray-100 px-3 py-2.5 flex justify-between items-center">
                     <div class="flex items-center gap-2">
                         <i class="fas fa-pen text-yellow-500 text-sm"></i>
@@ -299,8 +324,10 @@
         </div>
 
         {{-- MODAL DELETE CONFIRMATION --}}
-        <div id="modal-delete" class="modal-overlay fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
-            <div class="bg-white rounded-xl w-full max-w-sm mx-auto shadow-xl animate-fade-in-up" style="width: 90%; max-width: 360px;">
+        <div id="modal-delete"
+            class="modal-overlay fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+            <div class="bg-white rounded-xl w-full max-w-sm mx-auto shadow-xl animate-fade-in-up"
+                style="width: 90%; max-width: 360px;">
                 <div class="border-b border-gray-100 px-3 py-2.5 flex justify-between items-center">
                     <div class="flex items-center gap-2">
                         <i class="fas fa-trash-alt text-red-500 text-sm"></i>
@@ -316,7 +343,8 @@
                         <i class="fas fa-exclamation-triangle text-red-500 text-sm"></i>
                     </div>
                     <p class="text-sm text-gray-600" id="delete-message">
-                        Yakin ingin menghapus produk <span id="delete-product-name" class="font-semibold text-gray-800"></span>?
+                        Yakin ingin menghapus produk <span id="delete-product-name"
+                            class="font-semibold text-gray-800"></span>?
                     </p>
                     <p class="text-xs text-red-500 mt-2">
                         <i class="fas fa-info-circle mr-1"></i> Tindakan ini tidak dapat dibatalkan!
@@ -359,6 +387,7 @@
                 opacity: 0;
                 transform: scale(0.95);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1);
@@ -370,24 +399,43 @@
         }
 
         @keyframes toastFade {
-            0% { opacity: 0; transform: translateY(-20px); }
-            15% { opacity: 1; transform: translateY(0); }
-            85% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-20px); visibility: hidden; }
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            15% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            85% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-20px);
+                visibility: hidden;
+            }
         }
 
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
         }
+
         ::-webkit-scrollbar-track {
             background: #f3e4c3;
             border-radius: 10px;
         }
+
         ::-webkit-scrollbar-thumb {
             background: #c9973a;
             border-radius: 10px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
             background: #b07e28;
         }
@@ -411,7 +459,7 @@
             openModal('modal-delete');
         }
 
-        document.getElementById('form-delete')?.addEventListener('submit', function(e) {
+        document.getElementById('form-delete')?.addEventListener('submit', function (e) {
             e.preventDefault();
             this.action = deleteFormAction;
             this.submit();
@@ -426,7 +474,7 @@
             openModal('modal-edit');
         }
 
-        document.getElementById('search-button')?.addEventListener('click', function() {
+        document.getElementById('search-button')?.addEventListener('click', function () {
             const search = document.getElementById('search-input').value;
             const category = document.getElementById('category-filter').value;
             let url = "{{ route('contents.productmanage') }}";
@@ -437,11 +485,11 @@
             window.location.href = url;
         });
 
-        document.getElementById('search-input')?.addEventListener('keypress', function(e) {
+        document.getElementById('search-input')?.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') document.getElementById('search-button').click();
         });
 
-        document.getElementById('category-filter')?.addEventListener('change', function() {
+        document.getElementById('category-filter')?.addEventListener('change', function () {
             const search = document.getElementById('search-input').value;
             const category = this.value;
             let url = "{{ route('contents.productmanage') }}";
@@ -452,12 +500,12 @@
             window.location.href = url;
         });
 
-        setTimeout(function() {
+        setTimeout(function () {
             const toast = document.getElementById('toast-box');
             if (toast) setTimeout(() => toast.style.visibility = 'hidden', 3000);
         }, 100);
 
-        window.onclick = function(event) {
+        window.onclick = function (event) {
             if (event.target.classList.contains('modal-overlay')) {
                 event.target.style.display = 'none';
                 document.body.style.overflow = 'auto';

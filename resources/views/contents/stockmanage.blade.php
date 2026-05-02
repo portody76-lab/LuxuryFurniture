@@ -1,12 +1,19 @@
 @extends('layout.content')
 
-@section('title', 'Stock Management')
+@section('title', 'Stok')
 
 @section('content')
-    <div class="bg-white p-6 rounded-2xl mb-6 shadow-md border border-[#e7ddcf]">
-        <h2 class="text-2xl font-bold text-gray-800">Manajemen Stok</h2>
-        <p class="text-[#8b7a66] mt-1">Kelola stok produk furniture Anda</p>
-    </div>
+
+        @section('customHeader')
+            <div class="bg-white p-5 sm:p-8 rounded-2xl mb-6 sm:mb-8 shadow-md border border-[#e7ddcf]">
+                <h2 class="text-xl sm:text-3xl font-bold text-gray-800">
+                    Manajemen Stok
+                </h2>
+                <p class="text-[#8b7a66] text-sm sm:text-base mt-2">
+                    Kelola stok produk furniture Anda
+                </p>
+            </div>
+        @endsection
 
     <div class="bg-white rounded-2xl p-5 flex items-center gap-5 shadow mb-6">
         <div class="w-14 h-14 rounded-full bg-[#c9973a] flex items-center justify-center">

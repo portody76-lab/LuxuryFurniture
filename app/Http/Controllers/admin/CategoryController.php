@@ -31,6 +31,11 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:categories,name',
+        ], [
+            'name.required' => 'Nama kategori wajib diisi',
+            'name.string' => 'Nama kategori harus berupa teks',
+            'name.max' => 'Nama kategori maksimal 255 karakter',
+            'name.unique' => 'Nama kategori sudah ada',
         ]);
 
         Category::create([
@@ -46,6 +51,11 @@ class CategoryController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255|unique:categories,name,' . $id,
+        ], [
+            'name.required' => 'Nama kategori wajib diisi',
+            'name.string' => 'Nama kategori harus berupa teks',
+            'name.max' => 'Nama kategori maksimal 255 karakter',
+            'name.unique' => 'Nama kategori sudah ada',
         ]);
 
         $category = Category::findOrFail($id);
