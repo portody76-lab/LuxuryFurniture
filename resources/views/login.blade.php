@@ -44,51 +44,36 @@
         <div class="w-full md:w-1/2 p-6 sm:p-8 md:p-10">
             <h2 class="text-lg sm:text-xl font-semibold mb-4 sm:mb-6">Masuk ke akun</h2>
 
-            {{-- ========================================== --}}
-            {{-- ALERT NOTIFIKASI (DI BAWAH JUDUL) --}}
-            {{-- ========================================== --}}
-            
-            {{-- ERROR VALIDASI (dari controller) --}}
-            @if($errors->any())
-                <div class="mb-4 p-3 bg-red-50 border-l-4 border-red-500 rounded-lg alert-animate">
-                    <div class="flex items-start gap-2">
-                        <i class="fas fa-exclamation-circle text-red-500 mt-0.5"></i>
-                        <div class="text-sm text-red-700">
-                            <p class="font-semibold mb-1">Login gagal!</p>
-<p>{{ session('error') }}</p>
-                        </div>
-                    </div>
-                </div>
-            @endif
-
-            {{-- SUKSES LOGOUT (dari controller) --}}
+            {{-- ALERT NOTIFIKASI --}}
+            {{-- Sukses logout --}}
             @if(session('success'))
                 <div class="mb-4 p-3 bg-green-50 border-l-4 border-green-500 rounded-lg alert-animate">
-                    <div class="flex items-start gap-2">
-                        <i class="fas fa-check-circle text-green-500 mt-0.5"></i>
-                        <div class="text-sm text-green-700">
-                            <p class="font-semibold">Berhasil!</p>
-                            <p>{{ session('success') }}</p>
-                        </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-check-circle text-green-500"></i>
+                        <p class="text-sm text-green-700">{{ session('success') }}</p>
                     </div>
                 </div>
             @endif
 
-            {{-- ERROR UMUM (jika ada) --}}
-            @if(session('error'))
+            {{-- Error login (termasuk validasi field kosong & username/password salah) --}}
+            @if($errors->any() || session('error'))
                 <div class="mb-4 p-3 bg-red-50 border-l-4 border-red-500 rounded-lg alert-animate">
-                    <div class="flex items-start gap-2">
-                        <i class="fas fa-exclamation-circle text-red-500 mt-0.5"></i>
-                        <div class="text-sm text-red-700">
-                            <p class="font-semibold">Terjadi kesalahan!</p>
-                            <p>{{ session('error') }}</p>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-exclamation-circle text-red-500"></i>
+                        <div>
+                            <p class="text-sm font-semibold text-red-700">Login gagal!</p>
+                            @if($errors->any())
+                                <p class="text-sm text-red-600">{{ $errors->first() }}</p>
+                            @elseif(session('error'))
+                                <p class="text-sm text-red-600">{{ session('error') }}</p>
+                            @endif
                         </div>
                     </div>
                 </div>
             @endif
 
             {{-- FORM LOGIN --}}
-            <form method="POST" action="/">
+            <form method="POST" action="{{ route('login') }}">
                 @csrf
 
                 <label class="block text-sm mb-1">Username</label>

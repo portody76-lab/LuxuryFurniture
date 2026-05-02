@@ -17,6 +17,9 @@ class LoginController extends Controller
         $request->validate([
             'username' => 'required',
             'password' => 'required',
+        ], [
+            'username.required' => 'Username tidak boleh kosong',
+            'password.required' => 'Password tidak boleh kosong',
         ]);
 
         if (Auth::attempt($request->only('username', 'password'))) {
@@ -26,13 +29,13 @@ class LoginController extends Controller
 
             if ($user->status == 0) {
                 Auth::logout();
-                return back()->with('error', 'Status akun Anda nonaktif. Hubungi admin segera!');
+                return back()->with('error', 'Akun Anda nonaktif. Hubungi admin!');
             }
 
             return redirect()->route('contents.dashboard');
         }
 
-        return back()->with('error', 'Username atau password salah!')->withInput($request->except('password'));
+        return back()->with('error', 'Username atau password salah!');
     }
 
     public function logout(Request $request)
@@ -41,6 +44,6 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/')->with('success', 'Anda berhasil logout');
+        return redirect('/')->with('success', 'Berhasil logout');
     }
 }
