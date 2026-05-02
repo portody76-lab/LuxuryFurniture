@@ -1,14 +1,19 @@
 @extends('layout.content')
 
-@section('title', 'Mutasi Stok - Luxury Furniture')
+@section('title', 'Mutasi Stok')
 
 @section('content')
-    <div class="bg-white p-5 sm:p-8 rounded-2xl mb-6 sm:mb-8 shadow-md border border-[#e7ddcf]">
-        <h2 class="text-xl sm:text-3xl font-bold text-gray-800">Mutasi Stok</h2>
-        <p class="text-[#8b7a66] text-sm sm:text-base mt-2">
-            Riwayat mutasi stok barang secara lengkap
-        </p>
-    </div>
+
+        @section('customHeader')
+            <div class="bg-white p-5 sm:p-8 rounded-2xl mb-6 sm:mb-8 shadow-md border border-[#e7ddcf]">
+                <h2 class="text-xl sm:text-3xl font-bold text-gray-800">
+                    Mutasi Stok
+                </h2>
+                <p class="text-[#8b7a66] text-sm sm:text-base mt-2">
+                    Riwayat mutasi stok barang secara lengkap
+                </p>
+            </div>
+        @endsection
 
     <!-- Filter Section - Desain Baru -->
     <div class="bg-white rounded-2xl shadow-md overflow-hidden mb-6">

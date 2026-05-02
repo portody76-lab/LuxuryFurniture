@@ -171,7 +171,7 @@
                 Tanggal: {{ \Carbon\Carbon::parse($startDate)->translatedFormat('d F Y') }} s/d
                 {{ \Carbon\Carbon::parse($endDate)->translatedFormat('d F Y') }}
             @else
-                Tanggal : -
+                Tanggal : {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}
             @endif
         @else
             

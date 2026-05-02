@@ -1,13 +1,21 @@
 @extends('layout.content')
 
-@section('title', 'Trash - Product Management')
+@section('title', 'Sampah')
 
 @section('content')
     <div class="flex items-center justify-between mb-6 flex-wrap gap-3">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-800">Sampah - Produk Terhapus</h1>
-            <p class="text-[#8b7a66] text-sm mt-1">Produk yang telah dihapus</p>
-        </div>
+
+        @section('customHeader')
+            <div class="bg-white p-5 sm:p-8 rounded-2xl mb-6 sm:mb-8 shadow-md border border-[#e7ddcf]">
+                <h2 class="text-xl sm:text-3xl font-bold text-gray-800">
+                    Sampah
+                </h2>
+                <p class="text-[#8b7a66] text-sm sm:text-base mt-2">
+                    Lihat produk yang telah di hapus
+                </p>
+            </div>
+        @endsection
+
         <a href="{{ route('contents.productmanage') }}"
             class="bg-[#c9973a] hover:bg-[#a87922] text-white px-4 py-2 rounded-xl transition flex items-center gap-2">
             <i class="fas fa-arrow-left"></i> Kembali ke Produk

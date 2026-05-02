@@ -1,16 +1,21 @@
 @extends('layout.content')
 
-@section('title', 'User Management')
+@section('title', 'Manajemen User')
 
 @section('content')
     {{-- TAMBAHKAN overflow-x-hidden di container utama --}}
     <div class="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-8 overflow-x-hidden">
 
-        <div class="bg-white p-4 sm:p-6 rounded-2xl mb-6 shadow-md border border-[#e7ddcf]">
-            <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Manajemen User</h2>
-            <p class="text-[#8b7a66] text-sm sm:text-base mt-1">Kelola semua user (Admin & Operator)</p>
-        </div>
-
+        @section('customHeader')
+            <div class="bg-white p-5 sm:p-8 rounded-2xl mb-6 sm:mb-8 shadow-md border border-[#e7ddcf]">
+                <h2 class="text-xl sm:text-3xl font-bold text-gray-800">
+                    Manajemen User
+                </h2>
+                <p class="text-[#8b7a66] text-sm sm:text-base mt-2">
+                    Kelola semua user (Admin & Operator)
+                </p>
+            </div>
+        @endsection
 
         <!-- STATISTIK CARDS -->
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 sm:gap-5 mb-6 sm:mb-8">
@@ -20,7 +25,8 @@
                     <div class="min-w-0 flex-1">
                         <p class="text-xs text-blue-600 uppercase tracking-wide">Total User</p>
                         <h3 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mt-1 wrap-break-words">
-                            {{ $totalUsers }}</h3>
+                            {{ $totalUsers }}
+                        </h3>
                     </div>
                     <div
                         class="w-9 h-9 sm:w-12 sm:h-12 bg-blue-100 rounded-xl flex items-center justify-center shrink-0 ml-2">
@@ -35,7 +41,8 @@
                     <div class="min-w-0 flex-1">
                         <p class="text-xs text-purple-600 uppercase tracking-wide">Super Admin</p>
                         <h3 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mt-1 wrap-break-words">
-                            {{ $totalSuperAdmin }}</h3>
+                            {{ $totalSuperAdmin }}
+                        </h3>
                     </div>
                     <div
                         class="w-9 h-9 sm:w-12 sm:h-12 bg-purple-100 rounded-xl flex items-center justify-center shrink-0 ml-2">
@@ -50,7 +57,8 @@
                     <div class="min-w-0 flex-1">
                         <p class="text-xs text-green-600 uppercase tracking-wide">Admin</p>
                         <h3 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mt-1 wrap-break-words">
-                            {{ $totalAdmin }}</h3>
+                            {{ $totalAdmin }}
+                        </h3>
                     </div>
                     <div
                         class="w-9 h-9 sm:w-12 sm:h-12 bg-green-100 rounded-xl flex items-center justify-center shrink-0 ml-2">
@@ -65,7 +73,8 @@
                     <div class="min-w-0 flex-1">
                         <p class="text-xs text-amber-600 uppercase tracking-wide">Operator</p>
                         <h3 class="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mt-1 wrap-break-words">
-                            {{ $totalOperator }}</h3>
+                            {{ $totalOperator }}
+                        </h3>
                     </div>
                     <div
                         class="w-9 h-9 sm:w-12 sm:h-12 bg-amber-100 rounded-xl flex items-center justify-center shrink-0 ml-2">

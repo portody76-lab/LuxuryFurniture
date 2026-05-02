@@ -1,25 +1,21 @@
 @extends('layout.content')
 
-@section('title', 'Categories')
+@section('title', 'Kategori')
 
 @section('content')
     <div class="flex-1 p-4 sm:p-6">
 
-        <div class="bg-white p-4 sm:p-6 rounded-2xl mb-6 shadow-md border border-[#e7ddcf]">
-            <h2 class="text-xl sm:text-2xl font-bold text-gray-800">Kategori</h2>
-            <p class="text-[#8b7a66] text-sm sm:text-base mt-1">Kelola kategori produk furniture Anda</p>
-        </div>
-
-
-        @if ($errors->any())
-            <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded-lg mb-4 shadow-sm">
-                <ul class="list-disc pl-5">
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+        @section('customHeader')
+            <div class="bg-white p-5 sm:p-8 rounded-2xl mb-6 sm:mb-8 shadow-md border border-[#e7ddcf]">
+                <h2 class="text-xl sm:text-3xl font-bold text-gray-800">
+                    Kategori
+                </h2>
+                <p class="text-[#8b7a66] text-sm sm:text-base mt-2">
+                    Kelola kategori produk furniture Anda
+                </p>
             </div>
-        @endif
+        @endsection
+
 
         <!-- SEARCH & TAMBAH CATEGORY -->
         <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
