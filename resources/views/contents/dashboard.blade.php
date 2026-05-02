@@ -156,54 +156,101 @@
     </div>
 
     <!-- Chart Users (Hanya untuk Admin & Super Admin) -->
-    @if (in_array($role, ['admin', 'super_admin']))
-        <div class="grid grid-cols-1 gap-4 sm:gap-6 mb-8 sm:mb-10">
-            <div class="bg-white rounded-2xl shadow-md p-4 sm:p-6 hover:shadow-lg transition-shadow duration-300">
-                <div class="flex justify-between items-center mb-4 sm:mb-5 pb-3 border-b border-gray-100">
-                    <div class="flex items-center gap-3">
-                        <i class="fas fa-chart-line text-[#8faa7b] text-lg sm:text-xl"></i>
-                        <h4 class="font-semibold text-gray-800 text-base sm:text-lg">Statistik Pertumbuhan User</h4>
-                    </div>
-                    <!-- Filter untuk User Chart -->
-                    <div class="relative">
-                        <button onclick="toggleUserFilter()" class="text-gray-400 hover:text-[#c9973a] transition">
-                            <i class="fas fa-sliders-h"></i>
-                        </button>
-                        <div id="userFilterPanel"
-                            class="absolute right-0 top-8 mt-1 bg-white rounded-xl shadow-lg p-3 z-10 hidden"
-                            style="min-width: 350px;">
-                            <div class="space-y-2">
-                                <select id="user_filter_type"
-                                    class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm">
-                                    <option value="custom"> Custom</option>
-                                    <option value="daily"> Harian</option>
-                                    <option value="weekly"> Mingguan</option>
-                                    <option value="monthly"> Bulanan</option>
-                                </select>
-                                <div id="user_custom_range" class="flex gap-2">
-                                    <input type="date" id="user_start_date"
-                                        class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
-                                        placeholder="Mulai">
-                                    <input type="date" id="user_end_date"
-                                        class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
-                                        placeholder="Akhir">
-                                </div>
-                                <div class="flex gap-2">
-                                    <button onclick="applyUserFilter()"
-                                        class="bg-[#c9973a] text-white px-3 py-1 rounded-lg text-sm">Filter</button>
-                                    <button onclick="resetUserFilter()"
-                                        class="bg-gray-500 text-white px-3 py-1 rounded-lg text-sm">Reset</button>
-                                </div>
+@if (in_array($role, ['admin', 'super_admin']))
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-8 sm:mb-10">
+        <!-- Line Chart -->
+        <div class="bg-white rounded-2xl shadow-md p-4 sm:p-6 hover:shadow-lg transition-shadow duration-300">
+            <div class="flex justify-between items-center mb-4 sm:mb-5 pb-3 border-b border-gray-100">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-chart-line text-[#8faa7b] text-lg sm:text-xl"></i>
+                    <h4 class="font-semibold text-gray-800 text-base sm:text-lg">Statistik Pertumbuhan User (Line)</h4>
+                </div>
+                <!-- Filter untuk Line Chart -->
+                <div class="relative">
+                    <button onclick="toggleUserLineFilter()" class="text-gray-400 hover:text-[#c9973a] transition">
+                        <i class="fas fa-sliders-h"></i>
+                    </button>
+                    <div id="userLineFilterPanel"
+                        class="absolute right-0 top-8 mt-1 bg-white rounded-xl shadow-lg p-3 z-10 hidden"
+                        style="min-width: 350px;">
+                        <div class="space-y-2">
+                            <select id="user_line_filter_type"
+                                class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm">
+                                <option value="custom"> Custom</option>
+                                <option value="daily"> Harian</option>
+                                <option value="weekly"> Mingguan</option>
+                                <option value="monthly"> Bulanan</option>
+                            </select>
+                            <div id="user_line_custom_range" class="flex gap-2">
+                                <input type="date" id="user_line_start_date"
+                                    class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
+                                    placeholder="Mulai">
+                                <input type="date" id="user_line_end_date"
+                                    class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
+                                    placeholder="Akhir">
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="applyUserLineFilter()"
+                                    class="bg-[#c9973a] text-white px-3 py-1 rounded-lg text-sm">Filter</button>
+                                <button onclick="resetUserLineFilter()"
+                                    class="bg-gray-500 text-white px-3 py-1 rounded-lg text-sm">Reset</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="chart-container" style="position: relative; height: 300px; width: 100%;">
-                    <canvas id="userChart"></canvas>
-                </div>
+            </div>
+            <div class="chart-container" style="position: relative; height: 300px; width: 100%;">
+                <canvas id="userLineChart"></canvas>
             </div>
         </div>
-    @endif
+
+        <!-- Bar Chart -->
+        <div class="bg-white rounded-2xl shadow-md p-4 sm:p-6 hover:shadow-lg transition-shadow duration-300">
+            <div class="flex justify-between items-center mb-4 sm:mb-5 pb-3 border-b border-gray-100">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-chart-bar text-[#c9973a] text-lg sm:text-xl"></i>
+                    <h4 class="font-semibold text-gray-800 text-base sm:text-lg">Statistik Pertumbuhan User (Bar)</h4>
+                </div>
+                <!-- Filter untuk Bar Chart -->
+                <div class="relative">
+                    <button onclick="toggleUserBarFilter()" class="text-gray-400 hover:text-[#c9973a] transition">
+                        <i class="fas fa-sliders-h"></i>
+                    </button>
+                    <div id="userBarFilterPanel"
+                        class="absolute right-0 top-8 mt-1 bg-white rounded-xl shadow-lg p-3 z-10 hidden"
+                        style="min-width: 350px;">
+                        <div class="space-y-2">
+                            <select id="user_bar_filter_type"
+                                class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm">
+                                <option value="custom"> Custom</option>
+                                <option value="daily"> Harian</option>
+                                <option value="weekly"> Mingguan</option>
+                                <option value="monthly"> Bulanan</option>
+                            </select>
+                            <div id="user_bar_custom_range" class="flex gap-2">
+                                <input type="date" id="user_bar_start_date"
+                                    class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
+                                    placeholder="Mulai">
+                                <input type="date" id="user_bar_end_date"
+                                    class="w-full px-3 py-1.5 border border-gray-300 rounded-lg text-sm"
+                                    placeholder="Akhir">
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="applyUserBarFilter()"
+                                    class="bg-[#c9973a] text-white px-3 py-1 rounded-lg text-sm">Filter</button>
+                                <button onclick="resetUserBarFilter()"
+                                    class="bg-gray-500 text-white px-3 py-1 rounded-lg text-sm">Reset</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="chart-container" style="position: relative; height: 300px; width: 100%;">
+                <canvas id="userBarChart"></canvas>
+            </div>
+        </div>
+    </div>
+@endif
 
     <!-- BAGIAN BAWAH: Barang Stok Habis & Barang Rusak dengan Filter -->
     <div class="bg-white rounded-2xl shadow-md p-4 sm:p-6">
@@ -430,7 +477,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script>
         // Chart instances
-        let productChart, rankingChart, userChart;
+        let productChart, rankingChart, userLineChart, userBarChart;
+        let userLineChartInstance, userBarChartInstance; // untuk chart instances
 
         // Initial data from server
         const initialMonths = @json($months);
@@ -653,75 +701,136 @@
         }
 
         // Initialize User Chart
-        function initUserChart(labels, data) {
-            const canvas = document.getElementById('userChart');
-            const ctx = canvas?.getContext('2d');
-            if (!ctx) return;
+        // Initialize User Line Chart
+// Initialize User Line Chart
+function initUserLineChart(labels, data) {
+    const canvas = document.getElementById('userLineChart');
+    const ctx = canvas?.getContext('2d');
+    if (!ctx) return;
 
-            if (userChart) userChart.destroy();
+    if (userLineChartInstance) userLineChartInstance.destroy();
 
-            const hasData = data.some(v => v > 0);
+    const hasData = data.some(v => v > 0);
 
-            if (!hasData) {
-                canvas.style.display = 'none';
-                let emptyDiv = document.getElementById('userChartEmpty');
-                if (!emptyDiv) {
-                    emptyDiv = document.createElement('div');
-                    emptyDiv.id = 'userChartEmpty';
-                    emptyDiv.className = 'empty-state absolute inset-0 flex items-center justify-center';
-                    emptyDiv.innerHTML = `
-                            <div class="text-center">
-                                <div class="empty-state-icon mx-auto"><i class="fas fa-users"></i></div>
-                                <h3 class="empty-state-title">Belum Ada Data User</h3>
-                                <p class="empty-state-desc">Belum ada user yang terdaftar untuk periode ini</p>
-                            </div>
-                        `;
-                    canvas.parentNode.style.position = 'relative';
-                    canvas.parentNode.appendChild(emptyDiv);
-                } else {
-                    emptyDiv.style.display = 'flex';
-                }
-                return;
-            }
-
-            canvas.style.display = 'block';
-            const emptyDiv = document.getElementById('userChartEmpty');
-            if (emptyDiv) emptyDiv.style.display = 'none';
-
-            userChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'User Baru',
-                        data: data,
-                        borderColor: '#8faa7b',
-                        backgroundColor: '#8faa7b20',
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.3,
-                        pointBackgroundColor: '#8faa7b',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2,
-                        pointRadius: 5,
-                        pointHoverRadius: 7
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1,
-                                precision: 0
-                            }
-                        }
-                    }
-                }
-            });
+    if (!hasData) {
+        canvas.style.display = 'none';
+        let emptyDiv = document.getElementById('userLineChartEmpty');
+        if (!emptyDiv) {
+            emptyDiv = document.createElement('div');
+            emptyDiv.id = 'userLineChartEmpty';
+            emptyDiv.className = 'empty-state absolute inset-0 flex items-center justify-center';
+            emptyDiv.innerHTML = `
+                <div class="text-center">
+                    <div class="empty-state-icon mx-auto"><i class="fas fa-users"></i></div>
+                    <h3 class="empty-state-title">Belum Ada Data User</h3>
+                    <p class="empty-state-desc">Belum ada user yang terdaftar untuk periode ini</p>
+                </div>
+            `;
+            canvas.parentNode.style.position = 'relative';
+            canvas.parentNode.appendChild(emptyDiv);
+        } else {
+            emptyDiv.style.display = 'flex';
         }
+        return;
+    }
+
+    canvas.style.display = 'block';
+    const emptyDiv = document.getElementById('userLineChartEmpty');
+    if (emptyDiv) emptyDiv.style.display = 'none';
+
+    userLineChartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'User Baru',
+                data: data,
+                borderColor: '#8faa7b',
+                backgroundColor: '#8faa7b20',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.3,
+                pointBackgroundColor: '#8faa7b',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1, precision: 0 }
+                }
+            }
+        }
+    });
+}
+
+// Initialize User Bar Chart
+function initUserBarChart(labels, data) {
+    const canvas = document.getElementById('userBarChart');
+    const ctx = canvas?.getContext('2d');
+    if (!ctx) return;
+
+    if (userBarChartInstance) userBarChartInstance.destroy();
+
+    const hasData = data.some(v => v > 0);
+
+    if (!hasData) {
+        canvas.style.display = 'none';
+        let emptyDiv = document.getElementById('userBarChartEmpty');
+        if (!emptyDiv) {
+            emptyDiv = document.createElement('div');
+            emptyDiv.id = 'userBarChartEmpty';
+            emptyDiv.className = 'empty-state absolute inset-0 flex items-center justify-center';
+            emptyDiv.innerHTML = `
+                <div class="text-center">
+                    <div class="empty-state-icon mx-auto"><i class="fas fa-users"></i></div>
+                    <h3 class="empty-state-title">Belum Ada Data User</h3>
+                    <p class="empty-state-desc">Belum ada user yang terdaftar untuk periode ini</p>
+                </div>
+            `;
+            canvas.parentNode.style.position = 'relative';
+            canvas.parentNode.appendChild(emptyDiv);
+        } else {
+            emptyDiv.style.display = 'flex';
+        }
+        return;
+    }
+
+    canvas.style.display = 'block';
+    const emptyDiv = document.getElementById('userBarChartEmpty');
+    if (emptyDiv) emptyDiv.style.display = 'none';
+
+    userBarChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'User Baru',
+                data: data,
+                backgroundColor: '#c9973a',
+                borderRadius: 8,
+                barPercentage: 0.7,
+                categoryPercentage: 0.8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1, precision: 0 }
+                }
+            }
+        }
+    });
+}
 
         // Filter toggle functions
         function toggleProductFilter() {
@@ -734,26 +843,35 @@
             panel.classList.toggle('hidden');
         }
 
-        function toggleUserFilter() {
-            const panel = document.getElementById('userFilterPanel');
-            panel.classList.toggle('hidden');
-        }
+        function toggleUserLineFilter() {
+    const panel = document.getElementById('userLineFilterPanel');
+    panel.classList.toggle('hidden');
+}
+
+function toggleUserBarFilter() {
+    const panel = document.getElementById('userBarFilterPanel');
+    panel.classList.toggle('hidden');
+}
 
         // Close panels when clicking outside
-        document.addEventListener('click', function (event) {
-            if (!event.target.closest('#productFilterPanel') && !event.target.closest(
-                'button[onclick="toggleProductFilter()"]')) {
-                document.getElementById('productFilterPanel')?.classList.add('hidden');
-            }
-            if (!event.target.closest('#rankingFilterPanel') && !event.target.closest(
-                'button[onclick="toggleRankingFilter()"]')) {
-                document.getElementById('rankingFilterPanel')?.classList.add('hidden');
-            }
-            if (!event.target.closest('#userFilterPanel') && !event.target.closest(
-                'button[onclick="toggleUserFilter()"]')) {
-                document.getElementById('userFilterPanel')?.classList.add('hidden');
-            }
-        });
+document.addEventListener('click', function (event) {
+    if (!event.target.closest('#productFilterPanel') && !event.target.closest(
+        'button[onclick="toggleProductFilter()"]')) {
+        document.getElementById('productFilterPanel')?.classList.add('hidden');
+    }
+    if (!event.target.closest('#rankingFilterPanel') && !event.target.closest(
+        'button[onclick="toggleRankingFilter()"]')) {
+        document.getElementById('rankingFilterPanel')?.classList.add('hidden');
+    }
+    if (!event.target.closest('#userLineFilterPanel') && !event.target.closest(
+        'button[onclick="toggleUserLineFilter()"]')) {
+        document.getElementById('userLineFilterPanel')?.classList.add('hidden');
+    }
+    if (!event.target.closest('#userBarFilterPanel') && !event.target.closest(
+        'button[onclick="toggleUserBarFilter()"]')) {
+        document.getElementById('userBarFilterPanel')?.classList.add('hidden');
+    }
+});
 
         // ========== AJAX FUNCTIONS FOR PRODUCT CHART ==========
         async function applyProductFilter() {
@@ -823,39 +941,73 @@
             applyRankingFilter();
         }
 
-        // ========== AJAX FUNCTIONS FOR USER CHART ==========
-        async function applyUserFilter() {
-            const filterType = document.getElementById('user_filter_type').value;
-            const startDate = document.getElementById('user_start_date').value;
-            const endDate = document.getElementById('user_end_date').value;
+        // ========== AJAX FUNCTIONS FOR USER LINE CHART ==========
+async function applyUserLineFilter() {
+    const filterType = document.getElementById('user_line_filter_type').value;
+    const startDate = document.getElementById('user_line_start_date').value;
+    const endDate = document.getElementById('user_line_end_date').value;
 
-            const params = new URLSearchParams({
-                chart_type: 'user',
-                filter_type: filterType,
-                custom_start_date: startDate,
-                custom_end_date: endDate
-            });
+    const params = new URLSearchParams({
+        chart_type: 'user',
+        filter_type: filterType,
+        custom_start_date: startDate,
+        custom_end_date: endDate
+    });
 
-            const url = '{{ route('contents.dashboard.chart-data') }}?' + params.toString();
+    const url = '{{ route("contents.dashboard.chart-data") }}?' + params.toString();
 
-            try {
-                const response = await fetch(url);
-                const result = await response.json();
-                if (result.success) {
-                    initUserChart(result.data.labels, result.data.data);
-                }
-                document.getElementById('userFilterPanel').classList.add('hidden');
-            } catch (error) {
-                console.error('Error:', error);
-            }
+    try {
+        const response = await fetch(url);
+        const result = await response.json();
+        if (result.success) {
+            initUserLineChart(result.data.labels, result.data.data);
         }
+        document.getElementById('userLineFilterPanel').classList.add('hidden');
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
 
-        function resetUserFilter() {
-            document.getElementById('user_filter_type').value = 'custom';
-            document.getElementById('user_start_date').value = '';
-            document.getElementById('user_end_date').value = '';
-            applyUserFilter();
+function resetUserLineFilter() {
+    document.getElementById('user_line_filter_type').value = 'custom';
+    document.getElementById('user_line_start_date').value = '';
+    document.getElementById('user_line_end_date').value = '';
+    applyUserLineFilter();
+}
+
+// ========== AJAX FUNCTIONS FOR USER BAR CHART ==========
+async function applyUserBarFilter() {
+    const filterType = document.getElementById('user_bar_filter_type').value;
+    const startDate = document.getElementById('user_bar_start_date').value;
+    const endDate = document.getElementById('user_bar_end_date').value;
+
+    const params = new URLSearchParams({
+        chart_type: 'user',
+        filter_type: filterType,
+        custom_start_date: startDate,
+        custom_end_date: endDate
+    });
+
+    const url = '{{ route("contents.dashboard.chart-data") }}?' + params.toString();
+
+    try {
+        const response = await fetch(url);
+        const result = await response.json();
+        if (result.success) {
+            initUserBarChart(result.data.labels, result.data.data);
         }
+        document.getElementById('userBarFilterPanel').classList.add('hidden');
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+function resetUserBarFilter() {
+    document.getElementById('user_bar_filter_type').value = 'custom';
+    document.getElementById('user_bar_start_date').value = '';
+    document.getElementById('user_bar_end_date').value = '';
+    applyUserBarFilter();
+}
 
         // ========== AJAX FUNCTIONS FOR DAMAGED STOCK ==========
         async function applyDamagedFilter() {
@@ -947,41 +1099,40 @@
         }
 
         // Initialize all charts and event listeners on page load
-        document.addEventListener('DOMContentLoaded', function () {
-            // Product Chart
-            initProductChart(initialMonths, initialInData, initialOutData);
+document.addEventListener('DOMContentLoaded', function () {
+    // Product Chart
+    initProductChart(initialMonths, initialInData, initialOutData);
 
-            // Ranking Chart
-            if (initialRankingLabels.length > 0) {
-                initRankingChart(initialRankingLabels, initialRankingData);
-            }
+    // Ranking Chart
+    if (initialRankingLabels.length > 0) {
+        initRankingChart(initialRankingLabels, initialRankingData);
+    }
 
-            // User Chart (Admin & Super Admin only)
-            @if (in_array($role, ['admin', 'super_admin']))
-                initUserChart(monthsList, initialUserData);
-            @endif
+    // Initialize user charts
+    @if (in_array($role, ['admin', 'super_admin']))
+        initUserLineChart(monthsList, initialUserData);
+        initUserBarChart(monthsList, initialUserData);
+    @endif
 
-                // ========== TOGGLE CUSTOM DATE RANGE FOR DAMAGED STOCK ==========
-                const damagedFilterType = document.getElementById('damaged_filter_type');
-            const damagedCustomRange = document.getElementById('damaged_custom_range');
+    // ========== TOGGLE CUSTOM DATE RANGE FOR DAMAGED STOCK ==========
+    const damagedFilterType = document.getElementById('damaged_filter_type');
+    const damagedCustomRange = document.getElementById('damaged_custom_range');
 
-            if (damagedFilterType && damagedCustomRange) {
-                // Set initial state berdasarkan nilai awal dropdown
-                if (damagedFilterType.value === 'custom') {
-                    damagedCustomRange.classList.remove('hidden');
-                } else {
-                    damagedCustomRange.classList.add('hidden');
-                }
+    if (damagedFilterType && damagedCustomRange) {
+        if (damagedFilterType.value === 'custom') {
+            damagedCustomRange.classList.remove('hidden');
+        } else {
+            damagedCustomRange.classList.add('hidden');
+        }
 
-                // Event listener untuk perubahan dropdown
-                damagedFilterType.addEventListener('change', function () {
-                    if (this.value === 'custom') {
-                        damagedCustomRange.classList.remove('hidden');
-                    } else {
-                        damagedCustomRange.classList.add('hidden');
-                    }
-                });
+        damagedFilterType.addEventListener('change', function () {
+            if (this.value === 'custom') {
+                damagedCustomRange.classList.remove('hidden');
+            } else {
+                damagedCustomRange.classList.add('hidden');
             }
         });
+    }
+});
     </script>
 @endsection

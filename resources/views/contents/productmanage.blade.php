@@ -115,92 +115,77 @@
             <div style="overflow-x: auto; width: 100%;">
                 <table style="min-width: 500px; width: 100%; border-collapse: collapse;">
                     <thead>
-                        <tr class="bg-[#f3e4c3]">
-                            <th
-                                style="padding: 12px 8px; text-align: left; font-weight: 600; color: #7a5c1e; font-size: 12px; border-top-left-radius: 12px;">
-                                Kode</th>
-                            <th
-                                style="padding: 12px 8px; text-align: left; font-weight: 600; color: #7a5c1e; font-size: 12px;">
-                                Nama Item</th>
-                            <th
-                                style="padding: 12px 8px; text-align: left; font-weight: 600; color: #7a5c1e; font-size: 12px;">
-                                Kategori</th>
-                            <th
-                                style="padding: 12px 8px; text-align: left; font-weight: 600; color: #7a5c1e; font-size: 12px;">
-                                Stok</th>
-                            <th
-                                style="padding: 12px 8px; text-align: center; font-weight: 600; color: #7a5c1e; font-size: 12px; border-top-right-radius: 12px;">
-                                Aksi</th>
-                        </tr>
-                    </thead>
+    <tr class="bg-[#f3e4c3]">
+        <th style="padding: 12px 8px; text-align: left; font-weight: 600; color: #7a5c1e; font-size: 12px; border-top-left-radius: 12px;">No.</th>
+        <th style="padding: 12px 8px; text-align: left; font-weight: 600; color: #7a5c1e; font-size: 12px;">Kode</th>
+        <th style="padding: 12px 8px; text-align: left; font-weight: 600; color: #7a5c1e; font-size: 12px;">Nama Item</th>
+        <th style="padding: 12px 8px; text-align: left; font-weight: 600; color: #7a5c1e; font-size: 12px;">Kategori</th>
+        <th style="padding: 12px 8px; text-align: left; font-weight: 600; color: #7a5c1e; font-size: 12px;">Stok</th>
+        <th style="padding: 12px 8px; text-align: center; font-weight: 600; color: #7a5c1e; font-size: 12px; border-top-right-radius: 12px;">Aksi</th>
+    </tr>
+</thead>
                     <tbody>
-                        @if(isset($products) && count($products) > 0)
-                            @foreach($products as $p)
-                                @php
-                                    $productId = $p->id ?? 0;
-                                    $productCode = $p->product_code ?? '-';
-                                    $productName = $p->name ?? '-';
-                                    $categoryName = isset($p->category) && $p->category ? $p->category->name : 'Tidak Ada Kategori';
-                                    $stockValue = $p->stock ?? 0;
-                                    $categoryId = $p->category_id ?? 0;
-                                @endphp
-                                <tr style="border-bottom: 1px solid #f3e4c3;">
-                                    <td style="padding: 12px 8px; font-size: 13px; color: #3a3020;">{{ $productCode }}</td>
-                                    <td style="padding: 12px 8px; font-size: 13px; color: #3a3020; word-break: break-word;">
-                                        {{ $productName }}
-                                    </td>
-                                    <td style="padding: 12px 8px;">
-                                        <span
-                                            style="background: #f3e4c3; color: #7a5c1e; font-size: 11px; padding: 4px 10px; border-radius: 8px; white-space: nowrap;">
-                                            {{ $categoryName }}
-                                        </span>
-                                    </td>
-                                    <td style="padding: 12px 8px; font-size: 13px; color: #3a3020;">{{ $stockValue }}</td>
-                                    <td style="padding: 12px 8px; text-align: center;">
-                                        <div style="display: flex; gap: 6px; justify-content: center;">
-                                            <button
-                                                onclick="openEditModal({{ $productId }}, '{{ addslashes($productCode) }}', '{{ addslashes($productName) }}', {{ $categoryId }})"
-                                                style="background: #c9973a; border: none; padding: 6px 10px; border-radius: 8px; cursor: pointer;">
-                                                <svg width="12" height="12" fill="none" stroke="white" stroke-width="2.5"
-                                                    viewBox="0 0 24 24">
-                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                                                </svg>
-                                            </button>
-                                            <button onclick="openDeleteModal({{ $p->id }}, '{{ addslashes($productName) }}')"
-                                                style="background: #ef4444; border: none; padding: 6px 10px; border-radius: 8px; cursor: pointer;">
-                                                <svg width="12" height="12" fill="none" stroke="white" stroke-width="2.5"
-                                                    viewBox="0 0 24 24">
-                                                    <polyline points="3 6 5 6 21 6" />
-                                                    <path d="M19 6l-1 14H6L5 6" />
-                                                    <path d="M10 11v6" />
-                                                    <path d="M14 11v6" />
-                                                    <path d="M9 6V4h6v2" />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @else
-                            <tr>
-                                <td colspan="5" style="padding: 32px 8px; text-align: center; color: #9ca3af;">
-                                    <div>
-                                        <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5"
-                                            viewBox="0 0 24 24" style="margin: 0 auto 8px;">
-                                            <circle cx="11" cy="11" r="8" />
-                                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                                        </svg>
-                                        <p>Tidak ada produk ditemukan</p>
-                                        @if(request('search'))
-                                            <a href="{{ route('contents.productmanage') }}"
-                                                style="color: #c9973a; font-size: 12px;">Clear search</a>
-                                        @endif
-                                    </div>
-                                </td>
-                            </tr>
-                        @endif
-                    </tbody>
+    @if(isset($products) && count($products) > 0)
+        @foreach($products as $index => $p)
+            @php
+                $productId = $p->id ?? 0;
+                $productCode = $p->product_code ?? '-';
+                $productName = $p->name ?? '-';
+                $categoryName = isset($p->category) && $p->category ? $p->category->name : 'Tidak Ada Kategori';
+                $stockValue = $p->stock ?? 0;
+                $categoryId = $p->category_id ?? 0;
+                $rowNumber = ($products->currentPage() - 1) * $products->perPage() + $index + 1;
+            @endphp
+            <tr style="border-bottom: 1px solid #f3e4c3;">
+                <td style="padding: 12px 8px; font-size: 13px; color: #3a3020;">{{ $rowNumber }}</td>
+                <td style="padding: 12px 8px; font-size: 13px; color: #3a3020;">{{ $productCode }}</td>
+                <td style="padding: 12px 8px; font-size: 13px; color: #3a3020; word-break: break-word;">{{ $productName }}</td>
+                <td style="padding: 12px 8px;">
+                    <span style="background: #f3e4c3; color: #7a5c1e; font-size: 11px; padding: 4px 10px; border-radius: 8px; white-space: nowrap;">
+                        {{ $categoryName }}
+                    </span>
+                </td>
+                <td style="padding: 12px 8px; font-size: 13px; color: #3a3020;">{{ $stockValue }}</td>
+                <td style="padding: 12px 8px; text-align: center;">
+                    <div style="display: flex; gap: 6px; justify-content: center;">
+                        <button onclick="openEditModal({{ $productId }}, '{{ addslashes($productCode) }}', '{{ addslashes($productName) }}', {{ $categoryId }})"
+                            style="background: #c9973a; border: none; padding: 6px 10px; border-radius: 8px; cursor: pointer;">
+                            <svg width="12" height="12" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                            </svg>
+                        </button>
+                        <button onclick="openDeleteModal({{ $p->id }}, '{{ addslashes($productName) }}')"
+                            style="background: #ef4444; border: none; padding: 6px 10px; border-radius: 8px; cursor: pointer;">
+                            <svg width="12" height="12" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24">
+                                <polyline points="3 6 5 6 21 6" />
+                                <path d="M19 6l-1 14H6L5 6" />
+                                <path d="M10 11v6" />
+                                <path d="M14 11v6" />
+                                <path d="M9 6V4h6v2" />
+                            </svg>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        @endforeach
+    @else
+        <tr>
+            <td colspan="6" style="padding: 32px 8px; text-align: center; color: #9ca3af;">
+                <div>
+                    <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin: 0 auto 8px;">
+                        <circle cx="11" cy="11" r="8" />
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                    <p>Tidak ada produk ditemukan</p>
+                    @if(request('search'))
+                        <a href="{{ route('contents.productmanage') }}" style="color: #c9973a; font-size: 12px;">Clear search</a>
+                    @endif
+                </div>
+            </td>
+        </tr>
+    @endif
+</tbody>
                 </table>
             </div>
 
