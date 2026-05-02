@@ -63,7 +63,7 @@
                 <table class="w-full table-hover">
                     <thead class="bg-[#e7ddcf] text-gray-700">
                         <tr>
-                            <th class="px-4 sm:px-6 py-3 text-left text-sm font-semibold">ID</th>
+                            <th class="px-4 sm:px-6 py-3 text-left text-sm font-semibold">No.</th>
                             <th class="px-4 sm:px-6 py-3 text-left text-sm font-semibold">Kategori</th>
                             <th class="px-4 sm:px-6 py-3 text-left text-sm font-semibold">Aksi</th>
                         </tr>
@@ -71,7 +71,7 @@
                     <tbody class="divide-y divide-gray-100">
                         @forelse($categories as $category)
                             <tr class="hover:bg-[#fef7e8] transition">
-                                <td class="px-4 sm:px-6 py-3 text-sm text-gray-600 text-left">{{ $category->id }}</td>
+                                <td class="px-4 sm:px-6 py-3 text-sm text-gray-600 text-left">{{ ($categories->currentPage() - 1) * $categories->perPage() + $loop->iteration }}</td>
                                 <td class="px-4 sm:px-6 py-3 text-sm font-medium text-gray-800 text-left">{{ $category->name }}</td>
                                 <td class="px-4 sm:px-6 py-3 text-left">
                                     <button type="button" data-id="{{ $category->id }}" data-name="{{ $category->name }}"

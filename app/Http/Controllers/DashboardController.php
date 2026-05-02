@@ -198,89 +198,308 @@ class DashboardController extends Controller
             })
         ]);
     }
-    
+
     private function getProductChartData($filterType, $customStartDate, $customEndDate)
-    {
+{
+    setlocale(LC_TIME, 'id_ID');
+    
+    $inData = [];
+    $outData = [];
+    $labels = [];
+    
+    // Jika all atau custom dengan tanggal kosong -> tampilkan per bulan (all time)
+    if ($filterType === 'all' || ($filterType === 'custom' && !$customStartDate && !$customEndDate)) {
         $months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
         $inData = array_fill(0, 12, 0);
         $outData = array_fill(0, 12, 0);
         
-        // Jika all atau custom dengan tanggal kosong -> tampilkan all time
-        if ($filterType === 'all' || ($filterType === 'custom' && !$customStartDate && !$customEndDate)) {
-            $inResults = DB::table('stock_transactions')
-                ->where('type', 'in')
-                ->selectRaw('MONTH(transaction_date) as month, SUM(quantity) as total')
-                ->whereNotNull('transaction_date')
-                ->groupBy('month')
-                ->get();
-                
-            $outResults = DB::table('stock_transactions')
-                ->where('type', 'out')
-                ->selectRaw('MONTH(transaction_date) as month, SUM(quantity) as total')
-                ->whereNotNull('transaction_date')
-                ->groupBy('month')
-                ->get();
-                
-            foreach ($inResults as $r) {
-                $idx = ($r->month - 1);
-                if ($idx >= 0 && $idx < 12) $inData[$idx] = $r->total;
-            }
-            foreach ($outResults as $r) {
-                $idx = ($r->month - 1);
-                if ($idx >= 0 && $idx < 12) $outData[$idx] = $r->total;
-            }
-        } 
-        // Filter dengan periode tertentu
-        elseif ($customStartDate && $customEndDate) {
-            $startDate = $customStartDate . ' 00:00:00';
-            $endDate = $customEndDate . ' 23:59:59';
+        $inResults = DB::table('stock_transactions')
+            ->where('type', 'in')
+            ->selectRaw('MONTH(transaction_date) as month, SUM(quantity) as total')
+            ->whereNotNull('transaction_date')
+            ->groupBy('month')
+            ->get();
             
-            $transactions = DB::table('stock_transactions')
-                ->selectRaw('MONTH(transaction_date) as month, type, SUM(quantity) as total')
-                ->whereBetween('transaction_date', [$startDate, $endDate])
-                ->groupBy('month', 'type')
-                ->get();
-                
-            foreach ($transactions as $t) {
-                $idx = ($t->month - 1);
-                if ($idx >= 0 && $idx < 12) {
-                    if ($t->type == 'in') {
-                        $inData[$idx] = $t->total;
-                    } else {
-                        $outData[$idx] = $t->total;
-                    }
-                }
-            }
+        $outResults = DB::table('stock_transactions')
+            ->where('type', 'out')
+            ->selectRaw('MONTH(transaction_date) as month, SUM(quantity) as total')
+            ->whereNotNull('transaction_date')
+            ->groupBy('month')
+            ->get();
+            
+        foreach ($inResults as $r) {
+            $idx = ($r->month - 1);
+            if ($idx >= 0 && $idx < 12) $inData[$idx] = $r->total;
         }
-        // Harian, Mingguan, Bulanan
-        elseif ($filterType !== 'all' && $filterType !== 'custom') {
-            list($startDate, $endDate) = $this->getDateRangeForChart($filterType, null, null);
-            if ($startDate && $endDate) {
-                $transactions = DB::table('stock_transactions')
-                    ->selectRaw('MONTH(transaction_date) as month, type, SUM(quantity) as total')
-                    ->whereBetween('transaction_date', [$startDate, $endDate])
-                    ->groupBy('month', 'type')
-                    ->get();
-                    
-                foreach ($transactions as $t) {
-                    $idx = ($t->month - 1);
-                    if ($idx >= 0 && $idx < 12) {
-                        if ($t->type == 'in') {
-                            $inData[$idx] = $t->total;
-                        } else {
-                            $outData[$idx] = $t->total;
-                        }
-                    }
-                }
-            }
+        foreach ($outResults as $r) {
+            $idx = ($r->month - 1);
+            if ($idx >= 0 && $idx < 12) $outData[$idx] = $r->total;
         }
         
         return [
             'labels' => $months,
             'inData' => array_values($inData),
-            'outData' => array_values($outData)
+            'outData' => array_values($outData),
+            'type' => 'monthly'
         ];
+    } 
+    // Filter dengan custom date range
+    elseif ($customStartDate && $customEndDate) {
+        $startDate = $customStartDate . ' 00:00:00';
+        $endDate = $customEndDate . ' 23:59:59';
+        $diffInDays = (strtotime($customEndDate) - strtotime($customStartDate)) / 86400 + 1;
+        
+        // Jika rentang waktu <= 31 hari -> tampilkan harian
+        if ($diffInDays <= 31) {
+            $results = DB::table('stock_transactions')
+                ->selectRaw('DATE(transaction_date) as date, type, SUM(quantity) as total')
+                ->whereBetween('transaction_date', [$startDate, $endDate])
+                ->groupBy('date', 'type')
+                ->orderBy('date', 'asc')
+                ->get();
+                
+            $dateRange = [];
+            $current = strtotime($customStartDate);
+            $end = strtotime($customEndDate);
+            while ($current <= $end) {
+                $dayNum = date('j', $current);
+                $monthNum = date('n', $current);
+                $monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                $monthName = $monthNames[$monthNum];
+                $dateRange[date('Y-m-d', $current)] = $dayNum . ' ' . $monthName;
+                $current = strtotime('+1 day', $current);
+            }
+            
+            $inData = array_fill(0, count($dateRange), 0);
+            $outData = array_fill(0, count($dateRange), 0);
+            $labels = array_values($dateRange);
+            $dateKeys = array_keys($dateRange);
+            
+            foreach ($results as $r) {
+                $idx = array_search($r->date, $dateKeys);
+                if ($idx !== false) {
+                    if ($r->type == 'in') {
+                        $inData[$idx] = $r->total;
+                    } else {
+                        $outData[$idx] = $r->total;
+                    }
+                }
+            }
+            
+            return [
+                'labels' => $labels,
+                'inData' => $inData,
+                'outData' => $outData,
+                'type' => 'daily'
+            ];
+        } 
+        // Jika rentang waktu > 31 hari -> tampilkan bulanan
+        else {
+            $results = DB::table('stock_transactions')
+                ->selectRaw('DATE_FORMAT(transaction_date, "%Y-%m") as month, type, SUM(quantity) as total')
+                ->whereBetween('transaction_date', [$startDate, $endDate])
+                ->groupBy('month', 'type')
+                ->orderBy('month', 'asc')
+                ->get();
+                
+            $monthRange = [];
+            $current = strtotime($customStartDate);
+            $end = strtotime($customEndDate);
+            while ($current <= $end) {
+                $monthYear = date('Y-m', $current);
+                $monthNum = date('n', $current);
+                $yearNum = date('Y', $current);
+                $monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                $monthName = $monthNames[$monthNum];
+                $monthRange[$monthYear] = $monthName . ' ' . $yearNum;
+                $current = strtotime('first day of next month', $current);
+            }
+            
+            $inData = array_fill(0, count($monthRange), 0);
+            $outData = array_fill(0, count($monthRange), 0);
+            $labels = array_values($monthRange);
+            $monthKeys = array_keys($monthRange);
+            
+            foreach ($results as $r) {
+                $idx = array_search($r->month, $monthKeys);
+                if ($idx !== false) {
+                    if ($r->type == 'in') {
+                        $inData[$idx] = $r->total;
+                    } else {
+                        $outData[$idx] = $r->total;
+                    }
+                }
+            }
+            
+            return [
+                'labels' => $labels,
+                'inData' => $inData,
+                'outData' => $outData,
+                'type' => 'monthly'
+            ];
+        }
     }
+    // Filter Harian, Mingguan, Bulanan (tanpa custom date)
+    elseif ($filterType !== 'all' && $filterType !== 'custom') {
+        list($startDate, $endDate) = $this->getDateRangeForChart($filterType, null, null);
+        
+        if ($filterType == 'daily') {
+            // Harian: tampilkan tanggal
+            $results = DB::table('stock_transactions')
+                ->selectRaw('DATE(transaction_date) as date, type, SUM(quantity) as total')
+                ->whereBetween('transaction_date', [$startDate, $endDate])
+                ->groupBy('date', 'type')
+                ->orderBy('date', 'asc')
+                ->get();
+                
+            $inData = [];
+            $outData = [];
+            $labels = [];
+            
+            foreach ($results as $r) {
+                $dayNum = date('j', strtotime($r->date));
+                $monthNum = date('n', strtotime($r->date));
+                $monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                $monthName = $monthNames[$monthNum];
+                $dateLabel = $dayNum . ' ' . $monthName;
+                
+                if (!in_array($dateLabel, $labels)) {
+                    $labels[] = $dateLabel;
+                    $inData[] = 0;
+                    $outData[] = 0;
+                }
+                $idx = array_search($dateLabel, $labels);
+                if ($r->type == 'in') {
+                    $inData[$idx] = $r->total;
+                } else {
+                    $outData[$idx] = $r->total;
+                }
+            }
+            
+            return [
+                'labels' => $labels,
+                'inData' => $inData,
+                'outData' => $outData,
+                'type' => 'daily'
+            ];
+        } 
+        elseif ($filterType == 'weekly') {
+            // Mingguan: tampilkan SEMUA tanggal dalam 7 hari terakhir
+            $results = DB::table('stock_transactions')
+                ->selectRaw('DATE(transaction_date) as date, type, SUM(quantity) as total')
+                ->whereBetween('transaction_date', [$startDate, $endDate])
+                ->groupBy('date', 'type')
+                ->orderBy('date', 'asc')
+                ->get();
+            
+            // Buat date range untuk 7 hari
+            $dateRange = [];
+            $current = strtotime($startDate);
+            $end = strtotime($endDate);
+            
+            while ($current <= $end) {
+                $dayNum = date('j', $current);
+                $monthNum = date('n', $current);
+                $monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                $monthName = $monthNames[$monthNum];
+                $dateLabel = $dayNum . ' ' . $monthName;
+                $dateKey = date('Y-m-d', $current);
+                
+                $dateRange[$dateKey] = $dateLabel;
+                $current = strtotime('+1 day', $current);
+            }
+            
+            // Inisialisasi data dengan 0 untuk semua tanggal
+            $inData = array_fill(0, count($dateRange), 0);
+            $outData = array_fill(0, count($dateRange), 0);
+            $labels = array_values($dateRange);
+            $dateKeys = array_keys($dateRange);
+            
+            // Map data hasil query
+            foreach ($results as $r) {
+                $idx = array_search($r->date, $dateKeys);
+                if ($idx !== false) {
+                    if ($r->type == 'in') {
+                        $inData[$idx] = $r->total;
+                    } else {
+                        $outData[$idx] = $r->total;
+                    }
+                }
+            }
+            
+            return [
+                'labels' => $labels,
+                'inData' => $inData,
+                'outData' => $outData,
+                'type' => 'daily'
+            ];
+        } 
+        elseif ($filterType == 'monthly') {
+            // Bulanan: tampilkan nama bulan
+            $months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            $inData = array_fill(0, 12, 0);
+            $outData = array_fill(0, 12, 0);
+            
+            $results = DB::table('stock_transactions')
+                ->selectRaw('MONTH(transaction_date) as month, type, SUM(quantity) as total')
+                ->whereBetween('transaction_date', [$startDate, $endDate])
+                ->groupBy('month', 'type')
+                ->orderBy('month', 'asc')
+                ->get();
+                
+            foreach ($results as $r) {
+                $idx = ($r->month - 1);
+                if ($idx >= 0 && $idx < 12) {
+                    if ($r->type == 'in') {
+                        $inData[$idx] = $r->total;
+                    } else {
+                        $outData[$idx] = $r->total;
+                    }
+                }
+            }
+            
+            // Hanya tampilkan bulan yang memiliki data atau yang masuk rentang
+            $nonZeroIndices = [];
+            for ($i = 0; $i < 12; $i++) {
+                if ($inData[$i] > 0 || $outData[$i] > 0) {
+                    $nonZeroIndices[] = $i;
+                }
+            }
+            
+            if (count($nonZeroIndices) > 0) {
+                $filteredLabels = [];
+                $filteredInData = [];
+                $filteredOutData = [];
+                foreach ($nonZeroIndices as $idx) {
+                    $filteredLabels[] = $months[$idx];
+                    $filteredInData[] = $inData[$idx];
+                    $filteredOutData[] = $outData[$idx];
+                }
+                return [
+                    'labels' => $filteredLabels,
+                    'inData' => $filteredInData,
+                    'outData' => $filteredOutData,
+                    'type' => 'monthly'
+                ];
+            }
+            
+            return [
+                'labels' => $months,
+                'inData' => $inData,
+                'outData' => $outData,
+                'type' => 'monthly'
+            ];
+        }
+    }
+    
+    // Default return
+    return [
+        'labels' => [],
+        'inData' => [],
+        'outData' => [],
+        'type' => 'monthly'
+    ];
+}
     
     private function getRankingChartData($filterType, $customStartDate, $customEndDate)
     {
@@ -317,75 +536,290 @@ class DashboardController extends Controller
     }
     
     private function getUserChartData($filterType, $customStartDate, $customEndDate)
-    {
+{
+    setlocale(LC_TIME, 'id_ID');
+    
+    $labels = [];
+    $userData = [];
+    
+    // Jika all atau custom dengan tanggal kosong -> tampilkan per bulan (all time)
+    if ($filterType === 'all' || ($filterType === 'custom' && !$customStartDate && !$customEndDate)) {
         $months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
         $userData = array_fill(0, 12, 0);
         
-        $query = DB::table('users')
+        $results = DB::table('users')
             ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
-            ->whereNotNull('created_at');
-        
-        // Jika all atau custom dengan tanggal kosong -> tampilkan all time
-        if ($filterType === 'all' || ($filterType === 'custom' && !$customStartDate && !$customEndDate)) {
-            // No date filter
-        } 
-        elseif ($customStartDate && $customEndDate) {
-            $startDate = $customStartDate . ' 00:00:00';
-            $endDate = $customEndDate . ' 23:59:59';
-            $query->whereBetween('created_at', [$startDate, $endDate]);
-        }
-        elseif ($filterType !== 'all' && $filterType !== 'custom') {
-            list($startDate, $endDate) = $this->getDateRangeForChart($filterType, null, null);
-            if ($startDate && $endDate) {
-                $query->whereBetween('created_at', [$startDate, $endDate]);
-            }
-        }
-        
-        $results = $query->groupBy('month')->orderBy('month')->get();
-        
+            ->whereNotNull('created_at')
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+            
         foreach ($results as $r) {
             $idx = ($r->month - 1);
-            if ($idx >= 0 && $idx < 12) {
-                $userData[$idx] = $r->total;
-            }
+            if ($idx >= 0 && $idx < 12) $userData[$idx] = $r->total;
         }
         
         return [
             'labels' => $months,
-            'data' => $userData
+            'data' => $userData,
+            'type' => 'monthly'
         ];
     }
     
-    private function getDateRangeForChart($filterType, $customStartDate, $customEndDate)
-    {
-        $startDate = null;
-        $endDate = null;
-        $today = date('Y-m-d');
-        $now = date('Y-m-d H:i:s');
-
-        switch ($filterType) {
-            case 'daily':
-                $startDate = $today . ' 00:00:00';
-                $endDate = $now;
-                break;
-            case 'weekly':
-                $startDate = date('Y-m-d 00:00:00', strtotime('monday this week'));
-                $endDate = $now;
-                break;
-            case 'monthly':
-                $startDate = date('Y-m-01 00:00:00');
-                $endDate = $now;
-                break;
-            case 'custom':
-                if ($customStartDate && $customEndDate) {
-                    $startDate = $customStartDate . ' 00:00:00';
-                    $endDate = $customEndDate . ' 23:59:59';
+    // Filter dengan custom date range
+    elseif ($customStartDate && $customEndDate) {
+        $startDate = $customStartDate . ' 00:00:00';
+        $endDate = $customEndDate . ' 23:59:59';
+        $diffInDays = (strtotime($customEndDate) - strtotime($customStartDate)) / 86400 + 1;
+        
+        // Jika rentang waktu <= 31 hari -> tampilkan harian
+        if ($diffInDays <= 31) {
+            $results = DB::table('users')
+                ->selectRaw('DATE(created_at) as date, COUNT(*) as total')
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->groupBy('date')
+                ->orderBy('date', 'asc')
+                ->get();
+                
+            $dateRange = [];
+            $current = strtotime($customStartDate);
+            $end = strtotime($customEndDate);
+            while ($current <= $end) {
+                $dayNum = date('j', $current);
+                $monthNum = date('n', $current);
+                $monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                $monthName = $monthNames[$monthNum];
+                $dateRange[date('Y-m-d', $current)] = $dayNum . ' ' . $monthName;
+                $current = strtotime('+1 day', $current);
+            }
+            
+            $userData = array_fill(0, count($dateRange), 0);
+            $labels = array_values($dateRange);
+            $dateKeys = array_keys($dateRange);
+            
+            foreach ($results as $r) {
+                $idx = array_search($r->date, $dateKeys);
+                if ($idx !== false) {
+                    $userData[$idx] = $r->total;
                 }
-                break;
+            }
+            
+            return [
+                'labels' => $labels,
+                'data' => $userData,
+                'type' => 'daily'
+            ];
         }
-
-        return [$startDate, $endDate];
+        // Jika rentang waktu > 31 hari -> tampilkan bulanan
+        else {
+            $results = DB::table('users')
+                ->selectRaw('DATE_FORMAT(created_at, "%Y-%m") as month, COUNT(*) as total')
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->groupBy('month')
+                ->orderBy('month', 'asc')
+                ->get();
+                
+            $monthRange = [];
+            $current = strtotime($customStartDate);
+            $end = strtotime($customEndDate);
+            while ($current <= $end) {
+                $monthYear = date('Y-m', $current);
+                $monthNum = date('n', $current);
+                $yearNum = date('Y', $current);
+                $monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                $monthName = $monthNames[$monthNum];
+                $monthRange[$monthYear] = $monthName . ' ' . $yearNum;
+                $current = strtotime('first day of next month', $current);
+            }
+            
+            $userData = array_fill(0, count($monthRange), 0);
+            $labels = array_values($monthRange);
+            $monthKeys = array_keys($monthRange);
+            
+            foreach ($results as $r) {
+                $idx = array_search($r->month, $monthKeys);
+                if ($idx !== false) {
+                    $userData[$idx] = $r->total;
+                }
+            }
+            
+            return [
+                'labels' => $labels,
+                'data' => $userData,
+                'type' => 'monthly'
+            ];
+        }
     }
+    // Filter Harian, Mingguan, Bulanan (tanpa custom date)
+    elseif ($filterType !== 'all' && $filterType !== 'custom') {
+        list($startDate, $endDate) = $this->getDateRangeForChart($filterType, null, null);
+        
+        if ($filterType == 'daily') {
+            // Harian: tampilkan tanggal
+            $results = DB::table('users')
+                ->selectRaw('DATE(created_at) as date, COUNT(*) as total')
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->groupBy('date')
+                ->orderBy('date', 'asc')
+                ->get();
+                
+            $userData = [];
+            $labels = [];
+            
+            foreach ($results as $r) {
+                $dayNum = date('j', strtotime($r->date));
+                $monthNum = date('n', strtotime($r->date));
+                $monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+                $monthName = $monthNames[$monthNum];
+                $dateLabel = $dayNum . ' ' . $monthName;
+                
+                if (!in_array($dateLabel, $labels)) {
+                    $labels[] = $dateLabel;
+                    $userData[] = 0;
+                }
+                $idx = array_search($dateLabel, $labels);
+                $userData[$idx] = $r->total;
+            }
+            
+            return [
+                'labels' => $labels,
+                'data' => $userData,
+                'type' => 'daily'
+            ];
+        }
+        elseif ($filterType == 'weekly') {
+    // Mingguan: tampilkan SEMUA tanggal dalam 7 hari terakhir
+    $results = DB::table('users')
+        ->selectRaw('DATE(created_at) as date, COUNT(*) as total')
+        ->whereBetween('created_at', [$startDate, $endDate])
+        ->groupBy('date')
+        ->orderBy('date', 'asc')
+        ->get();
+    
+    // Buat date range untuk 7 hari
+    $dateRange = [];
+    $current = strtotime($startDate);
+    $end = strtotime($endDate);
+    
+    while ($current <= $end) {
+        $dayNum = date('j', $current);
+        $monthNum = date('n', $current);
+        $monthNames = ['', 'Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        $monthName = $monthNames[$monthNum];
+        $dateLabel = $dayNum . ' ' . $monthName;
+        $dateKey = date('Y-m-d', $current);
+        
+        $dateRange[$dateKey] = $dateLabel;
+        $current = strtotime('+1 day', $current);
+    }
+    
+    $userData = array_fill(0, count($dateRange), 0);
+    $labels = array_values($dateRange);
+    $dateKeys = array_keys($dateRange);
+    
+    $dataMap = [];
+    foreach ($results as $r) {
+        $dataMap[$r->date] = $r->total;
+    }
+    
+    foreach ($dateKeys as $idx => $dateKey) {
+        $userData[$idx] = $dataMap[$dateKey] ?? 0;
+    }
+    
+    return [
+        'labels' => $labels,
+        'data' => $userData,
+        'type' => 'daily'
+    ];
+}
+        elseif ($filterType == 'monthly') {
+            // Bulanan: tampilkan nama bulan
+            $months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            $userData = array_fill(0, 12, 0);
+            
+            $results = DB::table('users')
+                ->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->groupBy('month')
+                ->orderBy('month')
+                ->get();
+                
+            foreach ($results as $r) {
+                $idx = ($r->month - 1);
+                if ($idx >= 0 && $idx < 12) {
+                    $userData[$idx] = $r->total;
+                }
+            }
+            
+            // Hanya tampilkan bulan yang memiliki data
+            $nonZeroIndices = [];
+            for ($i = 0; $i < 12; $i++) {
+                if ($userData[$i] > 0) {
+                    $nonZeroIndices[] = $i;
+                }
+            }
+            
+            if (count($nonZeroIndices) > 0) {
+                $filteredLabels = [];
+                $filteredData = [];
+                foreach ($nonZeroIndices as $idx) {
+                    $filteredLabels[] = $months[$idx];
+                    $filteredData[] = $userData[$idx];
+                }
+                return [
+                    'labels' => $filteredLabels,
+                    'data' => $filteredData,
+                    'type' => 'monthly'
+                ];
+            }
+            
+            return [
+                'labels' => $months,
+                'data' => $userData,
+                'type' => 'monthly'
+            ];
+        }
+    }
+    
+    // Default return
+    return [
+        'labels' => [],
+        'data' => [],
+        'type' => 'monthly'
+    ];
+}
+    
+    private function getDateRangeForChart($filterType, $customStartDate, $customEndDate)
+{
+    $startDate = null;
+    $endDate = null;
+    $today = date('Y-m-d');
+    $now = date('Y-m-d H:i:s');
+
+    switch ($filterType) {
+        case 'daily':
+            $startDate = $today . ' 00:00:00';
+            $endDate = $now;
+            break;
+        case 'weekly':
+            // 7 hari terakhir
+            $startDate = date('Y-m-d 00:00:00', strtotime('-6 days'));
+            $endDate = $now;
+            break;
+        case 'monthly':
+            $startDate = date('Y-m-01 00:00:00');
+            $endDate = $now;
+            break;
+        case 'custom':
+            if ($customStartDate && $customEndDate) {
+                $startDate = $customStartDate . ' 00:00:00';
+                $endDate = $customEndDate . ' 23:59:59';
+            }
+            break;
+    }
+
+    return [$startDate, $endDate];
+}
 
     private function getDateRange($filterType, $customStartDate, $customEndDate)
     {
