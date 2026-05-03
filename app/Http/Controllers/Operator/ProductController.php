@@ -31,7 +31,7 @@ class ProductController extends Controller
             });
         }
 
-        $products = $query->oldest()->paginate(10);
+        $products = $query->latest()->paginate(10);
         $categories = Category::all();
         $totalProduct = Product::where('is_deleted', false)->count();
 
